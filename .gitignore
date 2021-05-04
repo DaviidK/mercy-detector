@@ -40,3 +40,6 @@ x64/
 *.vcx*
 *.vs/
 */enc_temp_folder/
+
+# MacOS Specific Files
+*.DS_Store
