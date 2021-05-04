@@ -1,7 +1,4 @@
-# mercy-detector
-
-<img style=img align="right" src="https://raw.githubusercontent.com/DaviidK/mercy-detector/tree/main/Documentation/Images/mercy_cartoon.png" />
-
+# mercy-detector <img style=img align="right" src="https://raw.githubusercontent.com/DaviidK/mercy-detector/main/Documentation/Images/mercy_cartoon.png" />
 
 ## Background
 Existing research has demonstrated that it is possible to parse visual data from a video feed of a game and analyze different aspects of gameplay. Static 2D elements such as a GUI used to represent health or energy have been studied in-depth, and no longer represent a particularly challenging task for computer vision projects. 3D modelled objects pose a similar challenge to identifying an object in real-life.
@@ -16,9 +13,9 @@ We will focus on the 3D object held by the player’s hero, which will move slig
 1. Which hero is currently being played
 2. What action is the held weapon performing at a given point in time
 
-![Mercy's Heads Up Display. The 3D modelled weapon moves slightly to show player movement and is subject to lighting effects. Each hero has a unique weapon](https://raw.githubusercontent.com/DaviidK/mercy-detector/tree/main/Documentation/Images/hero_demo.png)
+![Mercy's Heads Up Display. The 3D modelled weapon moves slightly to show player movement and is subject to lighting effects. Each hero has a unique weapon](https://raw.githubusercontent.com/DaviidK/mercy-detector/main/Documentation/Images/hero_demo.png)
 
-![Weapon action demonstration. Some weapons are capable of performing multiple actions. These result in slight changes in the weapon shape and color](https://raw.githubusercontent.com/DaviidK/mercy-detector/tree/main/Documentation/Images/weapon_action.png)
+![Weapon action demonstration. Some weapons are capable of performing multiple actions. These result in slight changes in the weapon shape and color](https://raw.githubusercontent.com/DaviidK/mercy-detector/main/Documentation/Images/weapon_action.png)
 
 In its final stage, we want our project to receive a set of frames of Overwatch gameplay and use them to output both the hero being played and their current action. We hope for this system to be performant enough to operate in real-time, which would allow for the analysis to be applied to a live video stream.
 
