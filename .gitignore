@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# OpenCV Program libraries
+x64/
+
+# Visual Studio files
+*.sln
+*.aps
+*.vcx*
+*.vs/
+*/enc_temp_folder/
