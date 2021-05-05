@@ -22,7 +22,7 @@
 #ifdef WINDOWS
 #include <direct.h>
 #define GetCurrentDir _getcwd
-#else
+#elsedef
 #include <unistd.h>
 #define GetCurrentDir getcwd
 #endif
