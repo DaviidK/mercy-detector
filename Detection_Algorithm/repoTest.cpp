@@ -17,7 +17,16 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+
+// Different imports depend on whether you're on Windows or Unix
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
 #include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 
 using namespace std;
 using namespace cv;
@@ -64,6 +73,8 @@ int main()
  *
  * Provides the current working directory as a string.
  *
+ * Sourced from: https://www.tutorialspoint.com/find-out-the-current-working-directory-in-c-cplusplus
+ *
  * @pre: None
  * @post: A string representing the working directory is populated and returned
  *
@@ -72,7 +83,7 @@ int main()
 string get_current_dir()
 {
     char buff[FILENAME_MAX]; //create string buffer to hold path
-    getcwd( buff, FILENAME_MAX );
+    GetCurrentDir( buff, FILENAME_MAX );
     string current_working_dir(buff);
     return current_working_dir;
 }
