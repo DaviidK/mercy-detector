@@ -19,7 +19,7 @@
 #include <opencv2/opencv.hpp>
 
 // Different imports depend on whether you're on Windows or Unix
-#ifndef __UNIX__
+#ifndef WINDOWS
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
