@@ -46,7 +46,7 @@ string get_current_dir();
  *
  * @return exit code indicating program status. Zero indicates success.
  **************************************************************************************************/
-int main()
+int main1()
 {
     cout << "Opening Files" << endl;
 
@@ -66,6 +66,8 @@ int main()
 
         displayImage(testImage, "Test Image", 2);
     }
+
+    return 0;
 }
 
 /***************************************************************************************************
