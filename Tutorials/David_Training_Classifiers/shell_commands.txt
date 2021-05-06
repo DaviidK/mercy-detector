@@ -1,0 +1,2 @@
+# Use annotation tool to visually draw outlines around objects
+opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Samples/
