@@ -11,7 +11,7 @@ Mat img; Mat templ; Mat result;
 const char* image_window = "Source Image";
 const char* result_window = "Result window";
 const char* image_name = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg";
-const char* template_name = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
+const char* template_name = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
 int match_method;
 int max_Trackbar = 5;
 
@@ -48,11 +48,13 @@ void MatchingMethod(int, void*) {
     normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
     double minVal; double maxVal; Point minLoc; Point maxLoc;
     Point matchLoc;
-    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
-    
+    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());   
+
     if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
+        cout << "Min value: " << minVal << endl;
         matchLoc = minLoc;
     } else {
+        cout << "Max value: " << maxVal << endl;
         matchLoc = maxLoc;
     }
 
