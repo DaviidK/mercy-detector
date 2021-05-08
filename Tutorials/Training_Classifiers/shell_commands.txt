@@ -6,3 +6,14 @@ opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_
 # Requires above step or manual creation of a file with all positive object annotations
 # Arguments are: -info <positive_samples_annotations_file_name>, -vec <output_file_name>
 opencv_createsamples -info positive_annotations.txt -vec positive_samples.vec
+
+# Training the boosted cascade classifiers
+# Requires both above steps to be completed
+# Arguments are:
+#       -data <cascade_directory_name>
+#       -vec <positive_vector_file>
+#       -bg <negative_images_paths_text_file>
+#       -numPos <number_of_positive_samples>
+#       -numNeg <number_of_negative_samples>
+#       -numStages <number_of_cascade_stages>
+opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 8 -numNeg 13 -numStages 20
