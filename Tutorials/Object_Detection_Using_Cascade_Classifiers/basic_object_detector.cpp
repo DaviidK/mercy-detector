@@ -30,6 +30,7 @@ int main(int argc, const char** argv) {
     parser.about("\nThis program demonstrates using the cv::CascadeClassifier class to detect objects (Face + eyes) in a video stream.\n"
         "You can use Haar or LBP features.\n\n");
     parser.printMessage();
+
     String face_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
     String eyes_cascade_name = samples::findFile(parser.get<String>("eyes_cascade"));
     
@@ -62,7 +63,7 @@ int main(int argc, const char** argv) {
         }
 
         //-- 3. Apply the classifier to the frame
-        detectAndDisplay(frame);
+        detectAndDisplay(face_cascade, eyes_cascade, frame);
         if (waitKey(10) == 27) {
             break; // escape
         }
@@ -70,7 +71,7 @@ int main(int argc, const char** argv) {
     return 0;
 }
 
-void detectAndDisplay(Mat frame) {
+void detectAndDisplay(CascadeClassifier& face_cascade, CascadeClassifier& eyes_cascade, Mat frame) {
     Mat frame_gray;
     cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
     equalizeHist(frame_gray, frame_gray);
