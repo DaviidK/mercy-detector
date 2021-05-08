@@ -1,8 +1,8 @@
-Data/Positive_Samples\pos1.jpg 1 1323 619 1233 705
-Data/Positive_Samples\pos2.jpg 1 1300 735 815 670
-Data/Positive_Samples\pos3.jpg 1 1297 841 850 575
-Data/Positive_Samples\pos4.jpg 1 1309 814 953 591
-Data/Positive_Samples\pos5.jpg 1 1310 752 803 652
-Data/Positive_Samples\pos6.jpg 1 1294 741 808 665
-Data/Positive_Samples\pos7.jpg 1 1352 769 746 637
-Data/Positive_Samples\pos8.jpg 1 1358 762 766 642
+Data/Positive_Images\pos1.jpg 1 1323 619 1233 705
+Data/Positive_Images\pos2.jpg 1 1300 735 815 670
+Data/Positive_Images\pos3.jpg 1 1297 841 850 575
+Data/Positive_Images\pos4.jpg 1 1309 814 953 591
+Data/Positive_Images\pos5.jpg 1 1310 752 803 652
+Data/Positive_Images\pos6.jpg 1 1294 741 808 665
+Data/Positive_Images\pos7.jpg 1 1352 769 746 637
+Data/Positive_Images\pos8.jpg 1 1358 762 766 642

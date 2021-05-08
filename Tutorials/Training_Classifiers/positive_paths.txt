@@ -1,8 +1,8 @@
-Data/Positive_Samples/pos1.jpg
-Data/Positive_Samples/pos2.jpg
-Data/Positive_Samples/pos3.jpg
-Data/Positive_Samples/pos4.jpg
-Data/Positive_Samples/pos5.jpg
-Data/Positive_Samples/pos6.jpg
-Data/Positive_Samples/pos7.jpg
-Data/Positive_Samples/pos8.jpg
+Data/Positive_Images/pos1.jpg
+Data/Positive_Images/pos2.jpg
+Data/Positive_Images/pos3.jpg
+Data/Positive_Images/pos4.jpg
+Data/Positive_Images/pos5.jpg
+Data/Positive_Images/pos6.jpg
+Data/Positive_Images/pos7.jpg
+Data/Positive_Images/pos8.jpg
