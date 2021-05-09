@@ -79,7 +79,7 @@ The tool will open a new window and allow the user to drag-select boxes around e
 After running, the tool will create a file in the location specified via the --annotations flag. This file will contain the file paths to each image, followed by the x and y coordinates for the top-left corner of the bounding box, and the width and height of the bounding box created. 
 
 In this tutorial, the command run is: 
-> `opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Samples/`
+> `opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Images/`
 
 ## Creating Positive Samples
 Once bounding boxes have been identified for each positive sample, the opencv_createsamples tool is used to pull samples from within these boxes. 
