@@ -12,6 +12,8 @@ This tutorial covers the steps necessary to train samples, but does not describe
 
 Note that in this tutorial, "images" refers to the image files themselves, and "samples" will refer to the objects within those images.
 
+Display settings for all images in this tutorial were the same as listed in `mercy-detector/Documentation/overwatch_settings.md`
+
 ## Necessary Tools
  OpenCV provides command-line tools which can train a classifier if given the requisite data. The three tools covered in this tutorial are:
 - opencv_annotation
