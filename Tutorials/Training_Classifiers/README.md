@@ -8,7 +8,7 @@ Object detection can be achieved using feature-based cascade classifiers, as dem
 This tutorial will cover the first step, and the tutorial "Object_Detection_Using_Cascade_Classifiers" will cover the second.
 
 ## References
-This tutorial covers the steps necessary to train samples, but does not describe the reasoning behind the process itself. A brief description can be found in the [OpenCV docs for object detection](https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html), and further detail can be found in the Viola & Jones paper mentioned above. 
+This tutorial covers the steps necessary to train samples, but does not describe the reasoning behind the process itself. A brief description can be found in the [OpenCV docs for object detection](https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html), which this tutorial is based on, and further detail can be found in the Viola & Jones paper mentioned above. 
 
 Note that in this tutorial, "images" refers to the image files themselves, and "samples" will refer to the objects within those images.
 
@@ -98,4 +98,32 @@ The opencv_createsamples tool will require the following arguments:
 - -h <sample_height>
   - This will specify the height in pixels that samples should be resized towards
 
+In this tutorial, the command that was run was:
+
+>// TODO: ADD COMMAND HERE
+
 After running, an output file will be created in the path specified by the -vec argument containing vector objects of the specified width and height for each positive sample. This file can be used in the next step.
+
+## Training the Cascade Classifier
+The final step of the training process is to use the positive and negative samples to train a boosted cascade of classifiers. This is done using the opencv_traincascade tool. The tool offers many different flags that can be used to tune the training process, all of which can be found [here](https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html). The following arguments are necessary, and used in this tutorial:
+
+- -data <cascade_directory_name>
+  - This specifies the output directory for the final cascade.xml file
+  - **Note!** This directory must be created before running the command
+- -vec <positive_vector_file>
+  - This is the vector file created using opencv_createsamples in the previous step
+- -bg <negative_images_paths_text_file>
+- -numPos <number_of_positive_samples>
+- -numNeg <number_of_negative_samples>
+- -numStages <number_of_cascade_stages>
+  - The best number of stages to use will vary on a case-by-case basis. Experimentation and tuning is required to determine how many stages to use. 
+- -w <sample_width>
+  - Must match the width specified in the previous step
+- -h <sample_height>
+  - Must match the height specified in the previous step
+
+In this tutorial, the command that was run was:
+
+>// TODO: ADD COMMAND HERE
+
+After running, the folder specified by the -data flag will be populated with files. The "cascade.xml" file is necessary for object detection, and all others can be deleted (they are used in case training fails).
