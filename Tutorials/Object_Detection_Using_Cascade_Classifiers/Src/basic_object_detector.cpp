@@ -1,11 +1,14 @@
- // ----------------------------------basic_object_detector.cpp------------------------------------
- // Author: David Kang, with code sourced from Ana Huamán via opencv.org
- // Last modified: 05/07/21
- // ------------------------------------------------------------------------------------------------
- // Purpose: This class modifies the source code found in the OpenCV Object Detection Tutorial
- // (https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html) to use a custom input 
- // image and a custom trained classifier. 
- // ------------------------------------------------------------------------------------------------
+// ----------------------------------basic_object_detector.cpp------------------------------------
+// Author: David Kang, with code sourced from Ana Huamán via opencv.org
+// Last modified: 05/09/21
+// -----------------------------------------------------------------------------------------------
+// Purpose: This class modifies the source code found in the OpenCV Object Detection Tutorial
+// (https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html) to use a custom trained 
+// classifier. 
+// -----------------------------------------------------------------------------------------------
+// Assumptions:
+//     - 
+
 
 #include "opencv2/objdetect.hpp"
 #include "opencv2/highgui.hpp"
@@ -16,32 +19,25 @@
 using namespace std;
 using namespace cv;
 
-void detectAndDisplay(CascadeClassifier& face_cascade, CascadeClassifier& eyes_cascade, Mat frame);
+void detectAndDisplay(CascadeClassifier& mercy_cascade, Mat frame);
 
 int main(int argc, const char** argv) {
-    CascadeClassifier face_cascade;
-    CascadeClassifier eyes_cascade;
+    CascadeClassifier mercy_cascade;
 
     CommandLineParser parser(argc, argv,
-        "{help h||}"
-        "{face_cascade|data/haarcascades/haarcascade_frontalface_alt.xml|Path to face cascade.}"
-        "{eyes_cascade|data/haarcascades/haarcascade_eye_tree_eyeglasses.xml|Path to eyes cascade.}"
-        "{camera|0|Camera device number.}");
-    parser.about("\nThis program demonstrates using the cv::CascadeClassifier class to detect objects (Face + eyes) in a video stream.\n"
-        "You can use Haar or LBP features.\n\n");
+        "{mercy_cascade|../Data/Input/mercy_staff_classifier.xml|Path to mercy cascade classifier.}"
+        );
+    
+    parser.about("\nThis program demonstrates using the cv::CascadeClassifier class to detect"
+                 " (Mery's staff) in screenshots of Overatch gameplay.\n"
+                 "You can use Haar or LBP features.\n\n");
     parser.printMessage();
 
-    String face_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
-    String eyes_cascade_name = samples::findFile(parser.get<String>("eyes_cascade"));
+    String mercy_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
     
-    //-- 1. Load the cascades
-    if (!face_cascade.load(face_cascade_name)) {
-        cout << "--(!)Error loading face cascade\n";
-        return -1;
-    }
-
-    if (!eyes_cascade.load(eyes_cascade_name)) {
-        cout << "--(!)Error loading eyes cascade\n";
+    //-- 1. Load the cascade for mercy's staff
+    if (!mercy_cascade.load(mercy_cascade_name)) {
+        cout << "--(!)Error loading mercy cascade\n";
         return -1;
     }
 
@@ -63,7 +59,7 @@ int main(int argc, const char** argv) {
         }
 
         //-- 3. Apply the classifier to the frame
-        detectAndDisplay(face_cascade, eyes_cascade, frame);
+        detectAndDisplay(face_cascade, frame);
         if (waitKey(10) == 27) {
             break; // escape
         }
