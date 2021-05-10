@@ -30,7 +30,7 @@ template should not be compared with the input image.
 
 ## template_matching.java
 
-This program is based off of this [OpenCV Tutorial] (https://docs.opencv.org/3.4/de/da9/tutorial_template_matching.html)
+This program is based off of this [OpenCV Tutorial](https://docs.opencv.org/3.4/de/da9/tutorial_template_matching.html)
 for template matching.
 The current state of this program takes a source image of a screenshot of a Mercy player 
 gameplay and two template images to map the resulting "match" of where the template image might 
