@@ -67,8 +67,6 @@ void MatchingMethod(int, void*) {
     imshow(image_window, img_display);
     imshow(result_window, result1);
 
-    waitKey(0);
-
     //normalize(result2, result2, 0, 1, NORM_MINMAX, -1, Mat());
     double minVal2; double maxVal2; Point minLoc2; Point maxLoc2;
     Point matchLoc2;
