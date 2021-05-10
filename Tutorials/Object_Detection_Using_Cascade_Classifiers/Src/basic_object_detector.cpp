@@ -23,23 +23,28 @@ void detectAndDisplay(CascadeClassifier& mercy_cascade, Mat frame);
 
 int main(int argc, const char** argv) {
     CascadeClassifier mercy_cascade;
+    String test_images_file_paths;
 
     CommandLineParser parser(argc, argv,
         "{mercy_cascade|../Data/Input/mercy_staff_classifier.xml|Path to mercy cascade classifier.}"
         );
-    
     parser.about("\nThis program demonstrates using the cv::CascadeClassifier class to detect"
                  " (Mery's staff) in screenshots of Overatch gameplay.\n"
                  "You can use Haar or LBP features.\n\n");
     parser.printMessage();
 
-    String mercy_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
-    
     //-- 1. Load the cascade for mercy's staff
+    String mercy_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
     if (!mercy_cascade.load(mercy_cascade_name)) {
         cout << "--(!)Error loading mercy cascade\n";
         return -1;
     }
+
+    
+
+
+
+
 
     int camera_device = parser.get<int>("camera");
     VideoCapture capture;
@@ -59,7 +64,7 @@ int main(int argc, const char** argv) {
         }
 
         //-- 3. Apply the classifier to the frame
-        detectAndDisplay(face_cascade, frame);
+        detectAndDisplay(mercy_cascade, frame);
         if (waitKey(10) == 27) {
             break; // escape
         }
