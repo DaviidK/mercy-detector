@@ -95,14 +95,10 @@ The opencv_createsamples tool will require the following arguments:
   - This is the file created after using opencv_annotation in the prior step
 - -vec <path_to_output_vector_file>
   - This is the output file which will contain all identified positive samples
-- -w <sample_width>
-  - This will specify the width in pixels that samples should be resized towards
-- -h <sample_height>
-  - This will specify the height in pixels that samples should be resized towards
 
 In this tutorial, the command that was run was:
 
->// TODO: ADD COMMAND HERE
+> opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.vec
 
 After running, an output file will be created in the path specified by the -vec argument containing vector objects of the specified width and height for each positive sample. This file can be used in the next step.
 
@@ -119,13 +115,9 @@ The final step of the training process is to use the positive and negative sampl
 - -numNeg <number_of_negative_samples>
 - -numStages <number_of_cascade_stages>
   - The best number of stages to use will vary on a case-by-case basis. Experimentation and tuning is required to determine how many stages to use. 
-- -w <sample_width>
-  - Must match the width specified in the previous step
-- -h <sample_height>
-  - Must match the height specified in the previous step
 
 In this tutorial, the command that was run was:
 
->// TODO: ADD COMMAND HERE
+> opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 20 -numNeg 60 -numStages 20
 
 After running, the folder specified by the -data flag will be populated with files. The "cascade.xml" file is necessary for object detection, and all others can be deleted (they are used in case training fails).
