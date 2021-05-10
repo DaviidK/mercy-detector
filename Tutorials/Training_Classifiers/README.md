@@ -25,8 +25,7 @@ Display settings for all images in this tutorial were the same as listed in `mer
 
 ### **Important Note!**
 Both opencv_createsamples and opencv_traincascade were not ported to 4.X versions of the application. Thus, to use them you will need to find the corresponding .exe and .dll from a 3.X version of OpenCV.<br>
-For the purposes of this tutorial, I downloaded OpenCV version 3.4.14 from [the release page here](https://opencv.org/releases/ "OpenCV Release Versions"). The necessary files were found in:
->`{Download_Folder}/opencv/build/x64/vc15/bin}`
+For the purposes of this tutorial, I downloaded OpenCV version 3.4.14 from [the release page here](https://opencv.org/releases/ "OpenCV Release Versions"). The necessary files were found in: `{Download_Folder}/opencv/build/x64/vc15/bin}`
 
 I copied the following files into my local build folder under `{Local_OpenCV_Directory}/x64/vc16/bin/`:
 - opencv_createsamples.exe
@@ -79,7 +78,7 @@ The tool will open a new window and allow the user to drag-select boxes around e
 After running, the tool will create a file in the location specified via the --annotations flag. This file will contain the file paths to each image, followed by the x and y coordinates for the top-left corner of the bounding box, and the width and height of the bounding box created. 
 
 In this tutorial, the command run is: 
-> `opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Images/`
+> opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Images/
 
 ## Creating Positive Samples
 Once bounding boxes have been identified for each positive sample, the opencv_createsamples tool is used to pull samples from within these boxes. 
