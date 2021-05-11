@@ -11,11 +11,12 @@ Mat removeBackground(Mat grabcutImg, Mat result) {
 			pixelBVal = grabcutImg.at<Vec3b>(r, c)[0];
 			pixelGVal = grabcutImg.at<Vec3b>(r, c)[1];
 			pixelRVal = grabcutImg.at<Vec3b>(r, c)[2];
+			//std::cout << "R: " << pixelRVal << "G: " << pixelGVal << "B: " << pixelBVal;
 			if (pixelBVal == 0 && pixelGVal == 0 && pixelRVal == 0) {
 				result.at<uchar>(r, c) = 0;
 			}
 			else {
-				result.at<uchar>(r, c) = 0;
+				result.at<uchar>(r, c) = 255;
 			}
 		}
 	}
