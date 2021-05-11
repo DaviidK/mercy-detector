@@ -1,3 +1,9 @@
+/*
+ * Template Matching 
+ * This program uses the opencv library's template matching function to find a location in 
+ * an image where a template image is most likely located.
+ */
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
@@ -10,12 +16,27 @@ using namespace cv;
 Mat img; Mat templ1; Mat templ2; Mat result1; Mat result2;
 const char* image_window = "Source Image";
 const char* result_window = "Result window";
-const char* image_name = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg";
+
+// Source image
+const char* image_name = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg"; 
+// Template 1 - True template (does exist in source)
 const char* template_name1 = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
+// Template 2 - False template (does not exist in source)
 const char* template_name2 = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
+
 int match_method;
 int max_Trackbar = 5;
 
+/*
+ * MatchingMethod()
+ * Calls the matchTemplate() method for both templates and draws a rectangle on the shown window
+ * of where the highest score for the matching was. The black rectangle shows the true sample match
+ * while the blue rectangle shows the false sample match.
+ * 
+ * pre: global Mat variables must be of valid images 
+ * post: displays the source image and a rectangle is drawn on of where the template had the highest 
+ *       match. also prints out the scores of the matches for both templates.
+ */
 void MatchingMethod(int, void*);
 
 int main(int argc, char** argv) {
@@ -41,15 +62,18 @@ int main(int argc, char** argv) {
 
 void MatchingMethod(int, void*) {
     Mat img_display;
-     img.copyTo(img_display);
-    int result_cols = img.cols; // - templ.cols + 1
+    img.copyTo(img_display);
+                                // Removed the following commented code in order to try to make the 
+                                // result the same size as source but it didn't work.
+    int result_cols = img.cols; // - templ.cols + 1 
     int result_rows = img.rows; // - templ.rows + 1
     result1.create(result_rows, result_cols, COLOR_BGR2GRAY); // , CV_32FC1
     result2.create(result_rows, result_cols, COLOR_BGR2GRAY);
     matchTemplate(img, templ1, result1, match_method);
     matchTemplate(img, templ2, result2, match_method);
 
-    //normalize(result1, result1, 0, 1, NORM_MINMAX, -1, Mat());
+    // Commented out so the scores can be compared between different templates
+    // normalize(result1, result1, 0, 1, NORM_MINMAX, -1, Mat());
     double minVal1; double maxVal1; Point minLoc1; Point maxLoc1;
     Point matchLoc1;
     minMaxLoc(result1, &minVal1, &maxVal1, &minLoc1, &maxLoc1, Mat());   
@@ -67,7 +91,8 @@ void MatchingMethod(int, void*) {
     imshow(image_window, img_display);
     imshow(result_window, result1);
 
-    //normalize(result2, result2, 0, 1, NORM_MINMAX, -1, Mat());
+    // Commented out so the scores can be compared between different templates
+    // normalize(result2, result2, 0, 1, NORM_MINMAX, -1, Mat());
     double minVal2; double maxVal2; Point minLoc2; Point maxLoc2;
     Point matchLoc2;
     minMaxLoc(result2, &minVal2, &maxVal2, &minLoc2, &maxLoc2, Mat());
