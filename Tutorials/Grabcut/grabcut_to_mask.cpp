@@ -11,7 +11,6 @@ Mat removeBackground(Mat grabcutImg, Mat result) {
 			pixelBVal = grabcutImg.at<Vec3b>(r, c)[0];
 			pixelGVal = grabcutImg.at<Vec3b>(r, c)[1];
 			pixelRVal = grabcutImg.at<Vec3b>(r, c)[2];
-			//std::cout << "R: " << pixelRVal << "G: " << pixelGVal << "B: " << pixelBVal;
 			if (pixelBVal == 0 && pixelGVal == 0 && pixelRVal == 0) {
 				result.at<uchar>(r, c) = 0;
 			}
@@ -29,9 +28,11 @@ int main(int argc, char* argv[]) {
 	waitKey(0);
 
 	Mat temp = Mat(grabcutImg.rows, grabcutImg.cols, CV_8U);
-	Mat result = removeBackground(grabcutImg, temp);
-	imshow("Show", result);
-
+	imshow("Temp", temp);
 	waitKey(0);
 
+	Mat result = removeBackground(grabcutImg, temp);
+	imshow("Show", result);
+	imwrite("mask_grabcut_mercy.jpg", result);
+	waitKey(0);
 }
