@@ -20,7 +20,8 @@
 using namespace std;
 using namespace cv;
 
-static const string TEST_IMAGES_FILE_PATHS = "test_image_file_paths.txt";
+static const string TEST_IMAGES_FILE_PATHS = 
+"Tutorials/Object_Detection_Using_Cascade_Classifiers/Src/test_image_file_paths.txt";
 
 void detectAndDisplay(CascadeClassifier& mercy_cascade, Mat frame);
 
@@ -29,7 +30,7 @@ int main(int argc, const char** argv) {
     String test_images_file_paths;
 
     CommandLineParser parser(argc, argv,
-        "{mercy_cascade|../Data/Input/mercy_staff_classifier.xml|Path to mercy cascade classifier.}"
+        "{mercy_cascade|Tutorials/Object_Detection_Using_Cascade_Classifiers/Data/Input/mercy_staff_classifier.xml|Path to mercy cascade classifier.}"
         );
     parser.about("\nThis program demonstrates using the cv::CascadeClassifier class to detect"
                  " (Mery's staff) in screenshots of Overatch gameplay.\n"
@@ -42,6 +43,8 @@ int main(int argc, const char** argv) {
         cout << "--(!)Error loading mercy cascade\n";
         return -1;
     }
+
+
 
     ifstream file(TEST_IMAGES_FILE_PATHS);
     string line;
@@ -59,6 +62,7 @@ int main(int argc, const char** argv) {
         if (waitKey(10) == 27) {
             break; // escape
         }
+        waitKey();
     }
     return 0;
 }
