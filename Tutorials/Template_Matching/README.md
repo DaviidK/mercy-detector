@@ -28,7 +28,7 @@ are six template matching methods available, as listed below:
 There is also an optional parameter to include a mask which specifies which regions of the 
 template should not be compared with the input image.
 
-## template_matching.java
+## template_matching.cpp
 
 This program is based off of this [OpenCV Tutorial](https://docs.opencv.org/3.4/de/da9/tutorial_template_matching.html)
 for template matching.
