@@ -14,10 +14,13 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
+#include <fstream>
 #include <iostream>
 
 using namespace std;
 using namespace cv;
+
+static const string TEST_IMAGES_FILE_PATHS = "test_image_file_paths.txt";
 
 void detectAndDisplay(CascadeClassifier& mercy_cascade, Mat frame);
 
@@ -34,30 +37,18 @@ int main(int argc, const char** argv) {
     parser.printMessage();
 
     //-- 1. Load the cascade for mercy's staff
-    String mercy_cascade_name = samples::findFile(parser.get<String>("face_cascade"));
+    String mercy_cascade_name = samples::findFile(parser.get<String>("mercy_cascade"));
     if (!mercy_cascade.load(mercy_cascade_name)) {
         cout << "--(!)Error loading mercy cascade\n";
         return -1;
     }
 
-    
+    ifstream file(TEST_IMAGES_FILE_PATHS);
+    string line;
 
+    while (getline(file, line)) {
+        Mat frame = imread(line);
 
-
-
-
-    int camera_device = parser.get<int>("camera");
-    VideoCapture capture;
-
-    //-- 2. Read the video stream
-    capture.open(camera_device);
-    if (!capture.isOpened()) {
-        cout << "--(!)Error opening video capture\n";
-        return -1;
-    }
-
-    Mat frame;
-    while (capture.read(frame)) {
         if (frame.empty()) {
             cout << "--(!) No captured frame -- Break!\n";
             break;
