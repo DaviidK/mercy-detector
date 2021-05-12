@@ -15,7 +15,7 @@ const char* mask_name = "Detection_Algorithm/Data/Static_Test_Im/mask_grabcut_me
 
 void matchTemplates(Mat src, Mat templ1, Mat templ2, Mat mask, int method);
 
-int main1(int argc, char** argv) {
+int main(int argc, char** argv) {
 	Mat srcImg = imread(image_name, IMREAD_COLOR);
 	Mat templImg1 = imread(template_name1, IMREAD_COLOR);
 	Mat templImg2 = imread(template_name2, IMREAD_COLOR);

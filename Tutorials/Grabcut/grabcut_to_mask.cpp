@@ -11,9 +11,7 @@ Mat removeBackground(Mat grabcutImg, Mat result) {
 			pixelBVal = grabcutImg.at<Vec3b>(r, c)[0];
 			pixelGVal = grabcutImg.at<Vec3b>(r, c)[1];
 			pixelRVal = grabcutImg.at<Vec3b>(r, c)[2];
-			if (c == 0) {
-				std::cout << "r: " << pixelRVal << "g: " << pixelGVal << "b: " << pixelBVal << std::endl;
-			}
+			
 			if (pixelBVal == 0 && pixelGVal == 0 && pixelRVal == 0) {
 				result.at<uchar>(r, c) = 0;
 			}
@@ -26,16 +24,25 @@ Mat removeBackground(Mat grabcutImg, Mat result) {
 }
 
 int main(int argc, char* argv[]) {
-	Mat grabcutImg = imread("Detection_Algorithm/Data/Static_Test_Im/template_grabcut_mercy.jpg");
+	Mat grabcutImg = imread("Detection_Algorithm/Data/Static_Test_Im/grabcutresult.jpg");
 	imshow("Grab", grabcutImg);
 	waitKey(0);
+	Rect myRect(992, 551, 600, 491);
+	Mat cropped = grabcutImg(myRect);
+	imshow("Grab", cropped);
+	waitKey(0);
 
-	Mat temp = Mat(grabcutImg.rows, grabcutImg.cols, CV_8U);
+	Mat temp = Mat(cropped.rows, cropped.cols, CV_8U);
 	imshow("Temp", temp);
 	waitKey(0);
 
-	Mat result = removeBackground(grabcutImg, temp);
+	Mat result = removeBackground(cropped, temp);
 	imshow("Show", result);
 	imwrite("mask_grabcut_mercy.jpg", result);
 	waitKey(0);
+	return 1;
 }
+// x: 987
+// y: 548
+// w: 608
+// h: 495

@@ -118,6 +118,7 @@ void GCApplication::setRectInMask() {
     rect.y = max(0, rect.y);
     rect.width = min(rect.width, image->cols - rect.x);
     rect.height = min(rect.height, image->rows - rect.y);
+    cout << "x: " << rect.x << "y: " << rect.y << "w: " << rect.width << "h: " << rect.height << endl;
     (mask(rect)).setTo(Scalar(GC_PR_FGD));
 }
 void GCApplication::setLblsInMask(int flags, Point p, bool isPr) {
