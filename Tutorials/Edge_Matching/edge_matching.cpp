@@ -10,13 +10,11 @@
 using namespace cv;
 using namespace std;
 
-
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/light.jpg";
 Mat src_gray;
 int thresh = 100;
 RNG rng(12345);
 const char* source_window = "Source";
-
 
 // Helper to display image with a scale factor parameter for resizing
 void displayImage(Mat image, String windowName, int scaleFactor) {
@@ -24,7 +22,6 @@ void displayImage(Mat image, String windowName, int scaleFactor) {
     resizeWindow(windowName, image.cols / scaleFactor, image.rows / scaleFactor);
     imshow(windowName, image);
 }
-
 
 void convex_thresh_callback(int, void*)
 {
@@ -41,7 +38,28 @@ void convex_thresh_callback(int, void*)
     for (size_t i = 0; i < contours.size(); i++)
     {
         Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        //drawContours(drawing, contours, (int)i, color);
+        drawContours(drawing, hull, (int)i, color, 2);
+    }
+    displayImage(drawing, source_window, 1);
+}
+
+
+void convex_contour_thresh_callback(int, void*)
+{
+    Mat canny_output;
+    Canny(src_gray, canny_output, thresh, thresh * 2);
+    vector<vector<Point> > contours;
+    findContours(canny_output, contours, RETR_TREE, CHAIN_APPROX_SIMPLE);
+    vector<vector<Point> >hull(contours.size());
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        convexHull(contours[i], hull[i]);
+    }
+    Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        drawContours(drawing, contours, (int)i, color);
         drawContours(drawing, hull, (int)i, color);
     }
     displayImage(drawing, source_window, 1);
@@ -83,10 +101,14 @@ int main(int argc, char** argv)
     contour_thresh_callback(0, 0);
     waitKey();
 
+    createTrackbar("Canny thresh:", source_window, &thresh, max_thresh, convex_contour_thresh_callback);
+    convex_contour_thresh_callback(0, 0);
+    waitKey();
+
+
     createTrackbar("Canny thresh:", source_window, &thresh, max_thresh, convex_thresh_callback);
     convex_thresh_callback(0, 0);
     waitKey();
-    destroyWindow(source_window);
     
     return 0;
 }
