@@ -45,7 +45,7 @@ using namespace cv;
 // For now, inputs are simply constants that must be changed
 // TODO: Convert to command line arguments
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Wand/idle.mp4";
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking2.mp4";
 static const string SAVE_DIRECTORY_PATH = "Detection_Algorithm/Data/Output/";
 
 static const string IMAGE_FILE_EXTENSION = ".png";
@@ -207,6 +207,8 @@ string removePath(string path)
 
 /***************************************************************************************************
  * Capitalize First
+ *
+ * //Todo: Make this also capitalize Names_With_Underscores
  *
  * Capitalizes the first letter in a string. Fails if the first index of the provided string is
  * below ASCII character 96, which is where lowercase letters start. In this case, the original
