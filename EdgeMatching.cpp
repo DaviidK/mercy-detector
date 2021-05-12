@@ -10,6 +10,7 @@
 using namespace cv;
 using namespace std;
 
+const String INPUT_FILE = "light.jpg";
 Mat src_gray;
 int thresh = 100;
 RNG rng(12345);
@@ -37,7 +38,7 @@ void convex_thresh_callback(int, void*)
     for (size_t i = 0; i < contours.size(); i++)
     {
         Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        drawContours(drawing, contours, (int)i, color);
+        //drawContours(drawing, contours, (int)i, color);
         drawContours(drawing, hull, (int)i, color);
     }
     displayImage(drawing, source_window, 1);
@@ -87,7 +88,7 @@ int distance_2(const vector<Point>& a, const vector<Point>& b)
     }
     return maxDistAB;
 }
-
+ 
 double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
 {
     int maxDistAB = distance_2(a, b);
@@ -104,7 +105,7 @@ double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
 
 int main(int argc, char** argv)
 {
-    Mat src = imread("busy.jpg");
+    Mat src = imread(INPUT_FILE);
     if (src.empty())
     {
         cout << "Could not open or find the image!\n" << endl;
