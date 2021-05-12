@@ -59,6 +59,49 @@ void contour_thresh_callback(int, void*)
     displayImage(drawing, source_window, 1);
 }
 
+
+
+// internal helper for HAUSDORFF DISTANCE
+int distance_2(const vector<Point>& a, const vector<Point>& b)
+{
+    int maxDistAB = 0;
+    for (size_t i = 0; i < a.size(); i++)
+    {
+        int minB = 1000000;
+        for (size_t j = 0; j < b.size(); j++)
+        {
+            int dx = (a[i].x - b[j].x);
+            int dy = (a[i].y - b[j].y);
+            int tmpDist = dx * dx + dy * dy;
+
+            if (tmpDist < minB)
+            {
+                minB = tmpDist;
+            }
+            if (tmpDist == 0)
+            {
+                break; // can't get better than equal.
+            }
+        }
+        maxDistAB += minB;
+    }
+    return maxDistAB;
+}
+
+double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
+{
+    int maxDistAB = distance_2(a, b);
+    int maxDistBA = distance_2(b, a);
+    int maxDist = max(maxDistAB, maxDistBA);
+    double result = sqrt((double)maxDist);
+
+    cout << "Hausdorff distance = " << result << endl;
+
+    return result;
+}
+
+
+
 int main(int argc, char** argv)
 {
     Mat src = imread("busy.jpg");
