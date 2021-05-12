@@ -10,11 +10,13 @@
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "light.jpg";
+
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
 Mat src_gray;
 int thresh = 100;
 RNG rng(12345);
 const char* source_window = "Source";
+
 
 // Helper to display image with a scale factor parameter for resizing
 void displayImage(Mat image, String windowName, int scaleFactor) {
@@ -22,6 +24,7 @@ void displayImage(Mat image, String windowName, int scaleFactor) {
     resizeWindow(windowName, image.cols / scaleFactor, image.rows / scaleFactor);
     imshow(windowName, image);
 }
+
 
 void convex_thresh_callback(int, void*)
 {
@@ -44,6 +47,7 @@ void convex_thresh_callback(int, void*)
     displayImage(drawing, source_window, 1);
 }
 
+
 void contour_thresh_callback(int, void*)
 {
     Mat canny_output;
@@ -59,48 +63,6 @@ void contour_thresh_callback(int, void*)
     }
     displayImage(drawing, source_window, 1);
 }
-
-
-
-// internal helper for HAUSDORFF DISTANCE
-int distance_2(const vector<Point>& a, const vector<Point>& b)
-{
-    int maxDistAB = 0;
-    for (size_t i = 0; i < a.size(); i++)
-    {
-        int minB = 1000000;
-        for (size_t j = 0; j < b.size(); j++)
-        {
-            int dx = (a[i].x - b[j].x);
-            int dy = (a[i].y - b[j].y);
-            int tmpDist = dx * dx + dy * dy;
-
-            if (tmpDist < minB)
-            {
-                minB = tmpDist;
-            }
-            if (tmpDist == 0)
-            {
-                break; // can't get better than equal.
-            }
-        }
-        maxDistAB += minB;
-    }
-    return maxDistAB;
-}
- 
-double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
-{
-    int maxDistAB = distance_2(a, b);
-    int maxDistBA = distance_2(b, a);
-    int maxDist = max(maxDistAB, maxDistBA);
-    double result = sqrt((double)maxDist);
-
-    cout << "Hausdorff distance = " << result << endl;
-
-    return result;
-}
-
 
 
 int main(int argc, char** argv)
