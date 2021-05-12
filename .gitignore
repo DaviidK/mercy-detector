@@ -41,5 +41,14 @@ x64/
 *.vs/
 */enc_temp_folder/
 
+# Visual Studio Build Files
+*.exe.recipe
+*.log
+*.tlog
+*.lastbuildstate
+unsuccessfulbuild
+*.idb
+*.pdb
+
 # MacOS Specific Files
 *.DS_Store
