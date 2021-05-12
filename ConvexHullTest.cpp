@@ -1,5 +1,5 @@
 // Tutorials for findContours() and convexHull()
-// press ESC to move to the next test method window
+// press any key to move to the next test method window
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
