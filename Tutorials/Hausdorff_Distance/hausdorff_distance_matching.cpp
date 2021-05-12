@@ -9,7 +9,8 @@
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/light.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/green.jpg";
+//const String INPUT_FILE = "C:/Users/Irene/source/repos/mercy-detector/Tutorials/Hausdorff_Distance/default_staff_snip.png";
 Mat src_gray;
 int thresh = 100;
 RNG rng(12345);
@@ -56,7 +57,22 @@ void convex_contour_thresh_callback(int, void*)
     {
         Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
         //drawContours(drawing, contours, (int)i, color);
-        drawContours(drawing, hull, (int)i, color);
+        bool quadrant4 = true;
+        for (int p = 0; p < contours[i].size(); p++) {
+            if (contours[i][p].x < src_gray.cols / 2) {
+                quadrant4 = false;
+                break;
+            }
+            if (contours[i][p].y < src_gray.rows / 2) {
+                quadrant4 = false;
+                break;
+            }
+        }
+
+        if (quadrant4) {
+            drawContours(drawing, hull, (int)i, color, 2);
+        }
+        
     }
     displayImage(drawing, source_window, 1);
 }
@@ -111,7 +127,7 @@ int main(int argc, char** argv)
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
     blur(src_gray, src_gray, Size(3, 3));
     namedWindow(source_window);
-    displayImage(src, source_window, 2);
+    displayImage(src, source_window, 1);
     const int max_thresh = 255;
     createTrackbar("Canny thresh:", source_window, &thresh, max_thresh, convex_contour_thresh_callback);
     convex_contour_thresh_callback(0, 0);
