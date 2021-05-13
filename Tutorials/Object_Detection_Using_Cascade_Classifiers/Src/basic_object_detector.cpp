@@ -1,5 +1,5 @@
 // ----------------------------------basic_object_detector.cpp------------------------------------
-// Author: David Kang, with code sourced from Ana Huamán via opencv.org
+// Author: David Kang, with sample code sourced from Ana Huamán via opencv.org
 // Last modified: 05/12/21
 // -----------------------------------------------------------------------------------------------
 // Purpose: This class modifies the source code found in the OpenCV Object Detection Tutorial
@@ -8,7 +8,8 @@
 // -----------------------------------------------------------------------------------------------
 // Assumptions:
 //   - A trained cascade classifier will exist, and will be referenced by MERCY_CLASSIFIER_LOCATION
-//   - A text file o
+//   - A text file containing relative filepaths to each image to be detected is stored in 
+//     TEST_IMAGES_FILE_PATHS 
 
 
 
