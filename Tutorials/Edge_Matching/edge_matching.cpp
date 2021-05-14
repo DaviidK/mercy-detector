@@ -10,7 +10,7 @@
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/light.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg";
 Mat src_gray;
 int thresh = 100;
 RNG rng(12345);
