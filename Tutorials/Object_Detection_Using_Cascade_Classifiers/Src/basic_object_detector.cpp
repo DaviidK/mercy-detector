@@ -1,5 +1,5 @@
 // ----------------------------------basic_object_detector.cpp------------------------------------
-// Author: David Kang, with sample code sourced from Ana Huamán via opencv.org
+// Author: David Kang, with sample code sourced from Ana Huamï¿½n via opencv.org
 // Last modified: 05/12/21
 // -----------------------------------------------------------------------------------------------
 // Purpose: This class modifies the source code found in the OpenCV Object Detection Tutorial
@@ -24,9 +24,13 @@ using namespace std;
 using namespace cv;
 
 static const string MERCY_CLASSIFIER_LOCATION =
-      "Tutorials/Object_Detection_Using_Cascade_Classifiers/Data/Input/mercy_staff_classifier.xml";
+      "Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/mercy_staff_classifier.xml";
+
+// TODO: Run a bash/batch command within this program to write all filepaths to
+//       this text file, allowing for new files to be added without updating
+//       the text file itself.
 static const string TEST_IMAGES_FILE_PATHS = 
-      "Tutorials/Object_Detection_Using_Cascade_Classifiers/Src/test_image_file_paths.txt";
+      "Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/test_image_file_paths.txt";
 
 void detectAndDisplay(CascadeClassifier& mercy_cascade, Mat image);
 

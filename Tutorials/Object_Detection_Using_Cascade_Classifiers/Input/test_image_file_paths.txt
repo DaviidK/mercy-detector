@@ -1,7 +1,7 @@
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image01.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image02.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image03.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image04.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image05.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image06.jpg
-Tutorials/Object_Detection_Using_Cascade_Classifiers/Input/Test_Images/image07.jpg
+../Input/Test_Images/image01.jpg
+../Input/Test_Images/image02.jpg
+../Input/Test_Images/image03.jpg
+../Input/Test_Images/image04.jpg
+../Input/Test_Images/image05.jpg
+../Input/Test_Images/image06.jpg
+../Input/Test_Images/image07.jpg
