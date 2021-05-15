@@ -27,7 +27,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
-#include <template_matching.cpp>
+#include "../Tutorials/Template_Matching/template_matching.h"
 
 using namespace std;
 using namespace cv;
@@ -37,7 +37,9 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking2.mp4";
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Wand/walking_damage_boosting.mp4";
+static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
+static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
 
 void doProcessing(long& start_processing, long& end_processing, Mat& frame);
 
@@ -129,7 +131,7 @@ int main()
  **************************************************************************************************/
 void processFrame(Mat& frame)
 {
-    identifyHero(frame);
+    identifyHero(frame, template_mercy, template_lucio);
 }
 
 /***************************************************************************************************

@@ -1,8 +1,8 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <iostream>
+/*
+ * This program aims to simply print 
+ */
+
+#include "template_matching.h"
 
 using namespace std;
 using namespace cv;
@@ -10,11 +10,11 @@ using namespace cv;
 const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
-const char* sample_mercy_frame = "Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle/frame_1.png";
-const char* sample_lucio_frame = "Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle/frame_311.png";
-const int MATCH_METHOD = 0; // can be any value between 0 and 6.
+//static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
+//static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
+const int MATCH_METHOD = 3; // can be any value between 0 and 5.
 
-void identifyHero(Mat& frame) {
+void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	Mat templ; string filename;
 	Mat result; Mat result_templ;
 	int counter = 0; int result_hero; 
@@ -22,7 +22,14 @@ void identifyHero(Mat& frame) {
 
 	while (counter < NUM_HEROES) {
 		filename = templ_file_prefix + heroes[counter] ;
-		templ = imread(filename + ".png", IMREAD_COLOR);
+		//templ = imread(filename + ".png", IMREAD_COLOR);
+
+		if (counter == 0) {
+			templ = template_mercy;
+		}
+		else {
+			templ = template_lucio;
+		}
 		matchTemplate(frame, templ, result, MATCH_METHOD);
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
@@ -52,11 +59,18 @@ void identifyHero(Mat& frame) {
 	frame.copyTo(display_img);
 	rectangle(display_img, matchLoc, Point(matchLoc.x + result_templ.cols, matchLoc.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
 	imshow("result", display_img);
-	cout << heroes[result_hero];
+	cout << heroes[result_hero] << endl;
 }
 
+// Test method to attempt identifying a sample frame 
+/*
 int main(int argc, char** argv) {
+    const char* sample_mercy_frame = "Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test/frame_280.png";
+    const char* sample_lucio_frame = "Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1/frame_466.png";
 	Mat frame = imread(sample_mercy_frame, IMREAD_COLOR);
 	identifyHero(frame);
 	waitKey(0);
-}
+	frame = imread(sample_lucio_frame, IMREAD_COLOR);
+	identifyHero(frame);
+	waitKey(0);
+}*/
