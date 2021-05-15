@@ -27,6 +27,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include <template_matching.cpp>
 
 using namespace std;
 using namespace cv;
@@ -128,14 +129,7 @@ int main()
  **************************************************************************************************/
 void processFrame(Mat& frame)
 {
-    for(int i = 0; i < frame.rows; i++)
-    {
-        for(int j = 0; j < frame.cols; j++)
-        {
-
-
-        }
-    }
+    identifyHero(frame);
 }
 
 /***************************************************************************************************
