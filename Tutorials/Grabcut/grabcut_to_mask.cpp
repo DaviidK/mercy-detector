@@ -1,3 +1,8 @@
+/*
+ * Convert a grabcutt-ed image to a greyscale mask where pixels with 0 values represent 
+ * areas to ignore during the template matching process. 
+ */
+
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>

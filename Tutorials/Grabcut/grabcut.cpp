@@ -1,3 +1,10 @@
+/*
+ * Grabcut Tutorial from https://docs.opencv.org/3.4/d8/d34/samples_2cpp_2grabcut_8cpp-example.html
+ * allows you to interactively choose a section from a source image to grabcut from. Essentially 
+ * removes what is perceived as the background. You're also able to adjust the result by manually
+ * identifying background and foreground sections.
+ */
+
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
