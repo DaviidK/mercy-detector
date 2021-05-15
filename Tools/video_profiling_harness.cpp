@@ -37,7 +37,7 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Wand/walking_damage_boosting.mp4";
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
 static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
 

@@ -12,7 +12,7 @@ const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 //static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 //static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
-const int MATCH_METHOD = 3; // can be any value between 0 and 5.
+const int MATCH_METHOD = 4; // can be any value between 0 and 5.
 
 void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	Mat templ; string filename;
@@ -34,6 +34,7 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
 		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+		normalize(result, result, 0, 1, NORM_L2, -1, Mat());
 
 		if (MATCH_METHOD == TM_SQDIFF || MATCH_METHOD == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
