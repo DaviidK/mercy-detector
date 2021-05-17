@@ -12,13 +12,16 @@ const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 //static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 //static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
-const int MATCH_METHOD = 4; // can be any value between 0 and 5.
+const int MATCH_METHOD = 3; // can be any value between 0 and 5.
 
 void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	Mat templ; string filename;
 	Mat result; Mat result_templ;
 	int counter = 0; int result_hero; 
 	double tempScore; Point matchLoc;
+
+	Rect cropRect = Rect(frame.cols / 2, frame.rows / 2, frame.cols / 2, frame.rows / 2);
+	Mat cropped = frame(cropRect);
 
 	while (counter < NUM_HEROES) {
 		filename = templ_file_prefix + heroes[counter] ;
@@ -30,11 +33,11 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 		else {
 			templ = template_lucio;
 		}
-		matchTemplate(frame, templ, result, MATCH_METHOD);
+		matchTemplate(cropped, templ, result, MATCH_METHOD);
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
 		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
-		normalize(result, result, 0, 1, NORM_L2, -1, Mat());
+		//normalize(result, result, 0, 1, NORM_L2, -1, Mat());
 
 		if (MATCH_METHOD == TM_SQDIFF || MATCH_METHOD == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
@@ -58,7 +61,8 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 
 	Mat display_img;
 	frame.copyTo(display_img);
-	rectangle(display_img, matchLoc, Point(matchLoc.x + result_templ.cols, matchLoc.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
+	Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
+	rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
 	imshow("result", display_img);
 	cout << heroes[result_hero] << endl;
 }

@@ -98,7 +98,7 @@ int main()
 
         waitKey(1);
 
-        imshow("VideoDisplay", frame);
+        //imshow("VideoDisplay", frame);
 
         end = getTime();
 
