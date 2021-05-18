@@ -105,7 +105,7 @@ void detectAndDisplay(CascadeClassifier& mercy_classifier,  Mat image) {
 
     for (size_t i = 0; i < staffOccurences.size(); i++) {
         Point center(staffOccurences[i].x + staffOccurences[i].width / 2, staffOccurences[i].y + staffOccurences[i].height / 2);
-        ellipse(image, center, Size(staffOccurences[i].width / 2, staffOccurences[i].height / 2), 0, 0, 360, Scalar(255, 0, 255), 4);
+        ellipse(image, center, Size(staffOccurences[i].width / 2, staffOccurences[i].height / 2), 0, 0, 360, Scalar(0, 255, 0), 6);
     }
 
     // Display the image to the user, with the drawn ellipse if an object was detected
