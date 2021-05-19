@@ -1,6 +1,6 @@
 /*
  * This program deals with template matching where only methods that accept masks are
- * being used. These are TM_SQDIFF and TM_CCORR_NORMED. Basically attempts to see if 
+ * being used. These are TM_SQDIFF and TM_CCORR_NORMED. Basically attempts to see if
  * masks make the template matching methodology more accurate or not.
  */
 
@@ -17,6 +17,9 @@ const char* image_window = "Source Image";
 const char* image_name = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg";
 const char* template_name1 = "Detection_Algorithm/Data/Static_Test_Im/template_grabcut_mercy.jpg";
 const char* mask_name = "Detection_Algorithm/Data/Static_Test_Im/mask_grabcut_mercy.jpg";
+// For cv::MatchTemplate(), only methods 0 and 3 work.
+// So for this constant, only include 0 (TM_SQDIFF) or 3 (TM_CCORR_NORMED).
+const int MATCH_METHOD = 0;
 
 void matchTemplates(Mat src, Mat templ1, Mat mask, int method);
 
@@ -32,9 +35,7 @@ int main(int argc, char** argv) {
 
 	namedWindow(image_window, WINDOW_AUTOSIZE);
 	
-	// For cv::MatchTemplate(), only methods 0 and 3 work. 
-	// So for the 5th parameter include 0 (TM_SQDIFF) or 3 (TM_CCORR_NORMED).
-	matchTemplates(srcImg, templImg1, maskImg, 0);
+	matchTemplates(srcImg, templImg1, maskImg, MATCH_METHOD);
 }
 
 void matchTemplates(Mat src, Mat templ1, Mat mask, int method) {
