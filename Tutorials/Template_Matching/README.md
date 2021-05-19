@@ -28,7 +28,13 @@ are six template matching methods available, as listed below:
 There is also an optional parameter to include a mask which specifies which regions of the 
 template should not be compared with the input image.
 
-## template_matching.cpp
+## template_matching_tutorial.cpp
+
+This program takes in an image and detects either a Lucio or a Mercy in it. You can change the 
+method that matchTemplate() uses by changing the global constant MATCH_METHOD to a value 
+between 0 and 5. 
+
+## template_matching_tutorial.cpp
 
 This program is based off of this [OpenCV Tutorial](https://docs.opencv.org/3.4/de/da9/tutorial_template_matching.html)
 for template matching.
