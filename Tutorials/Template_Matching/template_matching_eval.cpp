@@ -1,23 +1,19 @@
 /*
- * This program aims to simply print 
+ * This program aims to simply print which of two heroes are being displayed on the screen.
+ * 
  */
 
 #include "template_matching.h"
 
-using namespace std;
-using namespace cv;
-
 const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
-//static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
-//static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
 const int MATCH_METHOD = 3; // can be any value between 0 and 5.
 
-void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
+int identifyHeroEval(Mat& frame, int expected_hero, Mat template_mercy, Mat template_lucio) {
 	Mat templ; string filename;
 	Mat result; Mat result_templ;
-	int counter = 0; int result_hero; 
+	int counter = 0; int result_hero;
 	double tempScore; Point matchLoc;
 
 	// Crop the source image so it only looks at the lower right quadrant. 
@@ -25,8 +21,7 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	Mat cropped = frame(cropRect);
 
 	while (counter < NUM_HEROES) {
-		filename = templ_file_prefix + heroes[counter] ;
-		//templ = imread(filename + ".png", IMREAD_COLOR);
+		filename = templ_file_prefix + heroes[counter];
 
 		if (counter == 0) {
 			templ = template_mercy;
@@ -58,7 +53,7 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 			}
 		}
 		counter++;
-	} 
+	}
 
 	Mat display_img;
 	frame.copyTo(display_img);
@@ -66,13 +61,14 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
 	imshow("result", display_img);
 	cout << heroes[result_hero] << endl;
+	return expected_hero == result_hero;
 }
 
 // Test method to attempt identifying a sample frame 
 /*
 int main(int argc, char** argv) {
-    const char* sample_mercy_frame = "Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test/frame_280.png";
-    const char* sample_lucio_frame = "Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1/frame_466.png";
+	const char* sample_mercy_frame = "Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test/frame_280.png";
+	const char* sample_lucio_frame = "Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1/frame_466.png";
 	Mat frame = imread(sample_mercy_frame, IMREAD_COLOR);
 	identifyHero(frame);
 	waitKey(0);
