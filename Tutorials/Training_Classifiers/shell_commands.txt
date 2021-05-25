@@ -11,9 +11,9 @@ opencv_annotation -annotations=mercy_wand_idle_damage_boosting.txt -images=../..
 opencv_annotation -annotations=mercy_wand_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Dark
 opencv_annotation -annotations=mercy_wand_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test
 opencv_annotation -annotations=mercy_wand_melee.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Melee
-opencv_annotation -annotations=mercy_want_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
-opencv_annotation -annotations=mercy_want_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
-opencv_annotation -annotations=mercy_want_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
+opencv_annotation -annotations=mercy_wand_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
+opencv_annotation -annotations=mercy_wand_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
+opencv_annotation -annotations=mercy_wand_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
 opencv_annotation -annotations=walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
 opencv_annotation -annotations=walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
 
