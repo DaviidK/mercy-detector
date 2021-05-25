@@ -1,5 +1,8 @@
-# This command is used to write the file paths for positive images
+# Write the file paths for positive images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/* > all_mercy_wand_paths.txt
+
+# Write the file paths for negative images
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/* > negative_paths.txt
 
 # Use annotation tool to visually draw outlines around objects
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
@@ -23,4 +26,5 @@ opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.v
 
 # Training the boosted cascade classifiers
 # Requires both above steps to be completed
-opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 20 -numNeg 60 -numStages 20
+# -numPos & -numNeg must be configured to match the number of positive & negative samples being used, currently uses all positive & negative samples
+opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 50 -numNeg 277 -numStages 20 -minHitRate .9
