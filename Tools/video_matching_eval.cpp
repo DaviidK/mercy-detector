@@ -37,11 +37,11 @@ using std::chrono::system_clock;
 static const string DETECTION_TYPES[] = { "Template matching", "Cascade classifier", "Edge matching" };
 static const int DETECTION_METHOD = 0;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4"
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
 static const int EXPECTED_HERO = 1; // 0- Mercy, 1- Lucio
 
 // Template matching specific parameters
-static const int MATCH_METHOD = 4;
+static const int MATCH_METHOD = 5;
 
 static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
