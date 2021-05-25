@@ -7,14 +7,21 @@
  * This is a tool for determining how well the object detection methods are working. The input is a 
  * video of gameplay which is passed into the detection method. 
  *
+ * Structural TODOs:
+ * // TODO: Convert this into a C++ Class
+ * // TODO: Create file output to save test results
+ * // TODO: Make the processing function into a delegate function that can be assigned
+ * // TODO: Complete Documentation
+ *
+ * Video Performance Improvements:
+ * // TODO: Research if OpenCV is capping the framerate on its own
+ * // TODO: Research if caching video in RAM will speed things up
+ *
  * Configuration / Assumptions:
  *
- * - DETECTION_TYPES acts as a dictionary of which detection methods can be used
- * - DETECTION_METHOD is the method to be used to detect the hero in the frames of the video
  * - PATH_TO_VIDEO is the path to the video file you're breaking down
  * - EXPECTED_HERO is the expected hero that appears in the video file
- * - MATCH_METHOD is a specific parameter for the template matching detection method. It denotes 
- *   which of the 6 template matching methods to be used
+ * - M
  * - The object detection method called in processFrame() should:
  *   * Accept an integer of the expected hero based on the video file
  *   * Return an integer of whether the expected hero was found
@@ -37,7 +44,7 @@ using std::chrono::system_clock;
 static const string DETECTION_TYPES[] = { "Template matching", "Cascade classifier", "Edge matching" };
 static const int DETECTION_METHOD = 0;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4"
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
 static const int EXPECTED_HERO = 1; // 0- Mercy, 1- Lucio
 
 // Template matching specific parameters
@@ -45,6 +52,7 @@ static const int MATCH_METHOD = 4;
 
 static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
+
 
 void displayStats(const int& correct, const int& total);
 

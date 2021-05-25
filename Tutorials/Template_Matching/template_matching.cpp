@@ -4,17 +4,19 @@
 
 #include "template_matching.h"
 
-using namespace std;
-using namespace cv;
-
 const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 //static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 //static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
-const int MATCH_METHOD = 3; // can be any value between 0 and 5.
+//const int MATCH_METHOD = 3; // can be any value between 0 and 5.
 
-void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
+int identifyHero(Mat& frame, Mat* template_array, int match_method, int expected_hero) {
+	if (match_method < 0 || match_method > 5) {
+		cout << "The match method was invalid." << endl;
+		return -1;
+	}
+	
 	Mat templ; string filename;
 	Mat result; Mat result_templ;
 	int counter = 0; int result_hero; 
@@ -26,21 +28,15 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 
 	while (counter < NUM_HEROES) {
 		filename = templ_file_prefix + heroes[counter] ;
-		//templ = imread(filename + ".png", IMREAD_COLOR);
+		templ = template_array[counter];
 
-		if (counter == 0) {
-			templ = template_mercy;
-		}
-		else {
-			templ = template_lucio;
-		}
-		matchTemplate(cropped, templ, result, MATCH_METHOD);
+		matchTemplate(cropped, templ, result, match_method);
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
 		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
 		//normalize(result, result, 0, 1, NORM_L2, -1, Mat());
 
-		if (MATCH_METHOD == TM_SQDIFF || MATCH_METHOD == TM_SQDIFF_NORMED) {
+		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
 			if (counter == 0 || minVal < tempScore) {
 				tempScore = minVal;
@@ -66,6 +62,8 @@ void identifyHero(Mat& frame, Mat template_mercy, Mat template_lucio) {
 	rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
 	imshow("result", display_img);
 	cout << heroes[result_hero] << endl;
+
+	return expected_hero == result_hero;
 }
 
 // Test method to attempt identifying a sample frame 

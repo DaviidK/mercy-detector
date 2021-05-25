@@ -4,6 +4,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
+using namespace std;
 using namespace cv;
 
-void identifyHero(Mat& frame, Mat templ1, Mat templ2);
+int identifyHero(Mat& frame, Mat* templ_array, int match_method, int expected_hero = -1);
