@@ -7,11 +7,8 @@
 const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
-//static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
-//static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
-//const int MATCH_METHOD = 3; // can be any value between 0 and 5.
 
-int identifyHero(Mat& frame, Mat* template_array, int match_method, int expected_hero) {
+int identifyHero(Mat& frame, Mat* template_array, int match_method, string expected_hero) {
 	if (match_method < 0 || match_method > 5) {
 		cout << "The match method was invalid." << endl;
 		return -1;
@@ -63,7 +60,7 @@ int identifyHero(Mat& frame, Mat* template_array, int match_method, int expected
 	imshow("result", display_img);
 	cout << heroes[result_hero] << endl;
 
-	return expected_hero == result_hero;
+	return expected_hero == heroes[result_hero];
 }
 
 // Test method to attempt identifying a sample frame 

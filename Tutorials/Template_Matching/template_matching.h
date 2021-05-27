@@ -7,4 +7,4 @@
 using namespace std;
 using namespace cv;
 
-int identifyHero(Mat& frame, Mat* templ_array, int match_method, int expected_hero = -1);
+int identifyHero(Mat& frame, Mat* templ_array, int match_method, string expected_hero = "");

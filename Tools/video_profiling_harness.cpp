@@ -131,7 +131,10 @@ int main()
  **************************************************************************************************/
 void processFrame(Mat& frame)
 {
-    identifyHero(frame, template_mercy, template_lucio);
+    Mat templ_array[2];
+    templ_array[0] = template_mercy;
+    templ_array[1] = template_lucio;
+    identifyHero(frame, templ_array);
 }
 
 /***************************************************************************************************

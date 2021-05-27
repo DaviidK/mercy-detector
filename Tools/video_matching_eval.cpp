@@ -25,6 +25,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 #include "../Tutorials/Template_Matching/template_matching.h"
+#include "./CSV/csv_wrapper.h"
 
 using namespace std;
 using namespace cv;
@@ -37,11 +38,11 @@ using std::chrono::system_clock;
 static const string DETECTION_TYPES[] = { "Template matching", "Cascade classifier", "Edge matching" };
 static const int DETECTION_METHOD = 0;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
-static const int EXPECTED_HERO = 1; // 0- Mercy, 1- Lucio
+//static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
+//static const int EXPECTED_HERO = 1; // 0- Mercy, 1- Lucio
 
 // Template matching specific parameters
-static const int MATCH_METHOD = 5;
+//static const int MATCH_METHOD = 5;
 
 static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
 static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
@@ -64,38 +65,64 @@ int processFrame(Mat& frame);
  *
  **************************************************************************************************/
 int main() {
-    VideoCapture capture = VideoCapture(PATH_TO_VIDEO);
+    vector<vector<string>> videoFiles;
+    csv_wrapper::readFromCSV("Detection_Algorithm/Data/Video/video_paths.csv", videoFiles);
 
-    if (!capture.isOpened())     {
-        cout << "Could not open capture! Either the provided path is invalid, or your build \n" <<
-            "of openCV does not support MPEG." << endl;
+    VideoCapture capture;
 
-        return -1;
-    }
+    vector<vector<string>> output;
+    vector<string> row;
 
-    Mat frame;
+    for (int i = 0; i < videoFiles.size(); i++) {
+        string videoPath = videoFiles[i][0];
+        string expectedHero = videoPath.substr(0, videoPath.find("/", 0));
+        cout << expectedHero << endl;
 
-    int frameCount = 0;
-    int correctCount = 0;
+        capture = VideoCapture(videoPath);
 
-    while (true)     {
+        if (!capture.isOpened()) {
+            cout << "Could not open capture! Either the provided path is invalid, or your build \n" <<
+                "of openCV does not support MPEG." << endl;
 
-        capture >> frame;
-
-        if (frame.empty())         {
-            break;
+            return -1;
         }
 
-        correctCount += processFrame(frame);
+        Mat frame;
 
-        waitKey(1);
+        int totalFrameCount = 0;
+        int correctCount = 0;
+        int reps = DETECTION_METHOD == 0 ? 6 : 1;
+        
+        for (int i = 0; i < reps; i++) {
+            row.clear();
 
-        //imshow("VideoDisplay", frame);
+            while (true) {
 
-        frameCount++;
+                capture >> frame;
+
+                if (frame.empty()) {
+                    break;
+                }
+
+                correctCount += processFrame(frame, expectedHero, i);
+
+                waitKey(1);
+
+                //imshow("VideoDisplay", frame);
+
+                totalFrameCount++;
+            }
+
+            displayStats(correctCount, totalFrameCount);
+
+            row.push_back(videoPath);
+            row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
+            row.push_back(to_string(i));
+            row.push_back(to_string(correctCount));
+            row.push_back(to_string(totalFrameCount));
+            output.push_back(row);
+        }
     }
-
-    displayStats(correctCount, frameCount);
 
     return 0;
 }
@@ -104,15 +131,19 @@ int main() {
  * Process Frame
  *
  * This is where you should call your image processing code for a single frame.
+ * The method should take in an integer of which hero is expected.
  *
  * //TODO: Add your code here
  *
  **************************************************************************************************/
-int processFrame(Mat& frame) {
-    Mat templ_array[2];
-    templ_array[0] = template_mercy;
-    templ_array[1] = template_lucio;
-    return identifyHero(frame, templ_array, MATCH_METHOD, EXPECTED_HERO);
+int processFrame(Mat& frame, string expectedHero, int matchMethod) {
+    if (DETECTION_METHOD == 0) {
+        Mat templ_array[2];
+        templ_array[0] = template_mercy;
+        templ_array[1] = template_lucio;
+        return identifyHero(frame, templ_array, matchMethod, expectedHero);
+    }
+    return 0;
 }
 
 void displayStats(const int& correct, const int& total) {

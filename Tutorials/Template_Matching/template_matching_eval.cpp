@@ -3,7 +3,7 @@
  * 
  */
 
-#include "template_matching.h"
+#include "template_matching_eval.h"
 
 const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
