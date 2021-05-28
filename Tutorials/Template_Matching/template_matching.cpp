@@ -53,11 +53,11 @@ int identifyHero(Mat& frame, Mat* template_array, int match_method, string expec
 		counter++;
 	} 
 
-	Mat display_img;
-	frame.copyTo(display_img);
-	Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
-	rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
-	imshow("result", display_img);
+	//Mat display_img;
+	//frame.copyTo(display_img);
+	//Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
+	//rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
+	//imshow("result", display_img);
 	cout << heroes[result_hero] << endl;
 
 	return expected_hero == heroes[result_hero];
