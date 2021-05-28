@@ -25,8 +25,9 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
-#include "../Tutorials/Template_Matching/template_matching.h"
-#include "./CSV/csv_wrapper.h"
+#include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
+#include "Tutorials/Template_Matching/template_matching.h"
+#include "Tools/CSV/csv_wrapper.h"
 
 using namespace std;
 using namespace cv;
@@ -38,18 +39,18 @@ using std::chrono::system_clock;
 
 static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv";
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
-static const string ACCEPTED_HEROES[] = { "Mercy", "Lucio" };
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 6;
+static const OWConst::Heroes TM_ACCEPTED_HEROES[] = { OWConst::Mercy, OWConst::Lucio };
 static Mat TEMPLATES[2];
 static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
 void tempMatchingSetup();
 
-void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vector<vector<string>> output);
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> output);
 
 void displayStats(const int& correct, const int& total);
 
@@ -78,7 +79,7 @@ int main() {
 
 	for (int i = 0; i < videoFiles.size(); i++) {
 		string videoPath = VIDEO_FILE_PREFIX + videoFiles[i][0];
-		string expectedHero = videoPath.substr(0, videoPath.find("/", 0));
+		OWConst::Heroes expectedHero = OWConst::getHero(videoPath.substr(0, videoPath.find("/", 0)));
 
 		capture = VideoCapture(videoPath);
 
@@ -125,7 +126,7 @@ int main() {
  **************************************************************************************************/
 void tempMatchingSetup() {
 	for (int i = 0; i < 2; i++) {
-		string filename = TEMPL_FILE_PREFIX + ACCEPTED_HEROES[i] + ".png";
+		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
 		TEMPLATES[i] = imread(filename);
 	}
 }
@@ -138,7 +139,7 @@ void tempMatchingSetup() {
  * processing.
  * 
  **************************************************************************************************/
-void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vector<vector<string>> output) {
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> output) {
 	vector<string> row;
 
 	Mat frame;
@@ -164,7 +165,7 @@ void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vec
 		}
 
 		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-			correctCount[i] += identifyHero(frame, TEMPLATES, i, expectedHero);
+			correctCount[i] += evalIdentifyHero(frame, TEMPLATES, i, expectedHero);
 		}
 
 		totalFrameCount++;
@@ -172,7 +173,7 @@ void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vec
 	cout << endl;
 
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-		row.push_back(expectedHero);
+		row.push_back(OWConst::getHeroString(expectedHero));
 		row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
 		row.push_back(to_string(i));
 		row.push_back(to_string(correctCount[i]));
