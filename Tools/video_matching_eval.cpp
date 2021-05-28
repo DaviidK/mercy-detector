@@ -79,7 +79,6 @@ int main() {
 	for (int i = 0; i < videoFiles.size(); i++) {
 		string videoPath = VIDEO_FILE_PREFIX + videoFiles[i][0];
 		string expectedHero = videoPath.substr(0, videoPath.find("/", 0));
-		cout << expectedHero << endl;
 
 		capture = VideoCapture(videoPath);
 
@@ -90,17 +89,19 @@ int main() {
 			return -1;
 		}
 		
+		cout << "Currently on video " << i << " of " << videoFiles.size() << endl;
+
 		if (DETECTION_METHOD == 0) {
 			tempMatchingSetup();
 			processVideoTemplateMatching(capture, expectedHero, output);
 		}
 		else if (DETECTION_METHOD == 1) {
 			// TODO: Cascade Classifier frame processing method here
-			// Pass in capture and expectedHero.
+			// Pass in capture, expectedHero and output.
 		}
 		else if (DETECTION_METHOD == 2) {
 			// TODO: Edge Matching frame processing method here
-			// Pass in capture and expectedHero.
+			// Pass in capture, expectedHero and output.
 		}
 		else {
 			cout << "The given detection method is not one of the 3 accepted for this program." << endl;
@@ -148,6 +149,8 @@ void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vec
 		correctCount[i] = 0;
 	}
 
+	cout << "Progress (* per 50 frame): " << endl;
+
 	while (true) {
 
 		capture >> frame;
@@ -156,12 +159,17 @@ void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vec
 			break;
 		}
 
+		if (totalFrameCount % 50 == 0) {
+			cout << "*";
+		}
+
 		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 			correctCount[i] += identifyHero(frame, TEMPLATES, i, expectedHero);
 		}
 
 		totalFrameCount++;
 	}
+	cout << endl;
 
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 		row.push_back(expectedHero);

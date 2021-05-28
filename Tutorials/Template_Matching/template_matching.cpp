@@ -1,6 +1,13 @@
-/*
- * This program aims to simply print 
- */
+/***************************************************************************************************
+ * Object Detection - Template Matching 
+ *
+ * @author Sana Suse
+ * @date 5/20/21
+ *
+ * This method detects which Overwatch hero is being played from an input image of gameplay. When 
+ * an expected hero is passed into the method, it returns whether the detected hero was correct.
+ *
+ **************************************************************************************************/
 
 #include "template_matching.h"
 
@@ -8,7 +15,23 @@ const int NUM_HEROES = 2;
 const string heroes[NUM_HEROES] = { "Mercy", "Lucio" };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 
-int identifyHero(Mat& frame, Mat* template_array, int match_method, string expected_hero) {
+/***************************************************************************************************
+ * Identify Hero
+ *
+ * This method detects which Overwatch hero is being played from an input image of gameplay. When 
+ * an expected hero is passed into the method, it returns whether the detected hero was correct.
+ * 
+ * @params
+ *           Mat& frame: The source image to see if a hero can be detected.
+ *  Mat* template_array: An array of template images to be compared with the regions in the 
+ *                       source image
+ *     int match_method: An integer determining which matching method to use.
+ * string expected_hero: An optional method that takes in an expected hero. This should be used when 
+ *						 evaluating the success rate of the matching method. When left as default, it 
+ *						 will return the detected hero.
+ *
+ **************************************************************************************************/
+int identifyHero(Mat& frame, Mat* template_array, int match_method, string expected_hero = "") {
 	if (match_method < 0 || match_method > 5) {
 		cout << "The match method was invalid." << endl;
 		return -1;
@@ -53,25 +76,16 @@ int identifyHero(Mat& frame, Mat* template_array, int match_method, string expec
 		counter++;
 	} 
 
+	// Commented out display of the source image and print of the detected object
 	//Mat display_img;
 	//frame.copyTo(display_img);
 	//Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
 	//rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
 	//imshow("result", display_img);
-	cout << heroes[result_hero] << endl;
+	//cout << heroes[result_hero] << endl;
 
+	if (expected_hero.empty()) {
+		return result_hero;
+	}
 	return expected_hero == heroes[result_hero];
 }
-
-// Test method to attempt identifying a sample frame 
-/*
-int main(int argc, char** argv) {
-    const char* sample_mercy_frame = "Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test/frame_280.png";
-    const char* sample_lucio_frame = "Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1/frame_466.png";
-	Mat frame = imread(sample_mercy_frame, IMREAD_COLOR);
-	identifyHero(frame);
-	waitKey(0);
-	frame = imread(sample_lucio_frame, IMREAD_COLOR);
-	identifyHero(frame);
-	waitKey(0);
-}*/
