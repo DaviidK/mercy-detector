@@ -112,7 +112,7 @@ int main() {
 
 	string dateTime = getDateTime();
 
-	string output_file_name = DETECTION_TYPES[DETECTION_METHOD] +  + ".csv";
+	string output_file_name = DETECTION_TYPES[DETECTION_METHOD] + dateTime + ".csv";
 	csv_wrapper::saveToCSV(output_file_name, output);
 
 	return 0;
