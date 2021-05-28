@@ -11,7 +11,6 @@
 
 #include "template_matching.h"
 
-const int NUM_HEROES = 2;
 const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 
