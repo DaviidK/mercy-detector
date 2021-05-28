@@ -193,8 +193,8 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
  *
  **************************************************************************************************/
 void displayStats(const int& correct, const int& total) {
-	double effectiveness = correct / total * 100.0;
-	cout << DETECTION_METHOD << " had: " << endl;
+	double effectiveness = static_cast<double>(correct) / total * 100.0;
+	cout << DETECTION_TYPES[DETECTION_METHOD] << " had: " << endl;
 
 	cout << "Correct: " << correct << ", out of Total: " << total << endl;
 	cout << "Effectiveness: " << effectiveness << "% success rate." << endl;
