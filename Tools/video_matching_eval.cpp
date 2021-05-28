@@ -90,7 +90,7 @@ int main() {
 			return -1;
 		}
 		
-		cout << "Currently on video " << i << " of " << videoFiles.size() << endl;
+		cout << "Currently on video " << i + 1 << " of " << videoFiles.size() << endl;
 
 		if (DETECTION_METHOD == 0) {
 			tempMatchingSetup();
