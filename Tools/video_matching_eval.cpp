@@ -79,7 +79,8 @@ int main() {
 
 	for (int i = 0; i < videoFiles.size(); i++) {
 		string videoPath = VIDEO_FILE_PREFIX + videoFiles[i][0];
-		OWConst::Heroes expectedHero = OWConst::getHero(videoPath.substr(0, videoPath.find("/", 0)));
+		string hero_name = videoFiles[i][0].substr(0, videoFiles[i][0].find("/", 0));
+		OWConst::Heroes expectedHero = OWConst::getHero(hero_name);
 
 		capture = VideoCapture(videoPath);
 

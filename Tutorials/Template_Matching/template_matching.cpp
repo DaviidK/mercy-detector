@@ -100,5 +100,6 @@ OWConst::Heroes identifyHero(Mat& frame, Mat* template_array, int match_method) 
  *
  **************************************************************************************************/
 int evalIdentifyHero(Mat& frame, Mat* template_array, int match_method, OWConst::Heroes expected_hero) {
-	return identifyHero(frame, template_array, match_method) == expected_hero;
+	string result = OWConst::getHeroString(identifyHero(frame, template_array, match_method));
+	return result == OWConst::getHeroString(expected_hero);
 }
