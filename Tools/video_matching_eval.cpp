@@ -44,7 +44,7 @@ static const int DETECTION_METHOD = 0;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 6;
-static const OWConst::Heroes TM_ACCEPTED_HEROES[] = { OWConst::Mercy, OWConst::Lucio };
+static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
 static Mat TEMPLATES[2];
 static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
@@ -121,11 +121,11 @@ int main() {
  * Temp Matching Setup
  *
  * This method is a specific set up helper method for the template matching method.
- * It loads in the template images into a 
+ * It loads in the template images into a global vector of Mats.
  *
  **************************************************************************************************/
 void tempMatchingSetup() {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
 		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
 		TEMPLATES[i] = imread(filename);
 	}
