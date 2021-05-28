@@ -4,8 +4,9 @@
  * @author Matthew Munson, Sana Suse
  * @date 5/25/21
  *
- * This is a tool for determining how well the object detection methods are working. The input is a 
- * video of gameplay which is passed into the detection method. 
+ * This is a tool for determining how well the object detection methods are working. 
+ * The input is a video of gameplay which is passed into the detection method. 
+ * The output is a CSV file of the results.
  *
  * Configuration / Assumptions:
  *
@@ -13,7 +14,7 @@
  * - DETECTION_METHOD is the method to be used to detect the hero in the frames of the video
  * - PATH_TO_VIDEO is the path to the video file you're breaking down
  * - EXPECTED_HERO is the expected hero that appears in the video file
- * - MATCH_METHOD is a specific parameter for the template matching detection method. It denotes 
+ * - MATCH_METHOD is a specific parameter for the template matching detection method. It denotes
  *   which of the 6 template matching methods to be used
  * - The object detection method called in processFrame() should:
  *   * Accept an integer of the expected hero based on the video file
@@ -35,21 +36,24 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string DETECTION_TYPES[] = { "Template matching", "Cascade classifier", "Edge matching" };
+static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv";
+static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
+static const string ACCEPTED_HEROES[] = { "Mercy", "Lucio" };
+static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
 
-//static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
-//static const int EXPECTED_HERO = 1; // 0- Mercy, 1- Lucio
-
 // Template matching specific parameters
-//static const int MATCH_METHOD = 5;
+static const int NUM_MATCHING_METHODS = 6;
+static Mat TEMPLATES[2];
+static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
-static const Mat template_mercy = imread("Detection_Algorithm/Data/Templates/Mercy.png");
-static const Mat template_lucio = imread("Detection_Algorithm/Data/Templates/Lucio.png");
+void tempMatchingSetup();
+
+void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vector<vector<string>> output);
 
 void displayStats(const int& correct, const int& total);
 
-int processFrame(Mat& frame);
+string getDateTime();
 
 /***************************************************************************************************
  * Main Function
@@ -65,96 +69,141 @@ int processFrame(Mat& frame);
  *
  **************************************************************************************************/
 int main() {
-    vector<vector<string>> videoFiles;
-    csv_wrapper::readFromCSV("Detection_Algorithm/Data/Video/video_paths.csv", videoFiles);
+	vector<vector<string>> videoFiles;
+	csv_wrapper::readFromCSV(VIDEO_FILE_PATHS, videoFiles);
 
-    VideoCapture capture;
+	VideoCapture capture;
 
-    vector<vector<string>> output;
-    vector<string> row;
+	vector<vector<string>> output;
 
-    for (int i = 0; i < videoFiles.size(); i++) {
-        string videoPath = videoFiles[i][0];
-        string expectedHero = videoPath.substr(0, videoPath.find("/", 0));
-        cout << expectedHero << endl;
+	for (int i = 0; i < videoFiles.size(); i++) {
+		string videoPath = VIDEO_FILE_PREFIX + videoFiles[i][0];
+		string expectedHero = videoPath.substr(0, videoPath.find("/", 0));
+		cout << expectedHero << endl;
 
-        capture = VideoCapture(videoPath);
+		capture = VideoCapture(videoPath);
 
-        if (!capture.isOpened()) {
-            cout << "Could not open capture! Either the provided path is invalid, or your build \n" <<
-                "of openCV does not support MPEG." << endl;
+		if (!capture.isOpened()) {
+			cout << "Could not open capture! Either the provided path is invalid, or your build \n" <<
+				"of openCV does not support MPEG." << endl;
 
-            return -1;
-        }
+			return -1;
+		}
+		
+		if (DETECTION_METHOD == 0) {
+			tempMatchingSetup();
+			processVideoTemplateMatching(capture, expectedHero, output);
+		}
+		else if (DETECTION_METHOD == 1) {
+			// TODO: Cascade Classifier frame processing method here
+			// Pass in capture and expectedHero.
+		}
+		else if (DETECTION_METHOD == 2) {
+			// TODO: Edge Matching frame processing method here
+			// Pass in capture and expectedHero.
+		}
+		else {
+			cout << "The given detection method is not one of the 3 accepted for this program." << endl;
+		}
+	}
 
-        Mat frame;
+	string dateTime = getDateTime();
 
-        int totalFrameCount = 0;
-        int correctCount = 0;
-        int reps = DETECTION_METHOD == 0 ? 6 : 1;
-        
-        for (int i = 0; i < reps; i++) {
-            row.clear();
+	string output_file_name = DETECTION_TYPES[DETECTION_METHOD] +  + ".csv";
+	csv_wrapper::saveToCSV(output_file_name, output);
 
-            while (true) {
-
-                capture >> frame;
-
-                if (frame.empty()) {
-                    break;
-                }
-
-                correctCount += processFrame(frame, expectedHero, i);
-
-                waitKey(1);
-
-                //imshow("VideoDisplay", frame);
-
-                totalFrameCount++;
-            }
-
-            displayStats(correctCount, totalFrameCount);
-
-            row.push_back(videoPath);
-            row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
-            row.push_back(to_string(i));
-            row.push_back(to_string(correctCount));
-            row.push_back(to_string(totalFrameCount));
-            output.push_back(row);
-        }
-    }
-
-    return 0;
+	return 0;
 }
 
 /***************************************************************************************************
- * Process Frame
+ * Temp Matching Setup
  *
- * This is where you should call your image processing code for a single frame.
- * The method should take in an integer of which hero is expected.
- *
- * //TODO: Add your code here
+ * This method is a specific set up helper method for the template matching method.
+ * It loads in the template images into a 
  *
  **************************************************************************************************/
-int processFrame(Mat& frame, string expectedHero, int matchMethod) {
-    if (DETECTION_METHOD == 0) {
-        Mat templ_array[2];
-        templ_array[0] = template_mercy;
-        templ_array[1] = template_lucio;
-        return identifyHero(frame, templ_array, matchMethod, expectedHero);
-    }
-    return 0;
+void tempMatchingSetup() {
+	for (int i = 0; i < 2; i++) {
+		string filename = TEMPL_FILE_PREFIX + ACCEPTED_HEROES[i] + ".png";
+		TEMPLATES[i] = imread(filename);
+	}
 }
 
+/***************************************************************************************************
+ * Process Frame for Template Matching 
+ *
+ * This method processes a given VideoCapture to detect heroes in each frame.
+ * It stores the resulting correct counts and total number of frames into a csv file for easy data 
+ * processing.
+ * 
+ **************************************************************************************************/
+void processVideoTemplateMatching(VideoCapture capture, string expectedHero, vector<vector<string>> output) {
+	vector<string> row;
+
+	Mat frame;
+	int correctCount[NUM_MATCHING_METHODS];
+	int totalFrameCount = 0;
+
+	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+		correctCount[i] = 0;
+	}
+
+	while (true) {
+
+		capture >> frame;
+
+		if (frame.empty()) {
+			break;
+		}
+
+		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+			correctCount[i] += identifyHero(frame, TEMPLATES, i, expectedHero);
+		}
+
+		totalFrameCount++;
+	}
+
+	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+		row.push_back(expectedHero);
+		row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
+		row.push_back(to_string(i));
+		row.push_back(to_string(correctCount[i]));
+		row.push_back(to_string(totalFrameCount));
+		output.push_back(row);
+		
+		displayStats(correctCount[i], totalFrameCount);
+	}
+}
+
+/***************************************************************************************************
+ * Display Stats
+ *
+ * This method takes in a correct count and a total number of frames count. Using this, it prints 
+ * out what those values are, and as a percentage returns the effectiveness of the detection method.
+ *
+ **************************************************************************************************/
 void displayStats(const int& correct, const int& total) {
-    double effectiveness = correct / total * 100.0;
-    if (DETECTION_METHOD == 0) {
-        cout << DETECTION_METHOD << " using method #" << MATCH_METHOD << " had: " << endl;
-    }
-    else {
-        cout << DETECTION_METHOD << "had: " << endl;
-    }
-   
-    cout << "Correct: " << correct << ", out of Total: " << total << endl;
-    cout << "Effectiveness: " << effectiveness << "% success rate." << endl;
+	double effectiveness = correct / total * 100.0;
+	cout << DETECTION_METHOD << " had: " << endl;
+
+	cout << "Correct: " << correct << ", out of Total: " << total << endl;
+	cout << "Effectiveness: " << effectiveness << "% success rate." << endl;
+}
+
+/***************************************************************************************************
+ * Get Date Time
+ *
+ * This helper method retrieves the current time. 
+ * This can be used to help name the outputted csv files.
+ *
+ **************************************************************************************************/
+string getDateTime() {
+	time_t now;
+	struct tm timeinfo;
+	char buffer[80];
+
+	time(&now);
+	localtime_s(&timeinfo, &now);
+	strftime(buffer, 80, "%d-%m-%Y %H-%M-%S", &timeinfo);
+	return string(buffer);
 }
