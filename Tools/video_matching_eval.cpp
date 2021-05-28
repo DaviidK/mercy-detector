@@ -50,7 +50,7 @@ static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
 void tempMatchingSetup();
 
-void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> output);
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> &output);
 
 void displayStats(const int& correct, const int& total);
 
@@ -112,7 +112,7 @@ int main() {
 
 	string dateTime = getDateTime();
 
-	string output_file_name = DETECTION_TYPES[DETECTION_METHOD] + dateTime + ".csv";
+	string output_file_name = "Tools/Eval_Results/" + DETECTION_TYPES[DETECTION_METHOD] + "-" + dateTime + ".csv";
 	csv_wrapper::saveToCSV(output_file_name, output);
 
 	return 0;
@@ -140,7 +140,7 @@ void tempMatchingSetup() {
  * processing.
  * 
  **************************************************************************************************/
-void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> output) {
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> &output) {
 	vector<string> row;
 
 	Mat frame;
@@ -214,6 +214,6 @@ string getDateTime() {
 
 	time(&now);
 	localtime_s(&timeinfo, &now);
-	strftime(buffer, 80, "%d-%m-%Y %H-%M-%S", &timeinfo);
+	strftime(buffer, 80, "%d%m%Y%H%M%S", &timeinfo);
 	return string(buffer);
 }
