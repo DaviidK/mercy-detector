@@ -181,6 +181,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 		row.clear();
 
+		row.push_back(OWConst::getHeroString(expectedHero));
 		row.push_back(filepath);
 		row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
 		row.push_back(to_string(i));
