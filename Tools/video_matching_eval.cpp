@@ -50,7 +50,10 @@ static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
 void tempMatchingSetup();
 
-void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> &output);
+void processVideoTemplateMatching(VideoCapture capture, 
+								  OWConst::Heroes expectedHero, 
+	                              vector<vector<string>> &output,
+								  string filePath);
 
 void displayStats(const int& correct, const int& total);
 
@@ -78,8 +81,9 @@ int main() {
 	vector<vector<string>> output;
 
 	for (int i = 0; i < videoFiles.size(); i++) {
-		string videoPath = VIDEO_FILE_PREFIX + videoFiles[i][0];
-		string hero_name = videoFiles[i][0].substr(0, videoFiles[i][0].find("/", 0));
+		string shortPath = videoFiles[i][0];
+		string videoPath = VIDEO_FILE_PREFIX + shortPath;
+		string hero_name = shortPath.substr(0, shortPath.find("/", 0));
 		OWConst::Heroes expectedHero = OWConst::getHero(hero_name);
 
 		capture = VideoCapture(videoPath);
@@ -95,7 +99,7 @@ int main() {
 
 		if (DETECTION_METHOD == 0) {
 			tempMatchingSetup();
-			processVideoTemplateMatching(capture, expectedHero, output);
+			processVideoTemplateMatching(capture, expectedHero, output, shortPath);
 		}
 		else if (DETECTION_METHOD == 1) {
 			// TODO: Cascade Classifier frame processing method here
@@ -140,8 +144,9 @@ void tempMatchingSetup() {
  * processing.
  * 
  **************************************************************************************************/
-void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, vector<vector<string>> &output) {
-	vector<string> row;
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, 
+								  vector<vector<string>> &output, string filepath) {
+	vector<string> row; 
 
 	Mat frame;
 	int correctCount[NUM_MATCHING_METHODS];
@@ -174,7 +179,9 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 	cout << endl;
 
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-		row.push_back(OWConst::getHeroString(expectedHero));
+		row.clear();
+
+		row.push_back(filepath);
 		row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
 		row.push_back(to_string(i));
 		row.push_back(to_string(correctCount[i]));
