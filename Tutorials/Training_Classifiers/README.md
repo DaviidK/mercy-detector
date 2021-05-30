@@ -46,26 +46,33 @@ Positive training images must contain the desired object to be detected, and mul
                                 image1.png
                                 image2.png
                                 image3.png
+                                etc.
         Tutorials/
             Training_Classifiers/
                 positive_paths.txt
 
 In this example, "positive_paths.txt" contains the relative file paths to each image on its own line. Thus, we can expect the file to look like:
->Data/Positive_Images/pos1.jpg <br>
-Data/Positive_Images/pos2.jpg <br>
-Data/Positive_Images/pos3.jpg <br>
+>Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos1.jpg <br>
+Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos2.jpg <br>
+Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos3.jpg <br>
 etc.
 
 ### Negative Images
 Negative training images must not contain any instances of the desired object to be detected, and the directory should be set up in the same manner as positive images. For this tutorial, the directory is as follows: 
 
-    Data/
-      Negative_Images/
-        neg1.jpg
-        neg2.jpg
-        neg3.jpg
-        etc.
-    negative_paths.txt
+    mercy-detector
+        Detection_Algorithm/
+            Data/
+                Extracted_Frames/
+                    Lucio/
+                        <Image Directories>/
+                            image1.png
+                            image2.png
+                            image3.png
+                            etc.
+        Tutorials/
+            Training_Classifiers/
+                negative_paths.txt
 
 Once again, "negative_paths.txt" contains relative file paths to every image on its own line.
 
