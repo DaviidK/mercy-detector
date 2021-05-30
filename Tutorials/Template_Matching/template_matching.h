@@ -8,6 +8,8 @@
 using namespace std;
 using namespace cv;
 
-OWConst::Heroes identifyHero(Mat& frame, Mat* templ_array, int match_method);
+void tempMatchingSetup();
 
-int evalIdentifyHero(Mat& frame, Mat* templ_array, int match_method, OWConst::Heroes expected_hero);
+OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask = false);
+
+int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask = false);

@@ -13,6 +13,26 @@
 
 const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
+static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
+static Mat TEMPLATES[2]; static Mat MASKS[2];
+static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
+
+/***************************************************************************************************
+ * Temp Matching Setup
+ *
+ * This method is a specific set up helper method for the template matching method.
+ * It loads in the template images into a global vector of Mats.
+ *
+ **************************************************************************************************/
+void tempMatchingSetup() {
+	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
+		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
+		TEMPLATES[i] = imread(filename);
+
+		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
+		MASKS[i] = imread(filename);
+	}	
+}
 
 /***************************************************************************************************
  * Identify Hero
@@ -22,12 +42,12 @@ const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
  * 
  * @params
  *           Mat& frame: The source image to see if a hero can be detected.
- *  Mat* template_array: An array of template images to be compared with the regions in the 
- *                       source image
  *     int match_method: An integer determining which matching method to use.
+ *        bool use_mask: A boolean indicator for whether a mask should be used with the 
+ *                       matching method. 
  *
  **************************************************************************************************/
-OWConst::Heroes identifyHero(Mat& frame, Mat* template_array, int match_method) {
+OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
 	if (match_method < 0 || match_method > 5) {
 		cout << "The match method was invalid." << endl;
 		return OWConst::No_Hero;
@@ -43,9 +63,14 @@ OWConst::Heroes identifyHero(Mat& frame, Mat* template_array, int match_method) 
 	Mat cropped = frame(cropRect);
 
 	for (int i = 0; i < HEROES.size(); i++) {
-		templ = template_array[i];
+		templ = TEMPLATES[i];
 
-		matchTemplate(cropped, templ, result, match_method);
+		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
+			matchTemplate(cropped, templ, result, match_method, MASKS[i]);
+		}
+		else {
+			matchTemplate(cropped, templ, result, match_method);
+		}
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
 		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
@@ -92,14 +117,14 @@ OWConst::Heroes identifyHero(Mat& frame, Mat* template_array, int match_method) 
  * 
  * @params
  *                    Mat& frame: The source image to see if a hero can be detected.
- *           Mat* template_array: An array of template images to be compared with the regions in 
- *                                the source image
  *              int match_method: An integer determining which matching method to use.
  * OWConst::Heroes expected_hero: An OW constant of what hero is expected to be detected in this 
  *                                image.
+ *                 bool use_mask: A boolean indicator for whether a mask should be used with the 
+ *                                matching method. 
  *
  **************************************************************************************************/
-int evalIdentifyHero(Mat& frame, Mat* template_array, int match_method, OWConst::Heroes expected_hero) {
-	string result = OWConst::getHeroString(identifyHero(frame, template_array, match_method));
+int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask) {
+	string result = OWConst::getHeroString(identifyHero(frame, match_method, use_mask));
 	return result == OWConst::getHeroString(expected_hero);
 }

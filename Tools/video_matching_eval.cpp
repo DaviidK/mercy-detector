@@ -43,12 +43,7 @@ static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifi
 static const int DETECTION_METHOD = 0;
 
 // Template matching specific parameters
-static const int NUM_MATCHING_METHODS = 6;
-static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
-static Mat TEMPLATES[2];
-static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
-
-void tempMatchingSetup();
+static const int NUM_MATCHING_METHODS = 8;
 
 void processVideoTemplateMatching(VideoCapture capture, 
 								  OWConst::Heroes expectedHero, 
@@ -122,19 +117,7 @@ int main() {
 	return 0;
 }
 
-/***************************************************************************************************
- * Temp Matching Setup
- *
- * This method is a specific set up helper method for the template matching method.
- * It loads in the template images into a global vector of Mats.
- *
- **************************************************************************************************/
-void tempMatchingSetup() {
-	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
-		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
-		TEMPLATES[i] = imread(filename);
-	}
-}
+
 
 /***************************************************************************************************
  * Process Frame for Template Matching 
@@ -157,7 +140,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 	}
 
 	cout << "Progress (* per 50 frame): " << endl;
-
+	int match_method; bool use_mask;
 	while (true) {
 
 		capture >> frame;
@@ -169,9 +152,21 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 		if (totalFrameCount % 50 == 0) {
 			cout << "*";
 		}
-
+		
 		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-			correctCount[i] += evalIdentifyHero(frame, TEMPLATES, i, expectedHero);
+			if (i == 6) {
+				match_method = 0;
+				use_mask = true;
+			}
+			else if (i == 7) {
+				match_method = 3;
+				use_mask = true;
+			}
+			else {
+				match_method = i;
+				use_mask = false;
+			}
+			correctCount[i] += evalIdentifyHero(frame, match_method, expectedHero, use_mask);
 		}
 
 		totalFrameCount++;
@@ -222,6 +217,6 @@ string getDateTime() {
 
 	time(&now);
 	localtime_s(&timeinfo, &now);
-	strftime(buffer, 80, "%d%m%Y%H%M%S", &timeinfo);
+	strftime(buffer, 80, "%d%m%Y-%H%M%S", &timeinfo);
 	return string(buffer);
 }
