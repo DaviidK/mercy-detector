@@ -1,8 +1,8 @@
 # Write the file paths for positive images
-find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/* > all_mercy_wand_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_mercy_wand_paths.txt
 
 # Write the file paths for negative images
-../../Detection_Algorithm/Data/Extracted_Frames/Lucio/* > negative_paths.txt
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
 
 # Use annotation tool to visually draw outlines around objects
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
