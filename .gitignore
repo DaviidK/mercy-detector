@@ -39,7 +39,7 @@ x64/
 *.aps
 *.vcx*
 *.vs/
-*/enc_temp_folder/
+*enc_temp_folder/
 
 # Visual Studio Build Files
 *.exe.recipe

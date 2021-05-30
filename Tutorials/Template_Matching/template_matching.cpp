@@ -1,116 +1,130 @@
-/*
- * Template Matching 
- * This program uses the opencv library's template matching function to find a location in 
- * an image where a template image is most likely located.
- */
+/***************************************************************************************************
+ * Object Detection - Template Matching 
+ *
+ * @author Sana Suse
+ * @date 5/20/21
+ *
+ * This method detects which Overwatch hero is being played from an input image of gameplay. When 
+ * an expected hero is passed into the method, it returns whether the detected hero was correct.
+ *
+ **************************************************************************************************/
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <iostream>
+#include "template_matching.h"
 
-using namespace std;
-using namespace cv;
+const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
+const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
+static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
+static Mat TEMPLATES[2]; static Mat MASKS[2];
+static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
-Mat img; Mat templ1; Mat templ2; Mat result1; Mat result2;
-const char* image_window = "Source Image";
-const char* result_window = "Result window";
+/***************************************************************************************************
+ * Temp Matching Setup
+ *
+ * This method is a specific set up helper method for the template matching method.
+ * It loads in the template images into a global vector of Mats.
+ *
+ **************************************************************************************************/
+void tempMatchingSetup() {
+	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
+		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
+		TEMPLATES[i] = imread(filename);
 
-// Source image
-const char* image_name = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg"; 
-// Template 1 - True template (does exist in source)
-const char* template_name1 = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
-// Template 2 - False template (does not exist in source)
-const char* template_name2 = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
-
-int match_method;
-int max_Trackbar = 5;
-
-/*
- * MatchingMethod()
- * Calls the matchTemplate() method for both templates and draws a rectangle on the shown window
- * of where the highest score for the matching was. The black rectangle shows the true sample match
- * while the blue rectangle shows the false sample match.
- * 
- * pre: global Mat variables must be of valid images 
- * post: displays the source image and a rectangle is drawn on of where the template had the highest 
- *       match. also prints out the scores of the matches for both templates.
- */
-void MatchingMethod(int, void*);
-
-int main(int argc, char** argv) {
-    img = imread(image_name, IMREAD_COLOR);
-    templ1 = imread(template_name1, IMREAD_COLOR);
-    templ2 = imread(template_name2, IMREAD_COLOR);
-
-    if (img.empty() || templ1.empty() || templ2.empty())   {
-        cout << "Can't read one of the images" << endl;
-        return EXIT_FAILURE;
-    }
-
-    namedWindow(image_window, WINDOW_AUTOSIZE);
-    namedWindow(result_window, WINDOW_AUTOSIZE);
-
-    const char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
-    createTrackbar(trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod);
-    MatchingMethod(0, 0);
-    waitKey(0);
-
-    return EXIT_SUCCESS;
+		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
+		MASKS[i] = imread(filename);
+	}	
 }
 
-void MatchingMethod(int, void*) {
-    Mat img_display;
-    img.copyTo(img_display);
-                                // Removed the following commented code in order to try to make the 
-                                // result the same size as source but it didn't work.
-    int result_cols = img.cols; // - templ.cols + 1 
-    int result_rows = img.rows; // - templ.rows + 1
-    result1.create(result_rows, result_cols, COLOR_BGR2GRAY); // , CV_32FC1
-    result2.create(result_rows, result_cols, COLOR_BGR2GRAY);
-    matchTemplate(img, templ1, result1, match_method);
-    matchTemplate(img, templ2, result2, match_method);
+/***************************************************************************************************
+ * Identify Hero
+ *
+ * This method detects which Overwatch hero is being played from an input image of gameplay. 
+ * It returns an enum of whichever hero was detected in the image.
+ * 
+ * @params
+ *           Mat& frame: The source image to see if a hero can be detected.
+ *     int match_method: An integer determining which matching method to use.
+ *        bool use_mask: A boolean indicator for whether a mask should be used with the 
+ *                       matching method. 
+ *
+ **************************************************************************************************/
+OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
+	if (match_method < 0 || match_method > 5) {
+		cout << "The match method was invalid." << endl;
+		return OWConst::No_Hero;
+	}
+	
+	Mat templ; Mat result; Mat result_templ;
+	OWConst::Heroes result_hero = OWConst::No_Hero;
+	double tempScore; 
+	Point matchLoc;
 
-    // Commented out so the scores can be compared between different templates
-    // normalize(result1, result1, 0, 1, NORM_MINMAX, -1, Mat());
-    double minVal1; double maxVal1; Point minLoc1; Point maxLoc1;
-    Point matchLoc1;
-    minMaxLoc(result1, &minVal1, &maxVal1, &minLoc1, &maxLoc1, Mat());   
+	// Crop the source image so it only looks at the lower right quadrant. 
+	Rect cropRect = Rect(frame.cols / 2, frame.rows / 2, frame.cols / 2, frame.rows / 2);
+	Mat cropped = frame(cropRect);
 
-    if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
-        cout << "Mercy Min value: " << minVal1 << endl;
-        matchLoc1 = minLoc1;
-    } else {
-        cout << "Mercy Max value: " << maxVal1 << endl;
-        matchLoc1 = maxLoc1;
-    }
+	for (int i = 0; i < HEROES.size(); i++) {
+		templ = TEMPLATES[i];
 
-    rectangle(img_display, matchLoc1, Point(matchLoc1.x + templ1.cols, matchLoc1.y + templ1.rows), Scalar::all(0), 2, 8, 0);
-    rectangle(result1, matchLoc1, Point(matchLoc1.x + templ1.cols, matchLoc1.y + templ1.rows), Scalar::all(0), 2, 8, 0);
-    imshow(image_window, img_display);
-    imshow(result_window, result1);
+		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
+			matchTemplate(cropped, templ, result, match_method, MASKS[i]);
+		}
+		else {
+			matchTemplate(cropped, templ, result, match_method);
+		}
 
-    // Commented out so the scores can be compared between different templates
-    // normalize(result2, result2, 0, 1, NORM_MINMAX, -1, Mat());
-    double minVal2; double maxVal2; Point minLoc2; Point maxLoc2;
-    Point matchLoc2;
-    minMaxLoc(result2, &minVal2, &maxVal2, &minLoc2, &maxLoc2, Mat());
+		double minVal; double maxVal; Point minLoc; Point maxLoc;
+		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
 
-    if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
-        cout << "Soldier Min value: " << minVal2 << endl;
-        matchLoc2 = minLoc2;
-    }
-    else {
-        cout << "Soldier Max value: " << maxVal2 << endl;
-        matchLoc2 = maxLoc2;
-    }
+		// Normalization commented out so the results are comparable to each other. 
+		// TODO: Test normalization methods.
+		// normalize(result, result, 0, 1, NORM_L2, -1, Mat());
 
-    rectangle(img_display, matchLoc2, Point(matchLoc2.x + templ2.cols, matchLoc2.y + templ2.rows), Scalar(255, 0, 0), 2, 8, 0);
-    rectangle(result1, matchLoc2, Point(matchLoc2.x + templ2.cols, matchLoc2.y + templ2.rows), Scalar(255, 0, 0), 2, 8, 0);
-    imshow(image_window, img_display);
-    imshow(result_window, result2);
+		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
+			// If first run or score is less than temp score
+			if (i == 0 || minVal < tempScore) {
+				tempScore = minVal;
+				matchLoc = minLoc;
+				result_hero = HEROES[i];
+				result_templ = templ;
+			}
+		}
+		else {
+			if (i == 0 || maxVal > tempScore) {
+				tempScore = maxVal;
+				matchLoc = maxLoc;
+				result_hero = HEROES[i];
+				result_templ = templ;
+			}
+		}
+	} 
 
+	// Commented out display of the source image and print of the detected object
+	//Mat display_img;
+	//frame.copyTo(display_img);
+	//Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
+	//rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
+	//imshow("result", display_img);
+	//cout << OWConst::getHeroString(result_hero) << endl;
 
-    return;
+	return result_hero;
+}
+
+/***************************************************************************************************
+ * Eval Identify Hero
+ *
+ * This method checks if the hero detected from identifyHero() is consistent with the provided 
+ * expected_hero parameter.
+ * 
+ * @params
+ *                    Mat& frame: The source image to see if a hero can be detected.
+ *              int match_method: An integer determining which matching method to use.
+ * OWConst::Heroes expected_hero: An OW constant of what hero is expected to be detected in this 
+ *                                image.
+ *                 bool use_mask: A boolean indicator for whether a mask should be used with the 
+ *                                matching method. 
+ *
+ **************************************************************************************************/
+int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask) {
+	string result = OWConst::getHeroString(identifyHero(frame, match_method, use_mask));
+	return result == OWConst::getHeroString(expected_hero);
 }

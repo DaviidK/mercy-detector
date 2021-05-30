@@ -27,6 +27,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include "../Tutorials/Template_Matching/template_matching.h"
 
 using namespace std;
 using namespace cv;
@@ -36,7 +37,15 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking2.mp4";
+static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
+static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
+static const int DETECTION_METHOD = 0; // Change this to change the detection method.
+
+// Template Matching variables 
+static Mat TEMPLATES[2];
+static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
+static const vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
+static const int MATCH_METHOD = 0; // Change this to change the temp matching method.
 
 void doProcessing(long& start_processing, long& end_processing, Mat& frame);
 
@@ -45,6 +54,8 @@ long getTime();
 void displayStats(const long& totalTime, const long& processingTime);
 
 void processFrame(Mat& frame);
+
+void tempMatchingSetup();
 
 /***************************************************************************************************
  * Main Function
@@ -80,6 +91,10 @@ int main()
     long start, start_processing, end_processing, end;
     long processingTime, totalTime;
 
+    if (DETECTION_METHOD == 0) {
+        tempMatchingSetup();
+    }
+    
     while(true)
     {
         start = getTime();
@@ -95,7 +110,7 @@ int main()
 
         waitKey(1);
 
-        imshow("VideoDisplay", frame);
+        //imshow("VideoDisplay", frame);
 
         end = getTime();
 
@@ -128,13 +143,8 @@ int main()
  **************************************************************************************************/
 void processFrame(Mat& frame)
 {
-    for(int i = 0; i < frame.rows; i++)
-    {
-        for(int j = 0; j < frame.cols; j++)
-        {
-
-
-        }
+    if (DETECTION_METHOD == 0) {
+        identifyHero(frame, TEMPLATES, MATCH_METHOD);
     }
 }
 
@@ -181,4 +191,18 @@ void displayStats(const long& totalTime, const long& processingTime)
     cout << " | Processing Diff: " << processingTime;
     printf(" | Percentage: %.1f", ((double) processingTime / totalTime) * 100);
     cout << endl;
+}
+
+/***************************************************************************************************
+ * Temp Matching Setup
+ *
+ * This method is a specific set up helper method for the template matching method.
+ * It loads in the template images into a global vector of Mats.
+ *
+ **************************************************************************************************/
+void tempMatchingSetup() {
+    for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
+        string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
+        TEMPLATES[i] = imread(filename);
+    }
 }
