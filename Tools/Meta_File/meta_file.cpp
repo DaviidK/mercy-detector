@@ -78,6 +78,13 @@ MetaFile::MetaFile(const string& filename)
 }
 
 /***************************************************************************************************
+ * MetaFile NoArg Constructor
+ *
+ *
+ **************************************************************************************************/
+MetaFile::MetaFile() = default;
+
+/***************************************************************************************************
  * Set Hero
  *
  * Checks that the provided index is inside the valid range, then sets the hero at this index.
@@ -170,4 +177,3 @@ void MetaFile::save(const string& filename)
 
     csv_wrapper::saveToCSV(filename, data);
 }
-

@@ -26,6 +26,14 @@ class MetaFile {
 public:
 
     /***********************************************************************************************
+     * Meta No Arg Constructor
+     *
+     * Does nothing - the object is not initialized
+     *
+     **********************************************************************************************/
+    MetaFile();
+
+    /***********************************************************************************************
      * Meta File FrameCount Constructor
      *
      * Use this constructor to create a metadata object from scratch. The identified hero and
