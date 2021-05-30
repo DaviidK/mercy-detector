@@ -90,8 +90,10 @@ The tool will open a new window and allow the user to drag-select boxes around e
 
 After running, the tool will create a file in the location specified via the --annotations flag. This file will contain the file paths to each image, followed by the x and y coordinates for the top-left corner of the bounding box, and the width and height of the bounding box created. 
 
-In this tutorial, the command run is: 
+In this tutorial, there are many different directories used for positive samples, so multiple different command line calls are required. Each will write to a new .txt file, and an example is: 
 > opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Images/
+
+All of these individual command line calls have been combined into the file: `mercy-detector/Tutorials/Training_Classifiers/positive_annotations.txt`
 
 ## Creating Positive Samples
 Once bounding boxes have been identified for each positive sample, the opencv_createsamples tool is used to pull samples from within these boxes. 
