@@ -26,7 +26,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
-#include "Tutorials/Template_Matching/template_matching.h"
+#include "Detection_Algorithm/Src/Template_Matching/template_matching.h"
 #include "Tools/CSV/csv_wrapper.h"
 
 using namespace std;
