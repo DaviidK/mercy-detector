@@ -1,6 +1,6 @@
 // ----------------------------------classifier_detection.cpp--------------------------------------
 // Author: David Kang
-// Last modified: 05/31/21
+// Last modified: 06/01/21
 // ------------------------------------------------------------------------------------------------
 // Purpose: 
 // ------------------------------------------------------------------------------------------------
@@ -8,11 +8,9 @@
 //   - Trained cascade classifiers are stored in 'Detection_Algorithm/Data/Cascade_Classifiers/' 
 //     and have the same name as the hero they are meant to detect. 
 
-
-
 #include "classifier_detection.h"
 
-string CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
+const string& CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
 
 /**
 
@@ -21,10 +19,10 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
     // If no specific heroes are provided, load all classifiers available
     if (heroesToDetect.at(0) != OWConst::No_Hero) {
         // Iterate through all files in the classifier directory
-        for (const auto& file : std::filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
+        for (const auto& file : filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
             // Save the filepath, then convert it to a string
-            std::filesystem::path filePath(file);
-            std::string filePathString{filePath.u8string()};
+            filesystem::path filePath(file);
+            string filePathString = filePath.generic_string();
             CascadeClassifier heroClassifier;
 
             // Load the classifier for a given file, and push it to the classifiers field
@@ -57,17 +55,30 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
 /**
 
 */
-void classifier_detection::evaluateClassifier(vector<CascadeClassifier> classifier, Mat image, vector<OWConst::Heroes> knownHero) {
+bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
+    OWConst::Heroes detectedHero = OWConst::No_Hero;
+
+    for (int i = 0; i < this->classifiers->size(); i++) {
+        if (detect(image, this->classifiers->at(i))) {
+            detectedHero = this->classifierHeroes->at(i);
+            return detectedHero == knownHero; 
+        }
+    }
+
+    return false;
+}
+
+bool classifier_detection::detect(const Mat& image, CascadeClassifier& classifier) {
     Mat frame_gray;
     cvtColor(image, frame_gray, COLOR_BGR2GRAY);
     equalizeHist(frame_gray, frame_gray);
 
-    // Detect if a hero can be detected in the screenshot 
-    std::vector<Rect> heroOccurrences;
+    // Determine if a hero can be detected in the screenshot 
+    vector<Rect> heroOccurrences;
     classifier.detectMultiScale(frame_gray, heroOccurrences);
 
-	if (heroOccurrences.size() != 0) {
-		return true;
-	}
-
+    if (heroOccurrences.size() != 0) {
+        return true;
+    }
+    return false;
 }

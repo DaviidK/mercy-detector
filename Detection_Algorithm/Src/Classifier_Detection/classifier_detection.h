@@ -1,6 +1,6 @@
 // ----------------------------------classifier_detection.h----------------------------------------
 // Author: David Kang
-// Last modified: 05/31/21
+// Last modified: 06/01/21
 // ------------------------------------------------------------------------------------------------
 // Purpose: 
 // ------------------------------------------------------------------------------------------------
@@ -28,14 +28,15 @@ public:
     //------------------------------------------------------------------------Public member methods
     void cascadeClassifierSetup(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
 
-    void evaluateClassifier(vector<CascadeClassifier>, Mat, vector<OWConst::Heroes> = {OWConst::No_Hero});
-
-    void printClassifiers();
+    bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
 
 private:
     //------------------------------------------------------------------------Private member fields
     vector<CascadeClassifier>* classifiers = nullptr;
-    vector<OWConst::Heroes>* classifierHeroes;
+    vector<OWConst::Heroes>* classifierHeroes = nullptr;
+
+    //-----------------------------------------------------------------------Private member methods
+    bool detect(const Mat&, CascadeClassifier&);
     
 };
 
