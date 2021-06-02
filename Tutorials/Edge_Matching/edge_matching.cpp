@@ -43,12 +43,9 @@ void displayImage(Mat image, String windowName, int scaleFactor) {
 }
 
 
-
 /************************************************************************************************
 *   distanceFromTo
 *   internal helper for HAUSDORFF DISTANCE
-*
-*
 ************************************************************************************************/
 int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
 {
@@ -72,6 +69,7 @@ int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
     return maxDistAB;
 }
 
+
 /************************************************************************************************
 *   distance_hausdorff
 *************************************************************************************************/
@@ -94,17 +92,16 @@ double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
 *************************************************************************************************/
 bool showContours(Mat image_canny, vector<vector<Point>> contours, bool randomColors) {
     Mat image_drawing = Mat::zeros(image_canny.size(), CV_8UC3);
+
     for (size_t i = 0; i < contours.size(); i++)
     {
         if (randomColors) {
             Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
             drawContours(image_drawing, contours, (int)i, color);
-        }
-        else { 
+        } else { 
             //white contours
             drawContours(image_drawing, contours, (int)i, Scalar(255, 255, 255));
         }
-        
     }
     cout << "Edge map created." << endl;
     imshow("Edge Map", image_drawing);
@@ -129,11 +126,12 @@ vector<vector<Point>> createEdgeMap(Mat image, bool showImage, bool randomColors
     findContours(image_canny, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
 
     if (showImage) {
-        showContours(image_canny, contours, true);
+        showContours(image_canny, contours, randomColors);
     }
 
     return contours;
 }
+
 
 /************************************************************************************************
 *   poolPoints
@@ -166,8 +164,8 @@ int main(int argc, char** argv)
 
     //Create edge maps for image
     cout << "Creating edge maps..." << endl;
-    vector<vector<Point>> template_contours = createEdgeMap(templt, false, true);
-    vector<vector<Point>> input_contours = createEdgeMap(input, false, true);
+    vector<vector<Point>> template_contours = createEdgeMap(templt, true, false);
+    vector<vector<Point>> input_contours = createEdgeMap(input, true, false);
 
     //Pool points from contours for hausdorff distance calculations, start timer
     cout << "Calculating Hausdorff Distance with internal method... (timer start!)" << endl;
