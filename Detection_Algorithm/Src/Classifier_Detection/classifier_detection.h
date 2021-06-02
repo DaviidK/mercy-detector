@@ -26,7 +26,7 @@ public:
     //------------------------------------------------------------------------Public member methods
     void cascadeClassifierSetup(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
 
-    void identifyHero(vector<CascadeClassifier>, Mat, vector<OWConst::Heroes> = {OWConst::No_Hero});
+    void evaluateClassifier(vector<CascadeClassifier>, Mat, vector<OWConst::Heroes> = {OWConst::No_Hero});
 
 private:
     //------------------------------------------------------------------------Private member fields
