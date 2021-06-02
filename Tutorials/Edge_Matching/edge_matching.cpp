@@ -1,5 +1,5 @@
 /************************************************************************************************
-* Edge Matching with Haudorff Distance
+* Edge Matching with Haudorff Distance approach
 *
 * @author: Irene Wachirawutthichai
 * @date: May 25 2021
@@ -10,7 +10,6 @@
 * - https://stackoverflow.com/questions/21482534/how-to-use-shape-distance-and-common-interfaces-to-find-hausdorff-distance-in-op
 * - https://titanwolf.org/Network/Articles/Article?AID=813ecc86-ae22-4844-bd2b-0e516f9d15ce#gsc.tab=0
 *
-*
 ************************************************************************************************/
 
 #include <opencv2/core.hpp>
@@ -20,12 +19,13 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/shape/shape_distance.hpp>
 #include <iostream>
+#include <iomanip>
 #include <chrono>
 
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/close.jpg";
 const String TEMPLATE_FILE = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
 const int THRESHOLD = 100;
 RNG rng(98765);
@@ -34,7 +34,6 @@ RNG rng(98765);
 /************************************************************************************************
 *   displayImage
 *   Helper to display image with a scale factor parameter for resizing
-*
 ************************************************************************************************/
 void displayImage(Mat image, String windowName, int scaleFactor) {
     namedWindow(windowName, WINDOW_NORMAL);
@@ -71,16 +70,15 @@ int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
 
 
 /************************************************************************************************
-*   distance_hausdorff
+*   distance_hausdorff_pseudo
+*   calculates a one-sided hausdorff distance; matches template to input scene, excluding the vice versa
 *************************************************************************************************/
-double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
+double distance_hausdorff_pseudo(const vector<Point>& a, const vector<Point>& b)
 {
     int maxDistAB = distanceFromTo(a, b);
-    int maxDistBA = distanceFromTo(b, a);
-    int maxDist = max(maxDistAB, maxDistBA);
-    double result = sqrt((double)maxDist);
+    double result = sqrt((double)maxDistAB);
 
-    cout << "Hausdorff distance = " << result << endl;
+    cout << "Hausdorff distance = " << fixed << setprecision(2) << result << endl;
 
     return result;
 }
@@ -165,7 +163,7 @@ int main(int argc, char** argv)
     //Create edge maps for image
     cout << "Creating edge maps..." << endl;
     vector<vector<Point>> template_contours = createEdgeMap(templt, true, false);
-    vector<vector<Point>> input_contours = createEdgeMap(input, true, false);
+    vector<vector<Point>> input_contours = createEdgeMap(input, true, true);
 
     //Pool points from contours for hausdorff distance calculations, start timer
     cout << "Calculating Hausdorff Distance with internal method... (timer start!)" << endl;
@@ -175,14 +173,14 @@ int main(int argc, char** argv)
     vector<Point> input_points_pool = poolPoints(input_contours);
 
     //Calculate Hausdorff Distance, records time 
-    double distance_hausdorff_internal = distance_hausdorff(template_points_pool, input_points_pool);
+    double distance_hausdorff_internal = distance_hausdorff_pseudo(template_points_pool, input_points_pool);
     
     //Stop timer and show elapsed time
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
     int time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "[Hausdorff Distance caluclation time: " << time << " ms]" << endl;
 
-    waitKey(5000); //wait for 5 sec
+    waitKey(5000); //wait for 5 sec before auto-exit
 
     return 0;
 }
