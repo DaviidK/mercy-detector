@@ -20,20 +20,24 @@ string CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
 void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>& heroesToDetect) {
     // If no specific heroes are provided, load all classifiers available
     if (heroesToDetect.at(0) != OWConst::No_Hero) {
+        // Iterate through all files in the classifier directory
         for (const auto& file : std::filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
-            std::string filepath = std::filesystem::path_string(file);
+            // Save the filepath, then convert it to a string
+            std::filesystem::path filePath(file);
+            std::string filePathString{filePath.u8string()};
             CascadeClassifier heroClassifier;
-            // NOT A STRING
-            heroClassifier.load(file);
+
+            // Load the classifier for a given file, and push it to the classifiers field
+            heroClassifier.load(filePathString);
             this->classifiers->push_back(heroClassifier);
-            this->classifierHeroes->push_back(fileString.getHero());
+            // Push the corresponding hero to the classifierHeroes field
+            this->classifierHeroes->push_back(OWConst::getHero(filePathString));
         }
     }
     // If specific heroes are provided, then only load the classifiers corresponding to those heroes
     else {
         for (int i = 0; i < heroesToDetect.size(); i++) {
             CascadeClassifier heroClassifier;
-
             string classifierFilePath = CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
 
             if (!heroClassifier.load(classifierFilePath)) {
@@ -43,7 +47,7 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
             }
             else {
                 this->classifiers->push_back(heroClassifier);
-                this->classifierHeroes->push_back();
+                this->classifierHeroes->push_back(heroesToDetect[i]);
             }
         }
     }
