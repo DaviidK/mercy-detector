@@ -12,12 +12,29 @@
 
 #include "classifier_detection.h"
 
+string CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
+
+/**
+
+*/
 void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>& heroesToDetect) {
-    if (heroesToDetect.size() == 0) {
+    // If no specific heroes are provided, load all classifiers available
+    if (heroesToDetect.at(0) != OWConst::No_Hero) {
+        for (const auto& file : std::filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
+            std::string filepath = std::filesystem::path_string(file);
+            CascadeClassifier heroClassifier;
+            // NOT A STRING
+            heroClassifier.load(file);
+            this->classifiers->push_back(heroClassifier);
+            this->classifierHeroes->push_back(fileString.getHero());
+        }
+    }
+    // If specific heroes are provided, then only load the classifiers corresponding to those heroes
+    else {
         for (int i = 0; i < heroesToDetect.size(); i++) {
             CascadeClassifier heroClassifier;
 
-            string classifierFilePath = this->classifierDirectory + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
+            string classifierFilePath = CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
 
             if (!heroClassifier.load(classifierFilePath)) {
                 //throw invalid_argument("No available classifier for given hero");
@@ -26,13 +43,12 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
             }
             else {
                 this->classifiers->push_back(heroClassifier);
+                this->classifierHeroes->push_back();
             }
         }
     }
-    else {
-    
-    }
 }
+
 
 /**
 

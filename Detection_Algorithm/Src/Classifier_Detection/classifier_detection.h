@@ -14,6 +14,8 @@
 #include "opencv2/imgproc.hpp"
 #include <vector>
 #include <stdexcept>
+#include <filesystem>
+#include <string>
 #include <iostream>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
 
@@ -28,10 +30,13 @@ public:
 
     void evaluateClassifier(vector<CascadeClassifier>, Mat, vector<OWConst::Heroes> = {OWConst::No_Hero});
 
+    void printClassifiers();
+
 private:
     //------------------------------------------------------------------------Private member fields
     vector<CascadeClassifier>* classifiers = nullptr;
-    string classifierDirectory = "Detection_Algorithm/Data/Cascade_Classifiers/";
+    vector<OWConst::Heroes>* classifierHeroes;
+    
 };
 
 #endif
