@@ -1,16 +1,15 @@
 /************************************************************************************************
 * Edge Matching with Haudorff Distance
-* 
+*
 * @author: Irene Wachirawutthichai
 * @date: May 25 2021
-* 
-* 
-* references: 
+*
+*
+* references:
 * - https://programmersought.com/article/14824834608/
 * - https://stackoverflow.com/questions/21482534/how-to-use-shape-distance-and-common-interfaces-to-find-hausdorff-distance-in-op
 * - https://titanwolf.org/Network/Articles/Article?AID=813ecc86-ae22-4844-bd2b-0e516f9d15ce#gsc.tab=0
-* 
-* 
+*
 *
 ************************************************************************************************/
 
@@ -37,7 +36,7 @@ RNG rng(98765);
 /************************************************************************************************
 *   displayImage
 *   Helper to display image with a scale factor parameter for resizing
-* 
+*
 ************************************************************************************************/
 void displayImage(Mat image, String windowName, int scaleFactor) {
     namedWindow(windowName, WINDOW_NORMAL);
@@ -48,10 +47,10 @@ void displayImage(Mat image, String windowName, int scaleFactor) {
 
 
 /************************************************************************************************
-*   distanceFromTo 
+*   distanceFromTo
 *   internal helper for HAUSDORFF DISTANCE
-* 
-* 
+*
+*
 ************************************************************************************************/
 int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
 {
@@ -100,7 +99,7 @@ int main(int argc, char** argv)
     //Read INPUT file and TEMPLATE file from source
     Mat input = imread(INPUT_FILE);
     Mat templt = imread(TEMPLATE_FILE);
-    if (input.empty() || templt.empty() )
+    if (input.empty() || templt.empty())
     {
         cout << "Could not open or find the image!\n" << endl;
         cout << "Usage: " << argv[0] << " <Input image>" << endl;
@@ -133,7 +132,7 @@ int main(int argc, char** argv)
     Mat input_canny;
     Canny(input_gray, input_canny, THRESHOLD, THRESHOLD * 2);
     vector<vector<Point> > input_contours;
-    findContours(input_canny, input_contours, RETR_LIST, CHAIN_APPROX_SIMPLE); 
+    findContours(input_canny, input_contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
     /*Mat input_drawing = Mat::zeros(input_canny.size(), CV_8UC3);
     for (size_t i = 0; i < input_contours.size(); i++)
     {
@@ -143,9 +142,9 @@ int main(int argc, char** argv)
     cout << "Input image edge map created." << endl;
     imshow("Input", template_drawing);
     waitKey();*/
-  
+
     cout << "Pooling template image points..." << endl;
-    vector<Point> template_points_pool = {}; 
+    vector<Point> template_points_pool = {};
     for (int i = 0; i < template_contours.size(); i++) {
         template_points_pool.insert(template_points_pool.end(), template_contours[i].begin(), template_contours[i].end());
     }
@@ -160,7 +159,6 @@ int main(int argc, char** argv)
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
     double distance_hausdorff_internal = distance_hausdorff(template_points_pool, input_points_pool);
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
-
     cout << "[Elapsed time in milliseconds: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms]" << endl;
     waitKey();
 

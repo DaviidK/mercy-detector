@@ -35,31 +35,44 @@ I copied the following files into my local build folder under `{Local_OpenCV_Dir
 ## Setting up training data and directory structure
 ### Positive Images
 Positive training images must contain the desired object to be detected, and multiple objects can be present in the same image. Images should be stored in their own directory, with a separate text file containing the filepaths to each image on their own line. In this tutorial, the directory is set as follows:
-
-    Data/
-      Positive_Images/
-        pos1.jpg
-        pos2.jpg
-        pos3.jpg
-        etc.
-    positive_paths.txt
+    
+    mercy-detector
+        Detection_Algorithm/
+            Data/
+                Extracted_Frames/
+                    Mercy/
+                        Wand/
+                            <Image Directories>/
+                                image1.png
+                                image2.png
+                                image3.png
+                                etc.
+        Tutorials/
+            Training_Classifiers/
+                positive_paths.txt
 
 In this example, "positive_paths.txt" contains the relative file paths to each image on its own line. Thus, we can expect the file to look like:
->Data/Positive_Images/pos1.jpg <br>
-Data/Positive_Images/pos2.jpg <br>
-Data/Positive_Images/pos3.jpg <br>
+>Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos1.jpg <br>
+Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos2.jpg <br>
+Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/\<Image Directory>/pos3.jpg <br>
 etc.
 
 ### Negative Images
 Negative training images must not contain any instances of the desired object to be detected, and the directory should be set up in the same manner as positive images. For this tutorial, the directory is as follows: 
 
-    Data/
-      Negative_Images/
-        neg1.jpg
-        neg2.jpg
-        neg3.jpg
-        etc.
-    negative_paths.txt
+    mercy-detector
+        Detection_Algorithm/
+            Data/
+                Extracted_Frames/
+                    Lucio/
+                        <Image Directories>/
+                            image1.png
+                            image2.png
+                            image3.png
+                            etc.
+        Tutorials/
+            Training_Classifiers/
+                negative_paths.txt
 
 Once again, "negative_paths.txt" contains relative file paths to every image on its own line.
 
@@ -77,8 +90,10 @@ The tool will open a new window and allow the user to drag-select boxes around e
 
 After running, the tool will create a file in the location specified via the --annotations flag. This file will contain the file paths to each image, followed by the x and y coordinates for the top-left corner of the bounding box, and the width and height of the bounding box created. 
 
-In this tutorial, the command run is: 
+In this tutorial, there are many different directories used for positive samples, so multiple different command line calls are required. Each will write to a new .txt file, and an example is: 
 > opencv_annotation --annotations=positive_annotations.txt --images=Data/Positive_Images/
+
+All of these individual command line calls have been combined into the file: `mercy-detector/Tutorials/Training_Classifiers/positive_annotations.txt`
 
 ## Creating Positive Samples
 Once bounding boxes have been identified for each positive sample, the opencv_createsamples tool is used to pull samples from within these boxes. 
