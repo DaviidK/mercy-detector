@@ -28,6 +28,8 @@ public:
     //------------------------------------------------------------------------Public member methods
     void cascadeClassifierSetup(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
 
+    OWConst::Heroes identifyHero(const Mat&);
+
     bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
 
 private:

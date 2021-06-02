@@ -55,6 +55,20 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
 /**
 
 */
+OWConst::Heroes classifier_detection::identifyHero(const Mat& image) {
+
+    for (int i = 0; i < this->classifiers->size(); i++) {
+        if (detect(image, this->classifiers->at(i))) {
+            return this->classifierHeroes->at(i);
+        }
+    }
+
+    return OWConst::No_Hero;
+}
+
+/**
+
+*/
 bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
     OWConst::Heroes detectedHero = OWConst::No_Hero;
 
@@ -67,6 +81,8 @@ bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::H
 
     return false;
 }
+
+
 
 bool classifier_detection::detect(const Mat& image, CascadeClassifier& classifier) {
     Mat frame_gray;
