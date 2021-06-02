@@ -1,6 +1,6 @@
 // ----------------------------------classifier_detection.cpp--------------------------------------
 // Author: David Kang
-// Last modified: 06/01/21
+// Last modified: 06/02/21
 // ------------------------------------------------------------------------------------------------
 // Purpose: 
 // ------------------------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
 
             // Load the classifier for a given file, and push it to the classifiers field
             heroClassifier.load(filePathString);
-            this->classifiers->push_back(heroClassifier);
+            classifiers->push_back(heroClassifier);
             // Push the corresponding hero to the classifierHeroes field
-            this->classifierHeroes->push_back(OWConst::getHero(filePathString));
+            classifierHeroes->push_back(OWConst::getHero(filePathString));
         }
     }
     // If specific heroes are provided, then only load the classifiers corresponding to those heroes
@@ -44,8 +44,8 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
                 break;
             }
             else {
-                this->classifiers->push_back(heroClassifier);
-                this->classifierHeroes->push_back(heroesToDetect[i]);
+                classifiers->push_back(heroClassifier);
+                classifierHeroes->push_back(heroesToDetect[i]);
             }
         }
     }
@@ -57,9 +57,9 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
 */
 OWConst::Heroes classifier_detection::identifyHero(const Mat& image) {
 
-    for (int i = 0; i < this->classifiers->size(); i++) {
-        if (detect(image, this->classifiers->at(i))) {
-            return this->classifierHeroes->at(i);
+    for (int i = 0; i < classifiers->size(); i++) {
+        if (detect(image, classifiers->at(i))) {
+            return classifierHeroes->at(i);
         }
     }
 
@@ -72,9 +72,9 @@ OWConst::Heroes classifier_detection::identifyHero(const Mat& image) {
 bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
     OWConst::Heroes detectedHero = OWConst::No_Hero;
 
-    for (int i = 0; i < this->classifiers->size(); i++) {
-        if (detect(image, this->classifiers->at(i))) {
-            detectedHero = this->classifierHeroes->at(i);
+    for (int i = 0; i < classifiers->size(); i++) {
+        if (detect(image, classifiers->at(i))) {
+            detectedHero = classifierHeroes->at(i);
             return detectedHero == knownHero; 
         }
     }
@@ -85,13 +85,17 @@ bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::H
 
 
 bool classifier_detection::detect(const Mat& image, CascadeClassifier& classifier) {
-    Mat frame_gray;
-    cvtColor(image, frame_gray, COLOR_BGR2GRAY);
-    equalizeHist(frame_gray, frame_gray);
+    // Crop the source image so it only looks at bottom right quarter of screen
+    Rect newSize = Rect(image.cols / 2, image.rows / 2, image.cols / 2, image.rows / 2);
+    Mat croppedImage = croppedImage(newSize);
+
+    Mat grayImage;
+    cvtColor(croppedImage, grayImage, COLOR_BGR2GRAY);
+    equalizeHist(grayImage, grayImage);
 
     // Determine if a hero can be detected in the screenshot 
     vector<Rect> heroOccurrences;
-    classifier.detectMultiScale(frame_gray, heroOccurrences);
+    classifier.detectMultiScale(grayImage, heroOccurrences);
 
     if (heroOccurrences.size() != 0) {
         return true;
