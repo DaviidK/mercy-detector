@@ -25,12 +25,17 @@ static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
  *
  **************************************************************************************************/
 void tempMatchingSetup() {
+	Mat orig; Mat resized;
 	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
 		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
-		TEMPLATES[i] = imread(filename);
+		orig = imread(filename);
+		resize(orig, resized, Size(orig.cols, orig.rows));
+		TEMPLATES[i] = resized;
 
 		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
-		MASKS[i] = imread(filename);
+		orig = imread(filename);
+		resize(orig, resized, Size(orig.cols, orig.rows));
+		MASKS[i] = resized;
 	}	
 }
 
