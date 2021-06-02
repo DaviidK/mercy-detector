@@ -1,4 +1,4 @@
-// Testing convexHull() calculations with Hausdorff Distance
+// Testing calculations with Hausdorff Distance
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -9,7 +9,7 @@
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/green.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/soldier.jpg";
 //const String INPUT_FILE = "C:/Users/Irene/source/repos/mercy-detector/Tutorials/Hausdorff_Distance/default_staff_snip.png";
 Mat src_gray;
 int thresh = 100;
@@ -56,22 +56,7 @@ void convex_contour_thresh_callback(int, void*)
     for (size_t i = 0; i < contours.size(); i++)
     {
         Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        //drawContours(drawing, contours, (int)i, color);
-        bool quadrant4 = true;
-        for (int p = 0; p < contours[i].size(); p++) {
-            if (contours[i][p].x < src_gray.cols / 2) {
-                quadrant4 = false;
-                break;
-            }
-            if (contours[i][p].y < src_gray.rows / 2) {
-                quadrant4 = false;
-                break;
-            }
-        }
-
-        if (quadrant4) {
-            drawContours(drawing, hull, (int)i, color, 2);
-        }
+        drawContours(drawing, contours, (int)i, color, 2);
         
     }
     displayImage(drawing, source_window, 1);
@@ -79,7 +64,7 @@ void convex_contour_thresh_callback(int, void*)
 
 
 // internal helper for HAUSDORFF DISTANCE
-int distance_2(const vector<Point>& a, const vector<Point>& b)
+int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
 {
     int maxDistAB = 0;
     for (size_t i = 0; i < a.size(); i++) {
@@ -104,8 +89,8 @@ int distance_2(const vector<Point>& a, const vector<Point>& b)
 
 double distance_hausdorff(const vector<Point>& a, const vector<Point>& b)
 {
-    int maxDistAB = distance_2(a, b);
-    int maxDistBA = distance_2(b, a);
+    int maxDistAB = distanceFromTo(a, b);
+    int maxDistBA = distanceFromTo(b, a);
     int maxDist = max(maxDistAB, maxDistBA);
     double result = sqrt((double)maxDist);
 
