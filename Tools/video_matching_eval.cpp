@@ -75,7 +75,6 @@ int main() {
 
 	vector<vector<string>> output;
 
-	/*
 	for (int i = 0; i < videoFiles.size(); i++) {
 		string shortPath = videoFiles[i][0];
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
@@ -108,9 +107,8 @@ int main() {
 		else {
 			cout << "The given detection method is not one of the 3 accepted for this program." << endl;
 		}
-	}*/
-	vector<string> row = { "hi", "hi" };
-	output.push_back(row);
+	}
+	
 	string dateTime = getDateTime();
 
 	string output_file_name = "Tools/Eval_Results/" + DETECTION_TYPES[DETECTION_METHOD] + "-" + dateTime + ".csv";

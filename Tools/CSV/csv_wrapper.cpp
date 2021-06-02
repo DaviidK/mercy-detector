@@ -26,10 +26,6 @@ void csv_wrapper::saveToCSV(const string& filename, vector<vector<string>> data)
 
     fileOut.open(filename, ios::trunc | ios::out);
 
-    if (fileOut.is_open()) {
-        cout << "File is open." << endl;
-    }
-
     for(int i = 0; i < data.size(); i++)
     {
         for(int j = 0; j < data[i].size(); j++)
