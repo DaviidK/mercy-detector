@@ -25,7 +25,7 @@
 using namespace cv;
 using namespace std;
 
-const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/light.jpg";
+const String INPUT_FILE = "Detection_Algorithm/Data/Static_Test_Im/busy.jpg";
 const String TEMPLATE_FILE = "Detection_Algorithm/Data/Static_Test_Im/template.jpg";
 const int THRESHOLD = 100;
 Mat input_gray;
@@ -70,7 +70,7 @@ int distanceFromTo(const vector<Point>& a, const vector<Point>& b)
         }
         maxDistAB += minB;
     }
-    cout << "Total Distance = " << maxDistAB << endl;
+    //cout << "Total Distance = " << maxDistAB << endl;
     return maxDistAB;
 }
 
@@ -159,8 +159,10 @@ int main(int argc, char** argv)
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
     double distance_hausdorff_internal = distance_hausdorff(template_points_pool, input_points_pool);
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
-    cout << "[Elapsed time in milliseconds: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms]" << endl;
-    waitKey();
+    int time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+    cout << "[Elapsed time in milliseconds: " << time << " ms]" << endl;
+
+    waitKey(5000); //wait for 5 sec
 
     return 0;
 }
