@@ -29,10 +29,15 @@ Mat removeBackground(Mat grabcutImg, Mat result) {
 }
 
 int main(int argc, char* argv[]) {
-	Mat grabcutImg = imread("Detection_Algorithm/Data/Static_Test_Im/grabcutresult.jpg");
+	Mat grabcutImg = imread("Detection_Algorithm/Data/Templates/Mercy_mask.png");
+
+	if (grabcutImg.empty()) {
+		return 0;
+	}
+
 	imshow("Grab", grabcutImg);
 	waitKey(0);
-	Rect myRect(992, 551, 600, 491);
+	Rect myRect(4, 4, grabcutImg.rows - 5, grabcutImg.cols - 5);
 	Mat cropped = grabcutImg(myRect);
 	imshow("Grab", cropped);
 	waitKey(0);

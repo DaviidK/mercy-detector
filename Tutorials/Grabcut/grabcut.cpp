@@ -113,10 +113,10 @@ void GCApplication::showImage() const {
         circle(res, *it, radius, LIGHTBLUE, thickness);
     for (it = prFgdPxls.begin(); it != prFgdPxls.end(); ++it)
         circle(res, *it, radius, PINK, thickness);
+    imwrite("grabcutresult.png", res);
     if (rectState == IN_PROCESS || rectState == SET)
         rectangle(res, Point(rect.x, rect.y), Point(rect.x + rect.width, rect.y + rect.height), GREEN, 2);
     imshow(*winName, res);
-    imwrite("grabcutresult.jpg", res);
 }
 void GCApplication::setRectInMask() {
     CV_Assert(!mask.empty());
@@ -235,7 +235,7 @@ static void on_mouse(int event, int x, int y, int flags, void* param) {
     gcapp.mouseClick(event, x, y, flags, param);
 }
 int main(int argc, char** argv) {
-    cv::CommandLineParser parser(argc, argv, "{@input| Detection_Algorithm/Data/Static_Test_Im/close.jpg |}");
+    cv::CommandLineParser parser(argc, argv, "{@input| Detection_Algorithm/Data/Templates/Mercy.png |}");
     help(argv);
     string filename = parser.get<string>("@input");
     if (filename.empty())     {
