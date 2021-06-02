@@ -1,8 +1,8 @@
 /***************************************************************************************************
  * Object Detection Evaluator
  *
- * @author Matthew Munson, Sana Suse
- * @date 5/25/21
+ * @author Matthew Munson, Sana Suse, David Kang
+ * @date 06/02/21
  *
  * This is a tool for determining how well the object detection methods are working. 
  * The input is a video of gameplay which is passed into the detection method. 
@@ -50,6 +50,11 @@ void processVideoTemplateMatching(VideoCapture capture,
 								  OWConst::Heroes expectedHero, 
 	                              vector<vector<string>> &output,
 								  string filePath);
+
+void processVideoCascadeClassifier(VideoCapture capture,
+							       OWConst::Heroes expectedHero,
+								   vector<vector<string>>& output,
+								   string filepath);
 
 void displayStats(const int& correct, const int& total);
 
