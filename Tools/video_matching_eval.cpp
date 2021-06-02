@@ -134,6 +134,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 	Mat frame;
 	int correctCount[NUM_MATCHING_METHODS];
 	int totalFrameCount = 0;
+	int evalFrameCount = 0;
 
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 		correctCount[i] = 0;
@@ -153,22 +154,26 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 			cout << "*";
 		}
 		
-		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-			if (i == 6) {
-				match_method = 0;
-				use_mask = true;
-			}
-			else if (i == 7) {
-				match_method = 3;
-				use_mask = true;
-			}
-			else {
-				match_method = i;
-				use_mask = false;
-			}
-			correctCount[i] += evalIdentifyHero(frame, match_method, expectedHero, use_mask);
-		}
+		if (totalFrameCount % 10 == 0) {
+			resize(frame, frame, Size(frame.cols, frame.rows));
 
+			for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+				if (i == 6) {
+					match_method = 0;
+					use_mask = true;
+				}
+				else if (i == 7) {
+					match_method = 3;
+					use_mask = true;
+				}
+				else {
+					match_method = i;
+					use_mask = false;
+				}
+				correctCount[i] += evalIdentifyHero(frame, match_method, expectedHero, use_mask);
+			}
+			evalFrameCount++;
+		}
 		totalFrameCount++;
 	}
 	cout << endl;
@@ -181,10 +186,10 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 		row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
 		row.push_back(to_string(i));
 		row.push_back(to_string(correctCount[i]));
-		row.push_back(to_string(totalFrameCount));
+		row.push_back(to_string(evalFrameCount));
 		output.push_back(row);
 		
-		displayStats(correctCount[i], totalFrameCount);
+		displayStats(correctCount[i], evalFrameCount);
 	}
 }
 
