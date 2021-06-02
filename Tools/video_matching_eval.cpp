@@ -27,6 +27,7 @@
 #include <opencv2/opencv.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
 #include "Tutorials/Template_Matching/template_matching.h"
+#include "Detection_Algorithm/Src/Classifier_Detection/classifier_detection.h"
 #include "Tools/CSV/csv_wrapper.h"
 
 using namespace std;
@@ -40,7 +41,7 @@ using std::chrono::system_clock;
 static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv";
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
-static const int DETECTION_METHOD = 0;
+static const int DETECTION_METHOD = 1;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
@@ -97,8 +98,7 @@ int main() {
 			processVideoTemplateMatching(capture, expectedHero, output, shortPath);
 		}
 		else if (DETECTION_METHOD == 1) {
-			// TODO: Cascade Classifier frame processing method here
-			// Pass in capture, expectedHero and output.
+			processVideoCascadeClassifier(capture, expectedHero, output, shortPath);
 		}
 		else if (DETECTION_METHOD == 2) {
 			// TODO: Edge Matching frame processing method here
@@ -122,7 +122,7 @@ int main() {
 /***************************************************************************************************
  * Process Frame for Template Matching 
  *
- * This method processes a given VideoCapture to detect heroes in each frame.
+ * This method processes a given VideoCapture to detect heroes in each frame using template matching.
  * It stores the resulting correct counts and total number of frames into a csv file for easy data 
  * processing.
  * 
@@ -186,6 +186,54 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 		
 		displayStats(correctCount[i], totalFrameCount);
 	}
+}
+
+/***************************************************************************************************
+ * Process Frame for Cascade Classifiers
+ *
+ * This method processes a given VideoCapture to detect heroes in each frame using cascade classifiers.
+ * It stores the resulting correct counts and total number of frames into a csv file for easy data
+ * processing.
+ *
+ **************************************************************************************************/
+void processVideoCascadeClassifier(VideoCapture capture, OWConst::Heroes expectedHero,
+								   vector<vector<string>>& output, string filepath) {
+	vector<string> row;
+
+	Mat frame;
+	int correctCount = 0;
+	int totalFrameCount = 0;
+
+	cout << "Progress (* per 50 frame): " << endl;
+	int match_method; bool use_mask;
+
+	capture >> frame;
+	while (!frame.empty()) {
+		if (totalFrameCount % 50 == 0) {
+			cout << "*";
+		}
+
+		vector<OWConst::Heroes> knownHero = {expectedHero};
+		classifier_detection::cascadeClassifierSetup(knownHero);
+		if (classifier_detection::evaluateClassifier(frame, expectedHero)) {
+			correctCount++;
+		}
+
+		totalFrameCount++;
+		capture >> frame;
+	}
+	cout << endl;
+
+	row.clear();
+
+	row.push_back(OWConst::getHeroString(expectedHero));
+	row.push_back(filepath);
+	row.push_back(DETECTION_TYPES[DETECTION_METHOD]);
+	row.push_back(to_string(correctCount));
+	row.push_back(to_string(totalFrameCount));
+	output.push_back(row);
+
+	displayStats(correctCount, totalFrameCount);
 }
 
 /***************************************************************************************************
