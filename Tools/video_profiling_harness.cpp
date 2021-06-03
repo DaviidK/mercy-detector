@@ -46,6 +46,8 @@ static Mat TEMPLATES[2];
 static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 static const vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
 static const int MATCH_METHOD = 0; // Change this to change the temp matching method.
+static const bool USE_MASK = false; // Change this to change whether the matching method will take
+                                    // a mask. This can only be set to true for 0 and 3 match methods.
 
 void doProcessing(long& start_processing, long& end_processing, Mat& frame);
 
@@ -144,7 +146,7 @@ int main()
 void processFrame(Mat& frame)
 {
     if (DETECTION_METHOD == 0) {
-        identifyHero(frame, TEMPLATES, MATCH_METHOD);
+        identifyHero(frame, MATCH_METHOD, USE_MASK);
     }
 }
 
