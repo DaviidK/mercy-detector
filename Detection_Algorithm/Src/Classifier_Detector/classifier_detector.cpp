@@ -1,6 +1,6 @@
 // ----------------------------------classifier_detector.cpp--------------------------------------
 // Author: David Kang
-// Last modified: 06/02/21
+// Last modified: 06/03/21
 // ------------------------------------------------------------------------------------------------
 // Purpose: 
 // ------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ bool classifier_detector::evaluateClassifier(const Mat& image, const OWConst::He
 bool classifier_detector::detect(const Mat& image, CascadeClassifier& classifier) {
     // Crop the source image so it only looks at bottom right quarter of screen
     Rect newSize = Rect(image.cols / 2, image.rows / 2, image.cols / 2, image.rows / 2);
-    Mat croppedImage = croppedImage(newSize);
+    Mat croppedImage = image(newSize);
 
     Mat grayImage;
     cvtColor(croppedImage, grayImage, COLOR_BGR2GRAY);
