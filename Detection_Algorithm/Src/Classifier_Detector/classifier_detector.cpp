@@ -16,8 +16,8 @@ const string& CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifie
 
 */
 classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesToDetect) {
-    *(this->classifiers) = vector<CascadeClassifier>();
-    *(this->classifierHeroes) = vector<OWConst::Heroes>();
+    this->classifiers = vector<CascadeClassifier>();
+    this->classifierHeroes = vector<OWConst::Heroes>();
     // If no specific heroes are provided, load all classifiers available
     if (heroesToDetect.at(0) != OWConst::No_Hero) {
         // Iterate through all files in the classifier directory
@@ -29,9 +29,9 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
 
             // Load the classifier for a given file, and push it to the classifiers field
             heroClassifier.load(filePathString);
-            classifiers->push_back(heroClassifier);
+            this->classifiers.push_back(heroClassifier);
             // Push the corresponding hero to the classifierHeroes field
-            classifierHeroes->push_back(OWConst::getHero(filePathString));
+            this->classifierHeroes.push_back(OWConst::getHero(filePathString));
         }
     }
     // If specific heroes are provided, then only load the classifiers corresponding to those heroes
@@ -46,8 +46,8 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
                 break;
             }
             else {
-                classifiers->push_back(heroClassifier);
-                classifierHeroes->push_back(heroesToDetect[i]);
+                this->classifiers.push_back(heroClassifier);
+                this->classifierHeroes.push_back(heroesToDetect[i]);
             }
         }
     }
@@ -59,9 +59,9 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
 */
 OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
 
-    for (int i = 0; i < classifiers->size(); i++) {
-        if (detect(image, classifiers->at(i))) {
-            return classifierHeroes->at(i);
+    for (int i = 0; i < this->classifiers.size(); i++) {
+        if (detect(image, this->classifiers.at(i))) {
+            return this->classifierHeroes.at(i);
         }
     }
 
@@ -74,9 +74,9 @@ OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
 bool classifier_detector::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
     OWConst::Heroes detectedHero = OWConst::No_Hero;
 
-    for (int i = 0; i < classifiers->size(); i++) {
-        if (detect(image, classifiers->at(i))) {
-            detectedHero = classifierHeroes->at(i);
+    for (int i = 0; i < this->classifiers.size(); i++) {
+        if (detect(image, this->classifiers.at(i))) {
+            detectedHero = this->classifierHeroes.at(i);
             return detectedHero == knownHero; 
         }
     }

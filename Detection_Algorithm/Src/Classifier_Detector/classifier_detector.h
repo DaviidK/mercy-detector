@@ -26,7 +26,7 @@ class classifier_detector {
 
 public:
     //------------------------------------------------------------------------Public member methods
-    classifier_detector(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
+    classifier_detector(const vector<OWConst::Heroes> & = { OWConst::No_Hero });
 
     OWConst::Heroes identifyHero(const Mat&);
 
@@ -34,8 +34,8 @@ public:
 
 private:
     //------------------------------------------------------------------------Private member fields
-    vector<CascadeClassifier>* classifiers = nullptr;
-    vector<OWConst::Heroes>* classifierHeroes = nullptr;
+    vector<CascadeClassifier> classifiers;
+    vector<OWConst::Heroes> classifierHeroes;
 
     //-----------------------------------------------------------------------Private member methods
     bool detect(const Mat&, CascadeClassifier&);
