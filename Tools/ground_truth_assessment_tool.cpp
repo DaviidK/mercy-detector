@@ -43,9 +43,9 @@ using namespace cv;
 //__________________________________________________________________________________________________
 // Configuration Variables
 
-const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Glock/idle.mp4";
+const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Glock/firing.mp4";
 const string PATH_TO_METADATA = ""; // Leave this blank to create new
-const string PATH_TO_METADATA_SAVE = "Detection_Algorithm/Data/Output/";
+const string PATH_TO_METADATA_SAVE = "Detection_Algorithm/Data/Output";
 
 // These are the weapon actions assigned by the number keys 1-5
 // If a hero other than Mercy is being analyzed, these may need to be changed
