@@ -14,7 +14,8 @@
 const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
 const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
-static Mat TEMPLATES[2]; static Mat MASKS[2];
+static Mat HERO_TEMPLATES[2]; static Mat HERO_MASKS[2];
+static map<OWConst::Heroes, Mat[]> WA_TEMPLATES;
 static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 
 /***************************************************************************************************
@@ -30,12 +31,12 @@ void tempMatchingSetup() {
 		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
 		orig = imread(filename);
 		resize(orig, resized, Size(orig.cols, orig.rows));
-		TEMPLATES[i] = resized;
+		HERO_TEMPLATES[i] = resized;
 
 		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
 		orig = imread(filename);
 		resize(orig, resized, Size(orig.cols, orig.rows));
-		MASKS[i] = resized;
+		HERO_MASKS[i] = resized;
 	}	
 }
 
@@ -68,10 +69,10 @@ OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
 	Mat cropped = frame(cropRect);
 
 	for (int i = 0; i < HEROES.size(); i++) {
-		templ = TEMPLATES[i];
+		templ = HERO_TEMPLATES[i];
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
-			matchTemplate(cropped, templ, result, match_method, MASKS[i]);
+			matchTemplate(cropped, templ, result, match_method, HERO_MASKS[i]);
 		}
 		else {
 			matchTemplate(cropped, templ, result, match_method);
@@ -132,4 +133,20 @@ OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
 int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask) {
 	string result = OWConst::getHeroString(identifyHero(frame, match_method, use_mask));
 	return result == OWConst::getHeroString(expected_hero);
+}
+
+/***************************************************************************************************
+ * Identify Action
+ *
+ * This method detects what action is being done.
+ *
+ * @params
+ *           Mat& frame: The source image to see if a hero can be detected.
+ *     int match_method: An integer determining which matching method to use.
+ *        bool use_mask: A boolean indicator for whether a mask should be used with the
+ *                       matching method.
+ *
+ **************************************************************************************************/
+OWConst::WeaponActions identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
+
 }
