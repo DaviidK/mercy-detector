@@ -7,8 +7,8 @@
 // Assumptions:
 //   - 
 
-#ifndef CLASSIFIER_DETECTION_H
-#define CLASSIFIER_DETECTION_H
+#ifndef CLASSIFIER_DETECTOR_H
+#define CLASSIFIER_DETECTOR_H
 
 #include "opencv2/objdetect.hpp"
 #include "opencv2/imgproc.hpp"
@@ -22,23 +22,23 @@
 using namespace cv;
 using namespace std;
 
-class classifier_detection {
+class classifier_detector {
 
 public:
     //------------------------------------------------------------------------Public member methods
-    static void cascadeClassifierSetup(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
+    classifier_detector(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
 
-    static OWConst::Heroes identifyHero(const Mat&);
+    OWConst::Heroes identifyHero(const Mat&);
 
-    static bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
+    bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
 
 private:
     //------------------------------------------------------------------------Private member fields
-    static vector<CascadeClassifier>* classifiers;
-    static vector<OWConst::Heroes>* classifierHeroes;
+    vector<CascadeClassifier>* classifiers = nullptr;
+    vector<OWConst::Heroes>* classifierHeroes = nullptr;
 
     //-----------------------------------------------------------------------Private member methods
-    static bool detect(const Mat&, CascadeClassifier&);
+    bool detect(const Mat&, CascadeClassifier&);
     
 };
 

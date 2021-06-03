@@ -1,4 +1,4 @@
-// ----------------------------------classifier_detection.cpp--------------------------------------
+// ----------------------------------classifier_detector.cpp--------------------------------------
 // Author: David Kang
 // Last modified: 06/02/21
 // ------------------------------------------------------------------------------------------------
@@ -8,14 +8,16 @@
 //   - Trained cascade classifiers are stored in 'Detection_Algorithm/Data/Cascade_Classifiers/' 
 //     and have the same name as the hero they are meant to detect. 
 
-#include "classifier_detection.h"
+#include "classifier_detector.h"
 
 const string& CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
 
 /**
 
 */
-void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>& heroesToDetect) {
+classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesToDetect) {
+    *(this->classifiers) = vector<CascadeClassifier>();
+    *(this->classifierHeroes) = vector<OWConst::Heroes>();
     // If no specific heroes are provided, load all classifiers available
     if (heroesToDetect.at(0) != OWConst::No_Hero) {
         // Iterate through all files in the classifier directory
@@ -55,7 +57,7 @@ void classifier_detection::cascadeClassifierSetup(const vector<OWConst::Heroes>&
 /**
 
 */
-OWConst::Heroes classifier_detection::identifyHero(const Mat& image) {
+OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
 
     for (int i = 0; i < classifiers->size(); i++) {
         if (detect(image, classifiers->at(i))) {
@@ -69,7 +71,7 @@ OWConst::Heroes classifier_detection::identifyHero(const Mat& image) {
 /**
 
 */
-bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
+bool classifier_detector::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
     OWConst::Heroes detectedHero = OWConst::No_Hero;
 
     for (int i = 0; i < classifiers->size(); i++) {
@@ -84,7 +86,7 @@ bool classifier_detection::evaluateClassifier(const Mat& image, const OWConst::H
 
 
 
-bool classifier_detection::detect(const Mat& image, CascadeClassifier& classifier) {
+bool classifier_detector::detect(const Mat& image, CascadeClassifier& classifier) {
     // Crop the source image so it only looks at bottom right quarter of screen
     Rect newSize = Rect(image.cols / 2, image.rows / 2, image.cols / 2, image.rows / 2);
     Mat croppedImage = croppedImage(newSize);

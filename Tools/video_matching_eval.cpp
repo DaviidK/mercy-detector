@@ -27,7 +27,7 @@
 #include <opencv2/opencv.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
 #include "Tutorials/Template_Matching/template_matching.h"
-#include "Detection_Algorithm/Src/Classifier_Detection/classifier_detection.h"
+#include "Detection_Algorithm/Src/classifier_detector/classifier_detector.h"
 #include "Tools/CSV/csv_wrapper.h"
 
 using namespace std;
@@ -212,15 +212,16 @@ void processVideoCascadeClassifier(VideoCapture capture, OWConst::Heroes expecte
 	cout << "Progress (* per 50 frame): " << endl;
 	int match_method; bool use_mask;
 
+	vector<OWConst::Heroes> knownHero = { expectedHero };
+	classifier_detector CCDetector(knownHero);
+
 	capture >> frame;
 	while (!frame.empty()) {
 		if (totalFrameCount % 50 == 0) {
 			cout << "*";
 		}
-
-		vector<OWConst::Heroes> knownHero = {expectedHero};
-		classifier_detection::cascadeClassifierSetup(knownHero);
-		if (classifier_detection::evaluateClassifier(frame, expectedHero)) {
+		
+		if (CCDetector.evaluateClassifier(frame, expectedHero)) {
 			correctCount++;
 		}
 
