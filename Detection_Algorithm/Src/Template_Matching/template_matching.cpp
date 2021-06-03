@@ -139,12 +139,14 @@ int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero
  * Identify Action
  *
  * This method detects what action is being done.
+ * TODO: Implement!
  *
  * @params
  *           Mat& frame: The source image to see if a hero can be detected.
  *     int match_method: An integer determining which matching method to use.
  *        bool use_mask: A boolean indicator for whether a mask should be used with the
  *                       matching method.
+ *      OWConst::Heroes: The hero that was detected in the given frame.
  *
  **************************************************************************************************/
 OWConst::WeaponActions identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
