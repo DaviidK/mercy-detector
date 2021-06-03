@@ -6,11 +6,10 @@
  * extract desired frames, or assess the accuracy of an object detection method by comparing
  * against the ground truth.
  *
- * This program takes a single video path as input. It will automatically check the MetaData
- * directory to see if a corresponding .meta file exists.
- *
- * - If a metadata file exists, it will be opened so that it can be edited
- * - If no file exists, a new file will be created initialized to No_Hero, and No_Action
+ * This program takes a single video path as input. If the PATH_TO_METADATA string is empty, the
+ * metadata file will be created from scratch. Otherwise the metadata file will be opened at the
+ * provided path. The metadata file will be saved to PATH_TO_METADATA_SAVE. This can be the same
+ * as PATH_TO_METADATA to overwrite changes.
  *
  * Once a MetaFile has been created, the user will be able to step through each frame in the video.
  * _________________________________________________________________________________________________
@@ -45,7 +44,8 @@ using namespace cv;
 // Configuration Variables
 
 const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Glock/idle.mp4";
-const string PATH_TO_METADATA = "Detection_Algorithm/Data/MetaData";
+const string PATH_TO_METADATA = ""; // Leave this blank to create new
+const string PATH_TO_METADATA_SAVE = "Detection_Algorithm/Data/Output/";
 
 // These are the weapon actions assigned by the number keys 1-5
 // If a hero other than Mercy is being analyzed, these may need to be changed
@@ -94,25 +94,14 @@ int main()
     string filePath = PATH_TO_VIDEO;
     string filename = removePath(filePath);
     MetaFile metaFile;
-    bool matchFound = false;
 
-    // Search for corresponding metadata files in the MetaData directory
-    for (const auto & file : std::__fs::filesystem::directory_iterator(PATH_TO_METADATA))
+    if(!PATH_TO_METADATA.empty())
     {
-        string nextFile = removePath(file.path());
+        metaFile = MetaFile(PATH_TO_METADATA);
 
-        if(nextFile == filename)
-        {
-            cout << "Matching metadata file found, opening file" << endl;
-
-            metaFile = MetaFile(file.path());
-            matchFound = true;
-            break;
-        }
+        cout << "Opened " << PATH_TO_METADATA << endl;
     }
-
-    // Create a meta file from scratch if none has been found
-    if(!matchFound)
+    else
     {
         cout << "No corresponding meta file found, creating from scratch" << endl;
 
@@ -133,11 +122,11 @@ int main()
 
     cout << "Frame loop complete, saving metafile" << endl;
 
-    string metaFileName = PATH_TO_METADATA + "/" + filename + ".meta";
+    string metaFileName = PATH_TO_METADATA_SAVE + "/" + filename + ".meta";
 
     metaFile.save(metaFileName);
 
-    cout << "Meta File Saved" << endl;
+    cout << "Meta File Saved at " << metaFileName << endl;
 
     return 0;
 }
