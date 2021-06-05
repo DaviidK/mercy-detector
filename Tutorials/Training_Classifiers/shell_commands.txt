@@ -2,23 +2,32 @@
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_mercy_wand_paths.txt
 
 # Write the file paths for negative images
-../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > negative_paths.txt
 
 # Use annotation tool to visually draw outlines around objects
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
 # If the text files already exist and are populated, this step is not necessary
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Damage_Boosting
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Dark
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_melee.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Melee
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
-opencv_annotation -annotations=Annotation_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
-opencv_annotation -annotations=Annotation_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
+# Mercy Samples
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Damage_Boosting
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Dark
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_melee.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Melee
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
+
+# Lucio Samples
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Dark
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_light.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Light_Test
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Lucio/Walking2
 
 # Create positive samples using OpenCV command line tool
 # Requires above step or manual creation of a file with all positive object annotations
@@ -27,4 +36,4 @@ opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.v
 # Training the boosted cascade classifiers
 # Requires both above steps to be completed
 # -numPos & -numNeg must be configured to match the number of positive & negative samples being used, currently uses all positive & negative samples
-opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 50 -numNeg 277 -numStages 20 -minHitRate .9
+opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 100 -numNeg 1712 -numStages 20 -minHitRate .9
