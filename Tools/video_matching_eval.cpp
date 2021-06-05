@@ -217,6 +217,11 @@ void processVideoCascadeClassifier(VideoCapture capture, OWConst::Heroes expecte
 
 	capture >> frame;
 	while (!frame.empty()) {
+		capture >> frame;
+		if (frame.empty()) {
+			break;
+		}
+
 		if (totalFrameCount % 50 == 0) {
 			cout << "*";
 		}

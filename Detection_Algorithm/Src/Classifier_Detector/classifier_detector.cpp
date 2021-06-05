@@ -58,7 +58,6 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
 
 */
 OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
-
     for (int i = 0; i < this->classifiers.size(); i++) {
         if (detect(image, this->classifiers.at(i))) {
             return this->classifierHeroes.at(i);
