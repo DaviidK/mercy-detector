@@ -30,8 +30,13 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
             // Load the classifier for a given file, and push it to the classifiers field
             heroClassifier.load(filePathString);
             this->classifiers.push_back(heroClassifier);
+
             // Push the corresponding hero to the classifierHeroes field
-            this->classifierHeroes.push_back(OWConst::getHero(filePathString));
+            const size_t heroNameIndex = filePathString.find_last_of("\\/") + 1;
+            const size_t extensionIndex = filePathString.find_last_of(".");
+            const int heroNameSize = extensionIndex - heroNameIndex;
+            const string heroName = filePathString.substr(heroNameIndex, heroNameSize);
+            this->classifierHeroes.push_back(OWConst::getHero(heroName));
         }
     }
     // If specific heroes are provided, then only load the classifiers corresponding to those heroes
