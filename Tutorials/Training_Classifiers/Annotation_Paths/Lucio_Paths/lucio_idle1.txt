@@ -1,0 +1,14 @@
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_1.png 1 1046 576 644 502
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_125.png 1 1044 571 647 507
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_156.png 1 1046 568 657 511
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_187.png 1 1042 573 647 506
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_218.png 1 1046 571 656 507
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_249.png 1 1045 575 647 503
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_280.png 1 1047 573 652 505
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_311.png 1 1044 574 647 504
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_32.png 1 1046 566 658 512
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_342.png 1 1046 571 652 507
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_373.png 1 1047 574 648 504
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_404.png 1 1047 572 649 505
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_63.png 1 1048 584 629 494
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1\frame_94.png 1 1044 581 664 498
