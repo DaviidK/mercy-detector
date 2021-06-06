@@ -25,7 +25,7 @@ opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.t
 # Lucio Samples
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Dark
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_light.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Light_Test
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Light_Test
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Lucio/Walking2
 
@@ -36,4 +36,4 @@ opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.v
 # Training the boosted cascade classifiers
 # Requires both above steps to be completed
 # -numPos & -numNeg must be configured to match the number of positive & negative samples being used, currently uses all positive & negative samples
-opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 100 -numNeg 1712 -numStages 20 -minHitRate .9
+opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
