@@ -27,7 +27,7 @@ opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle.txt -imag
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Dark
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Light_Test
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Lucio/Walking2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking2
 
 # Create positive samples using OpenCV command line tool
 # Requires above step or manual creation of a file with all positive object annotations
