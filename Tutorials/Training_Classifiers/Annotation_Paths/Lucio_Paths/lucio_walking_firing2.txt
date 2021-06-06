@@ -1,0 +1,20 @@
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_1.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_125.png 1 1057 533 628 527
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_156.png 1 1011 490 787 585
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_187.png 1 1039 552 635 512
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_218.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_249.png 1 1051 594 565 440
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_280.png 1 1036 547 594 512
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_311.png 1 1024 565 609 479
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_32.png 1 1040 502 626 573
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_342.png 1 1036 576 614 471
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_373.png 1 1036 556 600 485
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_404.png 1 1040 571 625 490
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_435.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_466.png 1 1014 511 724 568
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_497.png 1 1040 545 691 533
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_528.png 1 1019 502 794 576
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_559.png 1 1034 518 675 524
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_590.png 1 1022 557 635 456
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_63.png 1 1038 504 630 531
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2\frame_94.png 1 1043 506 661 537
