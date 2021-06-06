@@ -1,0 +1,20 @@
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_1.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_125.png 1 1016 447 627 469
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_156.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_187.png 1 1054 632 562 436
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_218.png 1 1021 472 624 522
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_249.png 1 1041 541 610 498
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_280.png 1 1027 577 587 479
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_311.png 1 1027 467 651 505
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_32.png 1 1034 482 645 492
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_342.png 1 1044 581 616 482
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_373.png 1 1039 564 605 481
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_404.png 0
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_435.png 1 1057 645 574 431
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_466.png 1 1025 456 652 507
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_497.png 1 1043 603 573 465
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_528.png 1 1039 465 632 486
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_559.png 1 1050 529 620 512
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_590.png 1 1035 524 627 517
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_63.png 1 1057 480 616 590
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2\frame_94.png 1 1023 550 627 496
