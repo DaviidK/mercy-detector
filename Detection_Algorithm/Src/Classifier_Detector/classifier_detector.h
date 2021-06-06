@@ -1,11 +1,20 @@
-// ----------------------------------classifier_detection.h----------------------------------------
-// Author: David Kang
-// Last modified: 06/03/21
-// ------------------------------------------------------------------------------------------------
-// Purpose: 
-// ------------------------------------------------------------------------------------------------
-// Assumptions:
-//   - 
+/***************************************************************************************************
+ * Classifier Detector
+ *
+ * @author David Kang
+ * @date 06/06/21
+ *
+ * This file defines an object detector using cascade classifiers. It will load previously
+ * trained classifiers into different vectors, along with the corresponding Heroes & Weapons via
+ * the OWConst class.
+ *
+ * Configuration / Assumptions:
+ *
+ * - HERO_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different heroes, stored
+ *   with the name of that hero.
+ * - WEAPON_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different weapon actions,
+     stored with the name of that weapon action.
+ **************************************************************************************************/
 
 #ifndef CLASSIFIER_DETECTOR_H
 #define CLASSIFIER_DETECTOR_H
@@ -26,17 +35,20 @@ class classifier_detector {
 
 public:
     //------------------------------------------------------------------------Public member methods
+    // Default constructor: Will instantiate 
     classifier_detector();
 
     classifier_detector(const OWConst::Heroes&);
 
-    classifier_detector(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
+    classifier_detector(const vector<OWConst::Heroes>&);
 
     OWConst::Heroes identifyHero(const Mat&);
 
     OWConst::WeaponActions identifyWeaponAction(const Mat&);
 
-    bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
+    bool evaluateHeroClassifier(const Mat&, const OWConst::Heroes&);
+
+    bool evaluateWeaponClassifier(const Mat&, const OWConst::WeaponActions&);
 
 private:
     //------------------------------------------------------------------------Private member fields
