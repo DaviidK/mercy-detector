@@ -29,6 +29,6 @@ private:
 	Mat HERO_TEMPLATES[2]; 
 	Mat HERO_MASKS[2];
 	map<OWConst::Heroes, vector<Mat>> WA_TEMPLATES;
-	string WA_TEMPLATE_FILEPATHS;
+	string WA_TEMPLATE_FILEPATHS = "Detection_Algorithm/Data/Templates/Weapon_Actions/templ_paths.csv";
 	const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 };

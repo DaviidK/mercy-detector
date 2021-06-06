@@ -4,8 +4,8 @@
  * @author Matthew Munson, Sana Suse
  * @date 5/25/21
  *
- * This is a tool for determining how well the object detection methods are working. 
- * The input is a video of gameplay which is passed into the detection method. 
+ * This is a tool for determining how well the object detection methods are working.
+ * The input is a video of gameplay which is passed into the detection method.
  * The output is a CSV file of the results.
  *
  * Configuration / Assumptions:
@@ -38,7 +38,7 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv"; 
+static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv";
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
@@ -49,10 +49,10 @@ static const int NUM_MATCHING_METHODS = 8;
 static const int MATCH_METHOD = 3;
 static const bool USE_MASK = false;
 
-void processVideoTemplateMatching(VideoCapture capture, 
-								  OWConst::Heroes expectedHero, 
-	                              vector<vector<string>>& output,
-								  string filePath);
+void processVideoTemplateMatching(VideoCapture capture,
+	OWConst::Heroes expectedHero,
+	vector<vector<string>>& output,
+	string filePath);
 
 void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath);
 
@@ -90,10 +90,6 @@ int main() {
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
 		OWConst::Heroes expectedHero;
 
-		if (videoFiles[i].size() > 1) {
-			cout << "hi" << endl;
-		}
-
 		capture = VideoCapture(videoPath);
 
 		if (USE_META_FILE) {
@@ -116,7 +112,7 @@ int main() {
 
 			return -1;
 		}
-		
+
 		cout << "Currently on video " << i + 1 << " of " << videoFiles.size() << endl;
 
 		if (DETECTION_METHOD == 0) {
@@ -139,7 +135,7 @@ int main() {
 			cout << "The given detection method is not one of the 3 accepted for this program." << endl;
 		}
 	}
-	
+
 	string dateTime = getDateTime();
 
 	string output_file_name = "Tools/Eval_Results/" + DETECTION_TYPES[DETECTION_METHOD] + "-" + dateTime + ".csv";
@@ -148,69 +144,17 @@ int main() {
 	return 0;
 }
 
-
-void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath) {
-	Mat frame;
-	int frameCount = 0;
-	OWConst::Heroes expectedHero;
-	OWConst::Heroes detectedHero;
-	OWConst::WeaponActions expectedAction;
-	OWConst::WeaponActions detectedAction;
-
-	template_matching TMDetector;
-	
-	int correctCt = 0;
-	int incorrectCt = 0;
-
-	cout << "Progress (* per 50 frame): " << endl;
-
-	while (true) {
-
-		capture >> frame;
-
-		if (frame.empty()) {
-			break;
-		}
-
-		if (frameCount % 50 == 0) {
-			cout << "*";
-		}
-
-		expectedHero = metaFile.getHero(frameCount);
-		expectedAction = metaFile.getWeaponAction(frameCount);
-
-		detectedHero = TMDetector.identifyHero(frame, MATCH_METHOD, USE_MASK);
-
-		if (detectedHero == expectedHero) {
-			correctCt++;
-		}
-		else {
-			incorrectCt++;
-		}
-
-		frameCount++;
-	}
-
-	vector<string> row;
-	row.push_back(videoPath);
-	row.push_back(to_string(correctCt));
-	row.push_back(to_string(incorrectCt));
-	row.push_back(to_string(frameCount));
-
-	output.push_back(row);
-}
-
 /***************************************************************************************************
- * Process Frame for Template Matching 
+ * Process Video for Template Matching
  *
  * This method processes a given VideoCapture to detect heroes in each frame.
- * It stores the resulting correct counts and total number of frames into a csv file for easy data 
+ * It stores the resulting correct counts and total number of frames into a csv file for easy data
  * processing.
- * 
+ *
  **************************************************************************************************/
-void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, 
-								  vector<vector<string>>& output, string filepath) {
-	vector<string> row; 
+void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero,
+	vector<vector<string>>& output, string filepath) {
+	vector<string> row;
 	Mat frame;
 	int correctCount[NUM_MATCHING_METHODS];
 	int totalFrameCount = 0;
@@ -235,10 +179,8 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 		if (totalFrameCount % 50 == 0) {
 			cout << "*";
 		}
-		
-		if (totalFrameCount % 10 == 0) {
-			resize(frame, frame, Size(frame.cols, frame.rows));
 
+		if (totalFrameCount % 10 == 0) {
 			for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 				if (i == 6) {
 					match_method = 0;
@@ -270,15 +212,102 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 		row.push_back(to_string(correctCount[i]));
 		row.push_back(to_string(evalFrameCount));
 		output.push_back(row);
-		
+
 		displayStats(correctCount[i], evalFrameCount);
 	}
 }
 
 /***************************************************************************************************
+ * Process Video for Template Matching using the video metafile
+ *
+ * This method processes a given VideoCapture to detect heroes in each frame. Unlike the previous
+ * template matching video processing video, the video received in this method does not have one
+ * single hero or action that each frame corresponds to. Therefore, it uses a metafile that
+ * describes the state of each frame of the video to
+ *
+ *
+ **************************************************************************************************/
+void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath) {
+	Mat frame;
+	int frameCount = 0;
+	OWConst::Heroes expectedHero;
+	OWConst::Heroes detectedHero;
+	OWConst::WeaponActions expectedAction;
+	OWConst::WeaponActions detectedAction;
+
+	template_matching TMDetector;
+
+	int heroCorrectCt = 0;
+	int heroIncorrectCt = 0;
+	int actionCorrectCt = 0;
+	int actionIncorrectCt = 0;
+
+	cout << "Progress (* per 50 frame): " << endl;
+
+	while (true) {
+
+		capture >> frame;
+
+		if (frame.empty()) {
+			break;
+		}
+
+		if (frameCount % 50 == 0) {
+			cout << "*";
+		}
+
+		expectedHero = metaFile.getHero(frameCount);
+		expectedAction = metaFile.getWeaponAction(frameCount);
+
+		// 
+		detectedHero = TMDetector.identifyHero(frame, MATCH_METHOD, USE_MASK);
+		// Assume correct hero was detected, to detect the weapon.
+		detectedAction = TMDetector.identifyAction(frame, MATCH_METHOD, USE_MASK, expectedHero);
+
+		if (detectedHero == expectedHero) {
+			heroCorrectCt++;
+		}
+		else {
+			heroIncorrectCt++;
+		}
+
+		if (detectedAction == expectedAction) {
+			actionCorrectCt++;
+		}
+		else {
+			actionIncorrectCt++;
+		}
+
+		frameCount++;
+	}
+
+	if (output.size() == 0) {
+		vector<string> colNames;
+		colNames.push_back("videoPath");
+		colNames.push_back("heroCorrect");
+		colNames.push_back("heroIncorrect");
+		colNames.push_back("actionCorrect");
+		colNames.push_back("actionIncorrect");
+		colNames.push_back("totalFrames");
+		output.push_back(colNames);
+	}
+
+	vector<string> row;
+	row.push_back(videoPath);
+	row.push_back(to_string(heroCorrectCt));
+	row.push_back(to_string(heroIncorrectCt));
+	row.push_back(to_string(actionCorrectCt));
+	row.push_back(to_string(actionIncorrectCt));
+	row.push_back(to_string(frameCount));
+
+	output.push_back(row);
+}
+
+
+/***************************************************************************************************
  * Display Stats
  *
- * This method takes in a correct count and a total number of frames count. Using this, it prints 
+ * This method takes in a correct count and a total number of frames count. Using this, it prints
  * out what those values are, and as a percentage returns the effectiveness of the detection method.
  *
  **************************************************************************************************/
@@ -293,7 +322,7 @@ void displayStats(const int& correct, const int& total) {
 /***************************************************************************************************
  * Get Date Time
  *
- * This helper method retrieves the current time. 
+ * This helper method retrieves the current time.
  * This can be used to help name the outputted csv files.
  *
  **************************************************************************************************/

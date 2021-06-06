@@ -160,9 +160,8 @@ int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::H
  **************************************************************************************************/
 OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
 	vector<Mat> temps = WA_TEMPLATES[hero];
-	OWConst::WeaponActions result_action;
+	OWConst::WeaponActions result_action = OWConst::No_Action;
 	Mat templ;
-	Mat cropped;
 	Mat result;
 
 	double tempScore;
@@ -172,10 +171,10 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 		templ = temps.at(i);
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
-			matchTemplate(cropped, templ, result, match_method, HERO_MASKS[i]);
+			matchTemplate(frame, templ, result, match_method, HERO_MASKS[i]);
 		}
 		else {
-			matchTemplate(cropped, templ, result, match_method);
+			matchTemplate(frame, templ, result, match_method);
 		}
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
@@ -197,8 +196,6 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 			}
 		}
 	}
-
-
-
-	return OWConst::No_Action;
+	cout << "action templ: " << OWConst::getWeaponActionString(result_action) << endl;
+	return result_action;
 }
