@@ -6,6 +6,7 @@ find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_me
 # Write the file paths for negative images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
 find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > negative_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/*/*.png > Annotation_Paths/Mercy_Paths/all_mercy_glock_paths.txt
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,11 +28,17 @@ opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking_d
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
 
-# Glock samples - TO BE ADDED SOON
+# Mercy Glock samples 
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_firing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Firing
-opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_firing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Firing
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_flying.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Flying
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle_dark
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle_light_test
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Jumps
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Super_jumps
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Walking
 
-# Lucio Samples - IRENE DO THESE
+# Lucio Samples
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark2
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test1
@@ -67,11 +74,11 @@ opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec
 
 # 1 - Lucio classifier - 75pos, 20 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Staff_75Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 75 -numNeg 2136 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Lucio_75Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 75 -numNeg 2136 -numStages 20 -minHitRate .975
 
 # 2 - Staff classifier - 250pos, 20 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2155 -numStages 20 -minHitRate .975
 
 # 3 - Glock classifier - ?pos, 20 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/glock_annotations.txt -vec Data/Positive_Samples/glock_samples.vec
