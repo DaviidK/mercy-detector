@@ -19,7 +19,7 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
     this->classifiers = vector<CascadeClassifier>();
     this->classifierHeroes = vector<OWConst::Heroes>();
     // If no specific heroes are provided, load all classifiers available
-    if (heroesToDetect.at(0) != OWConst::No_Hero) {
+    if (heroesToDetect.at(0) == OWConst::No_Hero) {
         // Iterate through all files in the classifier directory
         for (const auto& file : filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
             // Save the filepath, then convert it to a string
