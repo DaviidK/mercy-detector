@@ -1,13 +1,18 @@
 # Write the file paths for positive images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_mercy_wand_paths.txt
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Write the file paths for negative images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
 find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > negative_paths.txt
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Use annotation tool to visually draw outlines around objects
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
 # If the text files already exist and are populated, this step is not necessary
+
 # Mercy Samples
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
@@ -22,18 +27,48 @@ opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking_d
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
 
-# Lucio Samples
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Dark
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Idle_Light_Test
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking1
-opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Walking2
+# Lucio Samples - IRENE DO THESE
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping_firing1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping_firing2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking_firing1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking_firing2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking4.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking4
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Create positive samples using OpenCV command line tool
 # Requires above step or manual creation of a file with all positive object annotations
 opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.vec
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Training the boosted cascade classifiers
 # Requires both above steps to be completed
 # -numPos & -numNeg must be configured to match the number of positive & negative samples being used, currently uses all positive & negative samples
 opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+
+
+# 1 - Lucio classifier - 75pos, 20 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_75Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 75 -numNeg 2136 -numStages 20 -minHitRate .975
+
+# 2 - Staff classifier - 250pos, 20 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/mercy_negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+
+# 3 - Glock classifier
+
+# 4 - Mercy classifier redux
