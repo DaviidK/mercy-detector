@@ -56,3 +56,4 @@ unsuccessfulbuild
 # Paths to Data Directories
 *Detection_Algorithm/Data/Video/
 *Detection_Algorithm/Data/Extracted_Frames/
+*Tools/Eval_Results/
