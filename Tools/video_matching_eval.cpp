@@ -28,6 +28,7 @@
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
 #include "Detection_Algorithm/Src/Template_Matching/template_matching.h"
 #include "Tools/CSV/csv_wrapper.h"
+#include "Tools/Meta_File/meta_file.h"
 
 using namespace std;
 using namespace cv;
@@ -37,18 +38,23 @@ using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 
-static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv";
+static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_paths.csv"; 
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
+static const bool USE_META_FILE = true;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
+static const int MATCH_METHOD = 3;
+static const bool USE_MASK = false;
 
 void processVideoTemplateMatching(VideoCapture capture, 
 								  OWConst::Heroes expectedHero, 
-	                              vector<vector<string>> &output,
+	                              vector<vector<string>>& output,
 								  string filePath);
+
+void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath);
 
 void displayStats(const int& correct, const int& total);
 
@@ -72,16 +78,37 @@ int main() {
 	csv_wrapper::readFromCSV(VIDEO_FILE_PATHS, videoFiles);
 
 	VideoCapture capture;
+	MetaFile metaFile;
 
 	vector<vector<string>> output;
 
 	for (int i = 0; i < videoFiles.size(); i++) {
+		if (USE_META_FILE && videoFiles[i].size() == 1) {
+			continue;
+		}
 		string shortPath = videoFiles[i][0];
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
-		string hero_name = shortPath.substr(0, shortPath.find("/", 0));
-		OWConst::Heroes expectedHero = OWConst::getHero(hero_name);
+		OWConst::Heroes expectedHero;
+
+		if (videoFiles[i].size() > 1) {
+			cout << "hi" << endl;
+		}
 
 		capture = VideoCapture(videoPath);
+
+		if (USE_META_FILE) {
+			const size_t period_idx = videoPath.rfind('.');
+			string metaPath = videoPath;
+			if (string::npos != period_idx) {
+				metaPath.erase(period_idx);
+			}
+
+			metaFile = MetaFile(metaPath + ".meta");
+		}
+		else {
+			string hero_name = shortPath.substr(0, shortPath.find("/", 0));
+			expectedHero = OWConst::getHero(hero_name);
+		}
 
 		if (!capture.isOpened()) {
 			cout << "Could not open capture! Either the provided path is invalid, or your build \n" <<
@@ -93,8 +120,12 @@ int main() {
 		cout << "Currently on video " << i + 1 << " of " << videoFiles.size() << endl;
 
 		if (DETECTION_METHOD == 0) {
-			tempMatchingSetup();
-			processVideoTemplateMatching(capture, expectedHero, output, shortPath);
+			if (USE_META_FILE) {
+				processMetaTemplateMatching(capture, metaFile, output, shortPath);
+			}
+			else {
+				processVideoTemplateMatching(capture, expectedHero, output, shortPath);
+			}
 		}
 		else if (DETECTION_METHOD == 1) {
 			// TODO: Cascade Classifier frame processing method here
@@ -118,6 +149,56 @@ int main() {
 }
 
 
+void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath) {
+	Mat frame;
+	int frameCount = 0;
+	OWConst::Heroes expectedHero;
+	OWConst::Heroes detectedHero;
+	OWConst::WeaponActions expectedAction;
+	OWConst::WeaponActions detectedAction;
+
+	template_matching TMDetector;
+	
+	int correctCt = 0;
+	int incorrectCt = 0;
+
+	cout << "Progress (* per 50 frame): " << endl;
+
+	while (true) {
+
+		capture >> frame;
+
+		if (frame.empty()) {
+			break;
+		}
+
+		if (frameCount % 50 == 0) {
+			cout << "*";
+		}
+
+		expectedHero = metaFile.getHero(frameCount);
+		expectedAction = metaFile.getWeaponAction(frameCount);
+
+		detectedHero = TMDetector.identifyHero(frame, MATCH_METHOD, USE_MASK);
+
+		if (detectedHero == expectedHero) {
+			correctCt++;
+		}
+		else {
+			incorrectCt++;
+		}
+
+		frameCount++;
+	}
+
+	vector<string> row;
+	row.push_back(videoPath);
+	row.push_back(to_string(correctCt));
+	row.push_back(to_string(incorrectCt));
+	row.push_back(to_string(frameCount));
+
+	output.push_back(row);
+}
 
 /***************************************************************************************************
  * Process Frame for Template Matching 
@@ -128,13 +209,14 @@ int main() {
  * 
  **************************************************************************************************/
 void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expectedHero, 
-								  vector<vector<string>> &output, string filepath) {
+								  vector<vector<string>>& output, string filepath) {
 	vector<string> row; 
-
 	Mat frame;
 	int correctCount[NUM_MATCHING_METHODS];
 	int totalFrameCount = 0;
 	int evalFrameCount = 0;
+
+	template_matching TMDetector;
 
 	for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 		correctCount[i] = 0;
@@ -170,7 +252,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 					match_method = i;
 					use_mask = false;
 				}
-				correctCount[i] += evalIdentifyHero(frame, match_method, expectedHero, use_mask);
+				correctCount[i] += TMDetector.evalIdentifyHero(frame, match_method, expectedHero, use_mask);
 			}
 			evalFrameCount++;
 		}
