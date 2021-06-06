@@ -235,7 +235,8 @@ static void on_mouse(int event, int x, int y, int flags, void* param) {
     gcapp.mouseClick(event, x, y, flags, param);
 }
 int main(int argc, char** argv) {
-    cv::CommandLineParser parser(argc, argv, "{@input| Detection_Algorithm/Data/Templates/Mercy.png |}");
+    cv::CommandLineParser parser(argc, argv, "{@input| Detection_Algorithm/Data/Templates/Mercy_Wand_Melee_2.png |}");
+
     help(argv);
     string filename = parser.get<string>("@input");
     if (filename.empty())     {
