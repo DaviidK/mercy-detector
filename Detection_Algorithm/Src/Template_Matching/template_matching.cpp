@@ -36,6 +36,7 @@ template_matching::template_matching() {
 	vector<Mat> templates;
 	vector<Mat> masks;
 	vector<Rect> positionRects;
+	vector<OWConst::WeaponActions> actions;
 
 	for (int i = 0; i < paths.size(); i++) {
 		if (paths[i].size() == 1) {
@@ -43,6 +44,7 @@ template_matching::template_matching() {
 				WA_TEMPLATES[hero] = templates;
 				WA_MASKS[hero] = masks;
 				WA_TEMPL_RECT[hero] = positionRects;
+				ACTIONS[hero] = actions;
 			}
 			templates.clear();
 			masks.clear();
@@ -58,7 +60,7 @@ template_matching::template_matching() {
 			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + "_mask.png";
 			masks.push_back(imread(filename));
 
-			ACTIONS.push_back(OWConst::getAction(paths[i][1]));
+			actions.push_back(OWConst::getAction(paths[i][1]));
 			
 			Rect cropRect = Rect(std::stoi(paths[i][2]), std::stoi(paths[i][3]), 
 				                 std::stoi(paths[i][4]), std::stoi(paths[i][5]));
@@ -69,6 +71,7 @@ template_matching::template_matching() {
 			WA_TEMPLATES[hero] = templates;
 			WA_MASKS[hero] = masks;
 			WA_TEMPL_RECT[hero] = positionRects;
+			ACTIONS[hero] = actions;
 		}
 	}
 
@@ -140,12 +143,8 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
 	} 
 
 	// Commented out display of the source image and print of the detected object
-	//Mat display_img;
-	//frame.copyTo(display_img);
-	//Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
-	//rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
-	//imshow("result", display_img);
-	//cout << OWConst::getHeroString(result_hero) << endl;
+	// cout << "Hero: " << OWConst::getHeroString(result_hero) << endl;
+	// displayDetectedArea(frame, matchLoc, resultRect, resultTempl);
 
 	return result_hero;
 }
@@ -170,6 +169,8 @@ int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::H
 	return result == OWConst::getHeroString(expected_hero);
 }
 
+
+
 /***************************************************************************************************
  * Identify Action
  *
@@ -187,14 +188,16 @@ int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::H
 OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
 	OWConst::WeaponActions result_action = OWConst::No_Action;
 	Mat templ; Mat result; Mat mask; Mat cropped;
+	Rect resultRect; Mat resultTempl;
 
 	double currScore;
 	Point matchLoc;
 
-	for (int i = 0; i < ACTIONS.size(); i++) {
+	for (int i = 0; i < WA_TEMPLATES[hero].size(); i++) {
 		templ = WA_TEMPLATES[hero][i];
 		mask = WA_MASKS[hero][i];
-		cropped = frame(WA_TEMPL_RECT[hero][i]);
+		Rect cropRect = WA_TEMPL_RECT[hero][i];
+		cropped = frame(cropRect);
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
 			matchTemplate(cropped, templ, result, match_method, mask);
@@ -211,17 +214,35 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 			if (i == 0 || minVal < currScore) {
 				currScore = minVal;
 				matchLoc = minLoc;
-				result_action = ACTIONS[i];
+				resultRect = cropRect;
+				resultTempl = templ;
+				result_action = ACTIONS[hero][i];
 			}
 		}
 		else {
 			if (i == 0 || maxVal > currScore) {
 				currScore = maxVal;
 				matchLoc = maxLoc;
-				result_action = ACTIONS[i];
+				resultRect = cropRect;
+				resultTempl = templ;
+				result_action = ACTIONS[hero][i];
 			}
 		}
 	}
-	cout << "action templ: " << OWConst::getWeaponActionString(result_action) << endl;
+
+	// Commented out display of the source image and print of the detected object
+	// cout << "Action: " << OWConst::getWeaponActionString(result_action) << endl;
+	// displayDetectedArea(frame, matchLoc, resultRect, resultTempl);
+	
 	return result_action;
+}
+
+void template_matching::displayDetectedArea(Mat frame, Point matchLoc, Rect resultRect, Mat resultTempl) {
+	// Commented out display of the source image and print of the detected object
+	Mat display_img;
+	frame.copyTo(display_img);
+	Point modifiedPt = Point(matchLoc.x + resultRect.x, matchLoc.y + resultRect.y);
+	rectangle(display_img, modifiedPt, Point(modifiedPt.x + resultTempl.cols, modifiedPt.y + resultTempl.rows), Scalar::all(0), 2, 8, 0);
+	imshow("result", display_img);
+	waitKey(0);
 }

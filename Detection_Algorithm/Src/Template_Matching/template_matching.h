@@ -21,9 +21,11 @@ public:
 
 	OWConst::WeaponActions identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero);
 
+	void displayDetectedArea(Mat frame, Point matchLoc, Rect resultRect, Mat resultTempl);
+
 private: 
 	const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
-	vector<OWConst::WeaponActions> ACTIONS;
+	map<OWConst::Heroes, vector<OWConst::WeaponActions>> ACTIONS;
 	const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
 	vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
 	Mat HERO_TEMPLATES[2]; 

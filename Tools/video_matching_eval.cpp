@@ -25,6 +25,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
 #include "Detection_Algorithm/Src/Template_Matching/template_matching.h"
 #include "Tools/CSV/csv_wrapper.h"
@@ -43,11 +44,14 @@ static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
 static const bool USE_META_FILE = true;
+static const bool SPECIFY_VIDEO = true;
+static const vector<int> VIDEO_NUMS = {24};
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
-static const int MATCH_METHOD = 3;
-static const bool USE_MASK = true;
+static const int MATCH_METHOD = 2;
+static const bool USE_MASK = false;
+static const bool TRY_GRAYSCALE = false;
 
 void processVideoTemplateMatching(VideoCapture capture,
 	OWConst::Heroes expectedHero,
@@ -86,6 +90,10 @@ int main() {
 		if (USE_META_FILE && videoFiles[i].size() == 1) {
 			continue;
 		}
+		if (i != 23) {
+			continue;
+		}
+		
 		string shortPath = videoFiles[i][0];
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
 		OWConst::Heroes expectedHero;
@@ -104,6 +112,7 @@ int main() {
 		else {
 			string hero_name = shortPath.substr(0, shortPath.find("/", 0));
 			expectedHero = OWConst::getHero(hero_name);
+			
 		}
 
 		if (!capture.isOpened()) {
@@ -169,6 +178,10 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 	cout << "Progress (* per 50 frame): " << endl;
 	int match_method; bool use_mask;
 	while (true) {
+
+		if (TRY_GRAYSCALE) {
+			cvtColor(frame, frame, COLOR_RGB2GRAY);
+		}
 
 		capture >> frame;
 
@@ -259,9 +272,10 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 		expectedHero = metaFile.getHero(frameCount);
 		expectedAction = metaFile.getWeaponAction(frameCount);
 
-		// 
 		detectedHero = TMDetector.identifyHero(frame, MATCH_METHOD, USE_MASK);
-		// Assume correct hero was detected, to detect the weapon.
+
+		// Assume correct hero was detected to detect the weapon and limit the necessary 
+		// template comparisons.
 		detectedAction = TMDetector.identifyAction(frame, MATCH_METHOD, USE_MASK, expectedHero);
 
 		if (detectedHero == expectedHero) {
