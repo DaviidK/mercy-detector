@@ -13,7 +13,7 @@ find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > 
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
 # If the text files already exist and are populated, this step is not necessary
 
-# Mercy Samples
+# Mercy Staff Samples
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle
@@ -28,6 +28,8 @@ opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_healing.txt 
 opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
 
 # Glock samples - TO BE ADDED SOON
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_firing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Firing
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_firing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Firing
 
 # Lucio Samples - IRENE DO THESE
 opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark
