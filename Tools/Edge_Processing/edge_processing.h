@@ -9,4 +9,4 @@
 using namespace cv;
 using namespace std;
 
-//methods
+Mat createEdgeMap(Mat& input_image);
