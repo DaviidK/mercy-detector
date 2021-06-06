@@ -34,12 +34,17 @@ public:
 
     OWConst::Heroes identifyHero(const Mat&);
 
+    OWConst::WeaponActions identifyWeaponAction(const Mat&);
+
     bool evaluateClassifier(const Mat&, const OWConst::Heroes&);
 
 private:
     //------------------------------------------------------------------------Private member fields
-    vector<CascadeClassifier> classifiers;
-    vector<OWConst::Heroes> classifierHeroes;
+    vector<CascadeClassifier> heroClassifiers;
+    vector<OWConst::Heroes> heroConstants;
+
+    vector<CascadeClassifier> weaponClassifiers;
+    vector<OWConst::WeaponActions> weaponConstants;
 
     //-----------------------------------------------------------------------Private member methods
     bool detect(const Mat&, CascadeClassifier&);

@@ -5,7 +5,7 @@
 // Purpose: 
 // ------------------------------------------------------------------------------------------------
 // Assumptions:
-//   - Trained cascade classifiers are stored in 'Detection_Algorithm/Data/Cascade_Classifiers/' 
+//   - Trained cascade heroClassifiers are stored in 'Detection_Algorithm/Data/Cascade_Classifiers/' 
 //     and have the same name as the hero they are meant to detect. 
 
 #include "classifier_detector.h"
@@ -17,44 +17,23 @@ const string& WEAPON_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Cl
 
 */
 classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesToDetect) {
-    this->classifiers = vector<CascadeClassifier>();
-    this->classifierHeroes = vector<OWConst::Heroes>();
-    // If no specific heroes are provided, load all classifiers available
-    if (heroesToDetect.at(0) == OWConst::No_Hero) {
-        // Iterate through all files in the classifier directory
-        for (const auto& file : filesystem::directory_iterator(HERO_CLASSIFIER_DIRECTORY)) {
-            // Save the filepath, then convert it to a string
-            filesystem::path filePath(file);
-            string filePathString = filePath.generic_string();
-            CascadeClassifier heroClassifier;
+    this->heroClassifiers = vector<CascadeClassifier>();
+    this->heroConstants = vector<OWConst::Heroes>();
+    this->weaponClassifiers = vector<CascadeClassifier>();
+    this->weaponConstants = vector<OWConst::WeaponActions>();
+    
+    for (int i = 0; i < heroesToDetect.size(); i++) {
+        CascadeClassifier heroClassifier;
+        string classifierFilePath = HERO_CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
 
-            // Load the classifier for a given file, and push it to the classifiers field
-            heroClassifier.load(filePathString);
-            this->classifiers.push_back(heroClassifier);
-
-            // Push the corresponding hero to the classifierHeroes field
-            const size_t heroNameIndex = filePathString.find_last_of("\\/") + 1;
-            const size_t extensionIndex = filePathString.find_last_of(".");
-            const int heroNameSize = extensionIndex - heroNameIndex;
-            const string heroName = filePathString.substr(heroNameIndex, heroNameSize);
-            this->classifierHeroes.push_back(OWConst::getHero(heroName));
+        if (!heroClassifier.load(classifierFilePath)) {
+            //throw invalid_argument("No available classifier for given hero");
+            cout << "ERROR!: Cannot load classifier for " << OWConst::getHeroString(heroesToDetect[i]) << endl;
+            break;
         }
-    }
-    // If specific heroes are provided, then only load the classifiers corresponding to those heroes
-    else {
-        for (int i = 0; i < heroesToDetect.size(); i++) {
-            CascadeClassifier heroClassifier;
-            string classifierFilePath = HERO_CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
-
-            if (!heroClassifier.load(classifierFilePath)) {
-                //throw invalid_argument("No available classifier for given hero");
-                cout << "ERROR!: Cannot load classifier for " << OWConst::getHeroString(heroesToDetect[i]) << endl;
-                break;
-            }
-            else {
-                this->classifiers.push_back(heroClassifier);
-                this->classifierHeroes.push_back(heroesToDetect[i]);
-            }
+        else {
+            this->heroClassifiers.push_back(heroClassifier);
+            this->heroConstants.push_back(heroesToDetect[i]);
         }
     }
 }
@@ -63,8 +42,10 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
 
 */
 classifier_detector::classifier_detector() {
-    this->classifiers = vector<CascadeClassifier>();
-    this->classifierHeroes = vector<OWConst::Heroes>();
+    this->heroClassifiers = vector<CascadeClassifier>();
+    this->heroConstants = vector<OWConst::Heroes>();
+    this->weaponClassifiers = vector<CascadeClassifier>();
+    this->weaponConstants = vector<OWConst::WeaponActions>();
 
     // Iterate through all files in the classifier directory
     for (const auto& file : filesystem::directory_iterator(HERO_CLASSIFIER_DIRECTORY)) {
@@ -73,16 +54,16 @@ classifier_detector::classifier_detector() {
         string filePathString = filePath.generic_string();
         CascadeClassifier heroClassifier;
 
-        // Load the classifier for a given file, and push it to the classifiers field
+        // Load the classifier for a given file, and push it to the heroClassifiers field
         heroClassifier.load(filePathString);
-        this->classifiers.push_back(heroClassifier);
+        this->heroClassifiers.push_back(heroClassifier);
 
-        // Push the corresponding hero to the classifierHeroes field
+        // Push the corresponding hero to the heroConstants field
         const size_t heroNameIndex = filePathString.find_last_of("\\/") + 1;
         const size_t extensionIndex = filePathString.find_last_of(".");
         const int heroNameSize = extensionIndex - heroNameIndex;
         const string heroName = filePathString.substr(heroNameIndex, heroNameSize);
-        this->classifierHeroes.push_back(OWConst::getHero(heroName));
+        this->heroConstants.push_back(OWConst::getHero(heroName));
     }
 }
 
@@ -90,8 +71,10 @@ classifier_detector::classifier_detector() {
 
 */
 classifier_detector::classifier_detector(const OWConst::Heroes& weaponHero) {
-    this->classifiers = vector<CascadeClassifier>();
-    this->classifierHeroes = {weaponHero};
+    this->heroClassifiers = vector<CascadeClassifier>();
+    this->heroConstants = {weaponHero};
+    this->weaponClassifiers = vector<CascadeClassifier>();
+    this->weaponConstants = vector<OWConst::WeaponActions>();
 
     string weaponDirectory = WEAPON_CLASSIFIER_DIRECTORY + OWConst::getHeroString(weaponHero) + "/";
 
@@ -102,16 +85,16 @@ classifier_detector::classifier_detector(const OWConst::Heroes& weaponHero) {
         string filePathString = filePath.generic_string();
         CascadeClassifier weaponClassifier;
 
-        // Load the classifier for a given file, and push it to the classifiers field
+        // Load the classifier for a given file, and push it to the heroClassifiers field
         weaponClassifier.load(filePathString);
-        this->classifiers.push_back(weaponClassifier);
+        this->weaponClassifiers.push_back(weaponClassifier);
 
-        // Push the corresponding hero to the classifierHeroes field
+        // Push the corresponding hero to the heroConstants field
         const size_t weaponNameIndex = filePathString.find_last_of("\\/") + 1;
         const size_t extensionIndex = filePathString.find_last_of(".");
         const int weaponNameSize = extensionIndex - weaponNameIndex;
         const string weaponName = filePathString.substr(weaponNameIndex, weaponNameSize);
-        this->classifierWeapons.push_back(OWConst::getWeapon(weaponName));
+        this->weaponConstants.push_back(OWConst::getAction(weaponName));
     }
 }
 
@@ -120,9 +103,9 @@ classifier_detector::classifier_detector(const OWConst::Heroes& weaponHero) {
 
 */
 OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
-    for (int i = 0; i < this->classifiers.size(); i++) {
-        if (detect(image, this->classifiers.at(i))) {
-            return this->classifierHeroes.at(i);
+    for (int i = 0; i < this->heroClassifiers.size(); i++) {
+        if (detect(image, this->heroClassifiers.at(i))) {
+            return this->heroConstants.at(i);
         }
     }
 
@@ -132,12 +115,25 @@ OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
 /**
 
 */
+OWConst::WeaponActions classifier_detector::identifyWeaponAction(const Mat& image) {
+    for (int i = 0; i < this->weaponClassifiers.size(); i++) {
+        if (detect(image, this->weaponClassifiers.at(i))) {
+            return this->weaponConstants.at(i);
+        }
+    }
+
+    return OWConst::No_Action;
+}
+
+/**
+
+*/
 bool classifier_detector::evaluateClassifier(const Mat& image, const OWConst::Heroes& knownHero) {
     OWConst::Heroes detectedHero = OWConst::No_Hero;
 
-    for (int i = 0; i < this->classifiers.size(); i++) {
-        if (detect(image, this->classifiers.at(i))) {
-            detectedHero = this->classifierHeroes.at(i);
+    for (int i = 0; i < this->heroClassifiers.size(); i++) {
+        if (detect(image, this->heroClassifiers.at(i))) {
+            detectedHero = this->heroConstants.at(i);
             return detectedHero == knownHero; 
         }
     }
