@@ -26,7 +26,11 @@ class classifier_detector {
 
 public:
     //------------------------------------------------------------------------Public member methods
-    classifier_detector(const vector<OWConst::Heroes> & = { OWConst::No_Hero });
+    classifier_detector();
+
+    classifier_detector(const OWConst::Heroes&);
+
+    classifier_detector(const vector<OWConst::Heroes>& = {OWConst::No_Hero});
 
     OWConst::Heroes identifyHero(const Mat&);
 

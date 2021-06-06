@@ -10,7 +10,8 @@
 
 #include "classifier_detector.h"
 
-const string& CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/";
+const string& HERO_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Heroes/";
+const string& WEAPON_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Weapons/";
 
 /**
 
@@ -21,7 +22,7 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
     // If no specific heroes are provided, load all classifiers available
     if (heroesToDetect.at(0) == OWConst::No_Hero) {
         // Iterate through all files in the classifier directory
-        for (const auto& file : filesystem::directory_iterator(CLASSIFIER_DIRECTORY)) {
+        for (const auto& file : filesystem::directory_iterator(HERO_CLASSIFIER_DIRECTORY)) {
             // Save the filepath, then convert it to a string
             filesystem::path filePath(file);
             string filePathString = filePath.generic_string();
@@ -43,7 +44,7 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
     else {
         for (int i = 0; i < heroesToDetect.size(); i++) {
             CascadeClassifier heroClassifier;
-            string classifierFilePath = CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
+            string classifierFilePath = HERO_CLASSIFIER_DIRECTORY + OWConst::getHeroString(heroesToDetect[i]) + ".xml";
 
             if (!heroClassifier.load(classifierFilePath)) {
                 //throw invalid_argument("No available classifier for given hero");
@@ -55,6 +56,62 @@ classifier_detector::classifier_detector(const vector<OWConst::Heroes>& heroesTo
                 this->classifierHeroes.push_back(heroesToDetect[i]);
             }
         }
+    }
+}
+
+/**
+
+*/
+classifier_detector::classifier_detector() {
+    this->classifiers = vector<CascadeClassifier>();
+    this->classifierHeroes = vector<OWConst::Heroes>();
+
+    // Iterate through all files in the classifier directory
+    for (const auto& file : filesystem::directory_iterator(HERO_CLASSIFIER_DIRECTORY)) {
+        // Save the filepath, then convert it to a string
+        filesystem::path filePath(file);
+        string filePathString = filePath.generic_string();
+        CascadeClassifier heroClassifier;
+
+        // Load the classifier for a given file, and push it to the classifiers field
+        heroClassifier.load(filePathString);
+        this->classifiers.push_back(heroClassifier);
+
+        // Push the corresponding hero to the classifierHeroes field
+        const size_t heroNameIndex = filePathString.find_last_of("\\/") + 1;
+        const size_t extensionIndex = filePathString.find_last_of(".");
+        const int heroNameSize = extensionIndex - heroNameIndex;
+        const string heroName = filePathString.substr(heroNameIndex, heroNameSize);
+        this->classifierHeroes.push_back(OWConst::getHero(heroName));
+    }
+}
+
+/**
+
+*/
+classifier_detector::classifier_detector(const OWConst::Heroes& weaponHero) {
+    this->classifiers = vector<CascadeClassifier>();
+    this->classifierHeroes = {weaponHero};
+
+    string weaponDirectory = WEAPON_CLASSIFIER_DIRECTORY + OWConst::getHeroString(weaponHero) + "/";
+
+    // Iterate through all files in the classifier directory
+    for (const auto& file : filesystem::directory_iterator(weaponDirectory)) {
+        // Save the filepath, then convert it to a string
+        filesystem::path filePath(file);
+        string filePathString = filePath.generic_string();
+        CascadeClassifier weaponClassifier;
+
+        // Load the classifier for a given file, and push it to the classifiers field
+        weaponClassifier.load(filePathString);
+        this->classifiers.push_back(weaponClassifier);
+
+        // Push the corresponding hero to the classifierHeroes field
+        const size_t weaponNameIndex = filePathString.find_last_of("\\/") + 1;
+        const size_t extensionIndex = filePathString.find_last_of(".");
+        const int weaponNameSize = extensionIndex - weaponNameIndex;
+        const string weaponName = filePathString.substr(weaponNameIndex, weaponNameSize);
+        this->classifierWeapons.push_back(OWConst::getWeapon(weaponName));
     }
 }
 
