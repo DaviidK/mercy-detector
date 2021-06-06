@@ -9,7 +9,7 @@
 *
 ************************************************************************************************/
 
-#include "preprocess_edge.h"
+#include "edge_processing.h"
 
 const int THRESHOLD = 100;
 

@@ -25,6 +25,9 @@ template_matching::template_matching() {
 		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
 		HERO_TEMPLATES[i] = imread(filename);
 
+		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_Edge.png";
+		EDGE_TEMPLATES[i] = imread(filename);
+
 		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
 		HERO_MASKS[i] = imread(filename);
 	}
@@ -97,7 +100,7 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
 		return OWConst::No_Hero;
 	}
 	
-	Mat templ; Mat result; Mat result_templ;
+	Mat templ; Mat mask; Mat result; Mat result_templ;
 	OWConst::Heroes result_hero = OWConst::No_Hero;
 	double currScore; 
 	Point matchLoc;
@@ -106,11 +109,42 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
 	Rect cropRect = Rect(frame.cols / 2, frame.rows / 2, frame.cols / 2, frame.rows / 2);
 	Mat cropped = frame(cropRect);
 
+	if (TRY_GRAYSCALE) {
+		Mat copy;
+		cropped.copyTo(copy);
+		cvtColor(copy, cropped, COLOR_BGR2GRAY);
+		equalizeHist(cropped, cropped);
+	}
+
+	if (TRY_EDGE) {
+		cropped = createEdgeMap(cropped);
+	}
+
 	for (int i = 0; i < HEROES.size(); i++) {
-		templ = HERO_TEMPLATES[i];
+		if (use_mask) {
+			mask = HERO_MASKS[i];
+		}
+		if (TRY_EDGE) {
+			templ = EDGE_TEMPLATES[i];
+		}
+		else {
+			templ = HERO_TEMPLATES[i];
+		}
+
+		if (TRY_GRAYSCALE) {
+			Mat copy;
+			templ.copyTo(copy);
+			cvtColor(copy, templ, COLOR_BGR2GRAY);
+			equalizeHist(templ, templ);
+			if (use_mask) {
+				mask.copyTo(copy);
+				cvtColor(copy, mask, COLOR_BGR2GRAY);
+				equalizeHist(mask, mask);			
+			}
+		}
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
-			matchTemplate(cropped, templ, result, match_method, HERO_MASKS[i]);
+			matchTemplate(cropped, templ, result, match_method, mask);
 		}
 		else {
 			matchTemplate(cropped, templ, result, match_method);
@@ -164,8 +198,10 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
  *                                matching method. 
  *
  **************************************************************************************************/
-int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask) {
-	string result = OWConst::getHeroString(identifyHero(frame, match_method, use_mask));
+int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, 
+										bool use_mask) {
+	string result = OWConst::getHeroString(
+						identifyHero(frame, match_method, use_mask));
 	return result == OWConst::getHeroString(expected_hero);
 }
 
