@@ -19,7 +19,7 @@ using namespace std;
 
 // Enums have no size in C++, using seperate variables to prevent hacky-ness
 static const int HERO_COUNT = 33;
-static const int WEAPON_ACTION_COUNT = 5; // TODO: Keep this updated!
+static const int WEAPON_ACTION_COUNT = 7; // TODO: Keep this updated!
 
 class OWConst {
 
@@ -72,7 +72,7 @@ public:
      * These are the weapon actions we intend to identify
     ***********************************************************************************************/
     enum WeaponActions {
-        Firing, Melee, Healing, Damage_Boosting, No_Action
+        Holding_Staff, Holding_Pistol, Firing, Melee, Healing, Damage_Boosting, No_Action
     };
 
     /***********************************************************************************************
@@ -121,7 +121,8 @@ private:
     // String array corresponding to weapon action enums
     static const constexpr char *WEAPON_ACTIONS[WEAPON_ACTION_COUNT]
             {
-                    "Firing", "Melee", "Healing", "Damage Boosting", "No Action"
+                    "Holding Staff", "Holding Pistol", "Firing", "Melee",
+                    "Healing", "Damage Boosting", "No Action"
             };
 
 };
