@@ -1,10 +1,10 @@
 # Write the file paths for positive images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_mercy_wand_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/*/*.png > all_lucio_paths.txt
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Write the file paths for negative images
-find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
 find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > negative_paths.txt
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/*/*.png > Annotation_Paths/Mercy_Paths/all_mercy_glock_paths.txt
 
@@ -72,22 +72,22 @@ opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.v
 opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
 
 
-# 1 - Lucio classifier - 75pos, 20 stages, .975 hit rate
-opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Lucio_75Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 75 -numNeg 2136 -numStages 20 -minHitRate .975
+# 1 - Lucio classifier - 150pos, 25 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/lucio_annotations.txt -vec Data/Positive_Samples/lucio_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Lucio_150Pos_25Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 150 -numNeg 2579 -numStages 25 -minHitRate .975
 
-# 2 - Staff classifier - 250pos, 20 stages, .975 hit rate
+# 2 - Staff classifier - 250pos, 25 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_20Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2155 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_25Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2423 -numStages 25 -minHitRate .975
 
-# 3 - Glock classifier - ?pos, 20 stages, .975 hit rate
+# 3 - Glock classifier - 100pos, 25 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/glock_annotations.txt -vec Data/Positive_Samples/glock_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Glock_?pos_20Stage_975HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_25Stage_975HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 2681 -numStages 25 -minHitRate .975
 
-# 4 - Healing classifier - ?pos, 20 stages, .975 hit rate
+# 4 - Healing classifier - 20pos, 25 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/healing_annotations.txt -vec Data/Positive_Samples/healing_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Healing_?pos_20Stage_975HitRate/ -vec Data/Positive_Samples/healing_samples.vec -bg Data/Negative_Paths/healing_negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Healing_20pos_25Stage_975HitRate/ -vec Data/Positive_Samples/healing_samples.vec -bg Data/Negative_Paths/healing_negative_paths.txt -numPos 20 -numNeg 2550 -numStages 25 -minHitRate .975
 
-# 5 - Damage boosing classifier - ?pos, 20 stages, .975 hit rate
+# 5 - Damage boosing classifier - 40pos, 25 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/damage_boosting_annotations.txt -vec Data/Positive_Samples/damage_boosting_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Damage_Boosting_?pos_20Stage_975HitRate/ -vec Data/Positive_Samples/damage_boosting_samples.vec -bg Data/Negative_Paths/damage_boosting_negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Damage_Boosting_40pos_25Stage_975HitRate/ -vec Data/Positive_Samples/damage_boosting_samples.vec -bg Data/Negative_Paths/damage_boosting_negative_paths.txt -numPos 40 -numNeg 2485 -numStages 25 -minHitRate .975
