@@ -47,7 +47,7 @@ static const bool USE_META_FILE = true;
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
 static const int MATCH_METHOD = 3;
-static const bool USE_MASK = false;
+static const bool USE_MASK = true;
 
 void processVideoTemplateMatching(VideoCapture capture,
 	OWConst::Heroes expectedHero,
@@ -270,8 +270,18 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 		else {
 			heroIncorrectCt++;
 		}
+		
+		// To simplify the process, we are currently just looking at whether the staff or the 
+		// pistol is being held by Mercy.
+		if (expectedAction == OWConst::Damage_Boosting ||
+			expectedAction == OWConst::Healing) {
+			expectedAction == OWConst::Holding_Staff;
+		}
+		else if (expectedAction == OWConst::Firing) {
+			expectedAction == OWConst::Holding_Pistol;
+		}
 
-		if (detectedAction == expectedAction) {
+		if (expectedAction == detectedAction) {
 			actionCorrectCt++;
 		}
 		else {

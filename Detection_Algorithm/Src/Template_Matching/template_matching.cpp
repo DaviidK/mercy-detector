@@ -34,16 +34,42 @@ template_matching::template_matching() {
 	string heroname;
 	OWConst::Heroes hero;
 	vector<Mat> templates;
+	vector<Mat> masks;
+	vector<Rect> positionRects;
 
 	for (int i = 0; i < paths.size(); i++) {
-		templates.clear();
-		heroname = paths[i][0];
-		hero = OWConst::getHero(heroname);
-		
-		for (int j = 1; j < paths[i].size(); i++) {
-			templates.push_back(imread(paths[i][j]));
+		if (paths[i].size() == 1) {
+			if (i != 0) {
+				WA_TEMPLATES[hero] = templates;
+				WA_MASKS[hero] = masks;
+				WA_TEMPL_RECT[hero] = positionRects;
+			}
+			templates.clear();
+			masks.clear();
+			positionRects.clear();
+
+			heroname = paths[i][0];
+			hero = OWConst::getHero(heroname);
 		}
-		WA_TEMPLATES[hero] = templates;
+		else {
+			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + ".png";
+			templates.push_back(imread(filename));
+
+			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + "_mask.png";
+			masks.push_back(imread(filename));
+
+			ACTIONS.push_back(OWConst::getAction(paths[i][1]));
+			
+			Rect cropRect = Rect(std::stoi(paths[i][2]), std::stoi(paths[i][3]), 
+				                 std::stoi(paths[i][4]), std::stoi(paths[i][5]));
+			positionRects.push_back(cropRect);
+		}
+		
+		if (paths.size() - 1 == i) {
+			WA_TEMPLATES[hero] = templates;
+			WA_MASKS[hero] = masks;
+			WA_TEMPL_RECT[hero] = positionRects;
+		}
 	}
 
 }
@@ -70,7 +96,7 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
 	
 	Mat templ; Mat result; Mat result_templ;
 	OWConst::Heroes result_hero = OWConst::No_Hero;
-	double tempScore; 
+	double currScore; 
 	Point matchLoc;
 
 	// Crop the source image so it only looks at the lower right quadrant. 
@@ -96,16 +122,16 @@ OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bo
 
 		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
-			if (i == 0 || minVal < tempScore) {
-				tempScore = minVal;
+			if (i == 0 || minVal < currScore) {
+				currScore = minVal;
 				matchLoc = minLoc;
 				result_hero = HEROES[i];
 				result_templ = templ;
 			}
 		}
 		else {
-			if (i == 0 || maxVal > tempScore) {
-				tempScore = maxVal;
+			if (i == 0 || maxVal > currScore) {
+				currScore = maxVal;
 				matchLoc = maxLoc;
 				result_hero = HEROES[i];
 				result_templ = templ;
@@ -159,22 +185,22 @@ int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::H
  *
  **************************************************************************************************/
 OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
-	vector<Mat> temps = WA_TEMPLATES[hero];
 	OWConst::WeaponActions result_action = OWConst::No_Action;
-	Mat templ;
-	Mat result;
+	Mat templ; Mat result; Mat mask; Mat cropped;
 
-	double tempScore;
+	double currScore;
 	Point matchLoc;
 
-	for (int i = 0; i < temps.size(); i++) {
-		templ = temps.at(i);
+	for (int i = 0; i < ACTIONS.size(); i++) {
+		templ = WA_TEMPLATES[hero][i];
+		mask = WA_MASKS[hero][i];
+		cropped = frame(WA_TEMPL_RECT[hero][i]);
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
-			matchTemplate(frame, templ, result, match_method, HERO_MASKS[i]);
+			matchTemplate(cropped, templ, result, match_method, mask);
 		}
 		else {
-			matchTemplate(frame, templ, result, match_method);
+			matchTemplate(cropped, templ, result, match_method);
 		}
 
 		double minVal; double maxVal; Point minLoc; Point maxLoc;
@@ -182,15 +208,15 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 
 		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
-			if (i == 0 || minVal < tempScore) {
-				tempScore = minVal;
+			if (i == 0 || minVal < currScore) {
+				currScore = minVal;
 				matchLoc = minLoc;
 				result_action = ACTIONS[i];
 			}
 		}
 		else {
-			if (i == 0 || maxVal > tempScore) {
-				tempScore = maxVal;
+			if (i == 0 || maxVal > currScore) {
+				currScore = maxVal;
 				matchLoc = maxLoc;
 				result_action = ACTIONS[i];
 			}
