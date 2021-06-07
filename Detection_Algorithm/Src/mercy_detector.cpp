@@ -12,8 +12,7 @@
  * _________________________________________________________________________________________________
  * Assumptions:
  *
- *
- *
+ * • VIDEO_PATH is a valid path to a .mp4 video
  * _________________________________________________________________________________________________
  * Implementation Details:
  *
@@ -34,7 +33,7 @@ using std::chrono::system_clock;
 //--------------------------------------------------------------------------------------------------
 // Configuration Variables
 
-static const string VIDEO_PATH = "Detection_Algorithm/Data/Video/Mercy_Eval/Mercy_Eval1.mp4";
+static const string VIDEO_PATH = "Detection_Algorithm/Data/Evaluation/Gameplay/gameplay1.mp4";
 
 static const bool USE_TEMPLATE_MATCHING = false;
 static const bool USE_CASCADE_CLASSIFIER = false;
@@ -70,6 +69,9 @@ OWConst::WeaponActions detectAction(Mat& frame);
 
 /***************************************************************************************************
  * Main Function
+ *
+ * @pre
+ * @post
  **************************************************************************************************/
 int main()
 {
@@ -91,6 +93,10 @@ int main()
 /***************************************************************************************************
  * Process Video
  *
+ * @param capture
+ *
+ * @pre
+ * @post
  **************************************************************************************************/
 void processVideo(VideoCapture& capture)
 {
@@ -108,6 +114,7 @@ void processVideo(VideoCapture& capture)
     namedWindow(displayWindow);
 
     cout << "Starting video loop" << endl;
+
     while(true)
     {
         capture >> frame;
@@ -136,11 +143,19 @@ void processVideo(VideoCapture& capture)
 
         lastTime = getTime();
     }
+
+    cout << "Video Loop Stopped" << endl;
 }
 
 /***************************************************************************************************
  * Detect Hero
  *
+ * @param frame
+ *
+ * @pre
+ * @post
+ *
+ * @return
  **************************************************************************************************/
 OWConst::Heroes detectHero(Mat& frame)
 {
@@ -173,6 +188,12 @@ OWConst::Heroes detectHero(Mat& frame)
 /***************************************************************************************************
  * Detect Action
  *
+ * @param frame
+ *
+ * @pre
+ * @post
+ *
+ * @return
  **************************************************************************************************/
 OWConst::WeaponActions detectAction(Mat& frame)
 {
@@ -205,14 +226,18 @@ OWConst::WeaponActions detectAction(Mat& frame)
 /***************************************************************************************************
  * Add Text Output
  *
- * Adds text to a provided frame. Displays the current frame number. The current hero and action
- * is the value stored in the file, which will be No_Hero and No_Action by default. The set hero
- * and action are the values that will be overwritten if the user presses the space bar.
+ * @param frame
+ * @param fps
+ * @param hero
+ * @param action
+ *
+ * @pre
+ * @post
  *
  **************************************************************************************************/
 void addTextOutput(Mat& frame, double fps, OWConst::Heroes hero, OWConst::WeaponActions action)
 {
-    string fpsDisplay = "FPS: " + to_string(fps);
+    string fpsDisplay = "FPS: " + to_string((int) fps);
 
     string heroDisplay = "IDENTIFIED HERO: " + OWConst::getHeroString(hero);
 
@@ -237,6 +262,10 @@ void addTextOutput(Mat& frame, double fps, OWConst::Heroes hero, OWConst::Weapon
  *
  * Source: https://www.delftstack.com/howto/cpp/how-to-get-time-in-milliseconds-cpp/
  *
+ * @pre
+ * @post
+ *
+ * @return
  **************************************************************************************************/
 long getTime()
 {
