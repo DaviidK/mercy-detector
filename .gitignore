@@ -57,3 +57,4 @@ unsuccessfulbuild
 *Detection_Algorithm/Data/Video/*/*/*.mp4
 *Detection_Algorithm/Data/Video/*/*.mp4
 *Detection_Algorithm/Data/Extracted_Frames/
+*Tools/Eval_Results/
