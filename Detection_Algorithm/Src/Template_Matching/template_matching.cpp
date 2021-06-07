@@ -39,6 +39,7 @@ template_matching::template_matching() {
 	vector<Mat> templates;
 	vector<Mat> masks;
 	vector<Rect> positionRects;
+	vector<Mat> edgeTemplates;
 	vector<OWConst::WeaponActions> actions;
 
 	for (int i = 0; i < paths.size(); i++) {
@@ -47,11 +48,13 @@ template_matching::template_matching() {
 				WA_TEMPLATES[hero] = templates;
 				WA_MASKS[hero] = masks;
 				WA_TEMPL_RECT[hero] = positionRects;
+				WA_EDGE_TEMPLS[hero] = edgeTemplates;
 				ACTIONS[hero] = actions;
 			}
 			templates.clear();
 			masks.clear();
 			positionRects.clear();
+			edgeTemplates.clear();
 
 			heroname = paths[i][0];
 			hero = OWConst::getHero(heroname);
@@ -62,6 +65,9 @@ template_matching::template_matching() {
 
 			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + "_mask.png";
 			masks.push_back(imread(filename));
+
+			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + "_Edge.png";
+			edgeTemplates.push_back(imread(filename));
 
 			actions.push_back(OWConst::getAction(paths[i][1]));
 			
@@ -74,6 +80,7 @@ template_matching::template_matching() {
 			WA_TEMPLATES[hero] = templates;
 			WA_MASKS[hero] = masks;
 			WA_TEMPL_RECT[hero] = positionRects;
+			WA_EDGE_TEMPLS[hero] = edgeTemplates;
 			ACTIONS[hero] = actions;
 		}
 	}
@@ -202,6 +209,8 @@ int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::H
 										bool use_mask) {
 	string result = OWConst::getHeroString(
 						identifyHero(frame, match_method, use_mask));
+
+	
 	return result == OWConst::getHeroString(expected_hero);
 }
 
@@ -233,7 +242,32 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 		templ = WA_TEMPLATES[hero][i];
 		mask = WA_MASKS[hero][i];
 		Rect cropRect = WA_TEMPL_RECT[hero][i];
+
 		cropped = frame(cropRect);
+
+		if (TRY_EDGE) {
+			cropped = createEdgeMap(cropped);
+			templ = WA_EDGE_TEMPLS[hero][i];
+		}
+		else {
+			templ = WA_EDGE_TEMPLS[hero][i];
+		}
+
+		if (TRY_GRAYSCALE) {
+			Mat copy;
+			cropped.copyTo(copy);
+			cvtColor(copy, cropped, COLOR_BGR2GRAY);
+			equalizeHist(cropped, cropped);
+
+			templ.copyTo(copy);
+			cvtColor(copy, templ, COLOR_BGR2GRAY);
+			equalizeHist(templ, templ);
+			if (use_mask) {
+				mask.copyTo(copy);
+				cvtColor(copy, mask, COLOR_BGR2GRAY);
+				equalizeHist(mask, mask);
+			}
+		}
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
 			matchTemplate(cropped, templ, result, match_method, mask);
@@ -273,6 +307,19 @@ OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_m
 	return result_action;
 }
 
+/***************************************************************************************************
+ * Display Detected Area
+ *
+ * This method detects what action is being done.
+ * TODO: Implement!
+ *
+ * @params
+ *           Mat& frame: The source image to see if a hero can be detected.
+ *       Point matchLoc: 
+ *        Rect use_mask: 
+ *      Mat resultTempl: The hero that was detected in the given frame.
+ *
+ **************************************************************************************************/
 void template_matching::displayDetectedArea(Mat frame, Point matchLoc, Rect resultRect, Mat resultTempl) {
 	// Commented out display of the source image and print of the detected object
 	Mat display_img;
