@@ -44,12 +44,12 @@ static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_pat
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
-static const bool USE_META_FILE = true;
+static const bool USE_META_FILE = false;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
-static const int MATCH_METHOD = 2;
-static const bool USE_MASK = false;
+static const int MATCH_METHOD = 3;
+static const bool USE_MASK = true;
 
 void processVideoTemplateMatching(VideoCapture capture,
 	OWConst::Heroes expectedHero,
@@ -93,7 +93,7 @@ int main() {
 		if (USE_META_FILE && videoFiles[i].size() == 1) {
 			continue;
 		}
-		
+
 		string shortPath = videoFiles[i][0];
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
 		OWConst::Heroes expectedHero;
@@ -186,6 +186,11 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 			cout << "*";
 		}
 
+		totalFrameCount++;
+		if (totalFrameCount % 5 != 0) {
+			continue;
+		}
+
 		if (totalFrameCount % 10 == 0) {
 			for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
 				if (i == 6) {
@@ -204,7 +209,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 			}
 			evalFrameCount++;
 		}
-		totalFrameCount++;
+		
 	}
 	cout << endl;
 
@@ -236,6 +241,7 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath) {
 	Mat frame;
 	int frameCount = 0;
+	int evalFrameCount = 0;
 	OWConst::Heroes expectedHero;
 	OWConst::Heroes detectedHero;
 	OWConst::WeaponActions expectedAction;
@@ -253,12 +259,17 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 	while (true) {
 
 		capture >> frame;
+		frameCount++;
 
 		if (frame.empty()) {
 			break;
 		}
 		if (frameCount % 50 == 0) {
 			cout << "*";
+		}
+
+		if (frameCount % 5 != 0) {
+			continue;
 		}
 
 		expectedHero = metaFile.getHero(frameCount);
@@ -270,15 +281,17 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 		// template comparisons.
 		detectedAction = TMDetector.identifyAction(frame, MATCH_METHOD, USE_MASK, expectedHero);
 
+		cout << "Expected hero: " << OWConst::getHeroString(expectedHero);
+		cout << " Result: " << OWConst::getHeroString(detectedHero) << endl;
 		if (detectedHero == expectedHero) {
 			heroCorrectCt++;
 		}
 		else {
 			heroIncorrectCt++;
 		}
-		
-		// To simplify the process, we are currently just looking at whether the staff or the 
-		// pistol is being held by Mercy.
+
+		// To simplify the process, we are currently just looking at whether the staff 
+		// or the pistol is being held by Mercy.
 		if (expectedAction == OWConst::Damage_Boosting ||
 			expectedAction == OWConst::Healing) {
 			expectedAction = OWConst::Holding_Staff;
@@ -287,6 +300,9 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 			expectedAction = OWConst::Holding_Pistol;
 		}
 
+		cout << "Expected action: " << OWConst::getWeaponActionString(expectedAction);
+		cout << " Result: " << OWConst::getWeaponActionString(detectedAction) << endl;
+
 		if (expectedAction == detectedAction) {
 			actionCorrectCt++;
 		}
@@ -294,7 +310,7 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 			actionIncorrectCt++;
 		}
 
-		frameCount++;
+		evalFrameCount++;
 	}
 
 	if (output.size() == 0) {
@@ -314,7 +330,7 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 	row.push_back(to_string(heroIncorrectCt));
 	row.push_back(to_string(actionCorrectCt));
 	row.push_back(to_string(actionIncorrectCt));
-	row.push_back(to_string(frameCount));
+	row.push_back(to_string(evalFrameCount));
 
 	output.push_back(row);
 }
