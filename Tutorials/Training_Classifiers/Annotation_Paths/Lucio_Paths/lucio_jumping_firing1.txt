@@ -1,0 +1,12 @@
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_1.png 1 1040 431 654 575
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_125.png 1 991 392 852 655
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_156.png 1 984 390 836 638
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_187.png 1 989 397 867 646
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_280.png 1 1040 451 694 588
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_342.png 1 1051 555 678 514
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_373.png 1 1028 498 706 571
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_404.png 1 1080 675 586 401
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_559.png 1 1031 534 603 517
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_590.png 1 1035 427 539 423
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_63.png 1 1044 706 575 372
+../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1\frame_94.png 1 980 436 852 640

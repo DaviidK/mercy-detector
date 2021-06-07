@@ -1,8 +1,8 @@
 /***************************************************************************************************
  * Object Detection Evaluator
  *
- * @author Matthew Munson, Sana Suse
- * @date 5/25/21
+ * @author Matthew Munson, Sana Suse, David Kang
+ * @date 06/02/21
  *
  * This is a tool for determining how well the object detection methods are working.
  * The input is a video of gameplay which is passed into the detection method.
@@ -27,7 +27,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
-#include "Detection_Algorithm/Src/Template_Matching/template_matching.h"
+#include "Tutorials/Template_Matching/template_matching.h"
+#include "Detection_Algorithm/Src/classifier_detector/classifier_detector.h"
 #include "Tools/CSV/csv_wrapper.h"
 #include "Tools/Meta_File/meta_file.h"
 
@@ -56,6 +57,11 @@ void processVideoTemplateMatching(VideoCapture capture,
 	string filePath);
 
 void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath);
+
+void processVideoCascadeClassifier(VideoCapture capture,
+							       OWConst::Heroes expectedHero,
+								   vector<vector<string>>& output,
+								   string filepath);
 
 void displayStats(const int& correct, const int& total);
 
@@ -126,8 +132,7 @@ int main() {
 			}
 		}
 		else if (DETECTION_METHOD == 1) {
-			// TODO: Cascade Classifier frame processing method here
-			// Pass in capture, expectedHero and output.
+			processVideoCascadeClassifier(capture, expectedHero, output, shortPath);
 		}
 		else if (DETECTION_METHOD == 2) {
 			// TODO: Edge Matching frame processing method here
@@ -252,7 +257,6 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 		if (frame.empty()) {
 			break;
 		}
-
 		if (frameCount % 50 == 0) {
 			cout << "*";
 		}
@@ -314,7 +318,6 @@ void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vecto
 
 	output.push_back(row);
 }
-
 
 /***************************************************************************************************
  * Display Stats

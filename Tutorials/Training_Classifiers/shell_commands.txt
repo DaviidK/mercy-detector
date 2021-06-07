@@ -1,30 +1,100 @@
 # Write the file paths for positive images
 find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/*/*.png > all_mercy_wand_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/*/*.png > all_lucio_paths.txt
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Write the file paths for negative images
-../../Detection_Algorithm/Data/Extracted_Frames/Lucio/*/*.png > negative_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Negative_Samples/*/*.png > negative_paths.txt
+find ../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/*/*.png > Annotation_Paths/Mercy_Paths/all_mercy_glock_paths.txt
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Use annotation tool to visually draw outlines around objects
 # Each line here corresponds to one of the data folders containing training images, and will overwrite the text file corresponding to those images
 # If the text files already exist and are populated, this step is not necessary
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Damage_Boosting
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Dark
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_melee.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Melee
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
-opencv_annotation -annotations=Annotation_Paths/mercy_wand_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
-opencv_annotation -annotations=Annotation_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
-opencv_annotation -annotations=Annotation_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
+
+# Mercy Staff Samples
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying1
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_flying2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Flying2
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Damage_Boosting
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Dark
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Idle_Light_Test
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_melee.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Melee
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Super_Jumps1
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_wand_walking_damage_boosting.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Damage_Boosting
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_healing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Healing
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/walking_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Wand/Walking_Light_Test
+
+# Mercy Glock samples 
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_firing.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Firing
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_flying.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Flying
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle_dark
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_idle_light_test.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Idle_light_test
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Jumps
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_super_jumps.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Super_jumps
+opencv_annotation -annotations=Annotation_Paths/Mercy_Paths/mercy_glock_walking.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Mercy/Glock/Walking
+
+# Lucio Samples
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_dark2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_dark2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle_light_test3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle_light_test3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_idle3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Idle3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping_firing1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping_firing2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping_firing2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_jumping2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Jumping2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking_firing1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking_firing2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking_firing2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking1.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking1
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking2.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking2
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking3.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking3
+opencv_annotation -annotations=Annotation_Paths/Lucio_Paths/lucio_walking4.txt -images=../../Detection_Algorithm/Data/Extracted_Frames/Lucio/Speed_Mode/Walking4
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Create positive samples using OpenCV command line tool
 # Requires above step or manual creation of a file with all positive object annotations
 opencv_createsamples -info positive_annotations.txt -vec Data/positive_samples.vec
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Training the boosted cascade classifiers
 # Requires both above steps to be completed
 # -numPos & -numNeg must be configured to match the number of positive & negative samples being used, currently uses all positive & negative samples
-opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 50 -numNeg 277 -numStages 20 -minHitRate .9
+opencv_traincascade -data Data/Cascade_Classifier -vec Data/positive_samples.vec -bg negative_paths.txt -numPos 250 -numNeg 1712 -numStages 20 -minHitRate .975
+
+
+# 1 - Lucio classifier - 150pos, 25 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/lucio_annotations.txt -vec Data/Positive_Samples/lucio_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Lucio_150Pos_25Stage_975HitRate/ -vec Data/Positive_Samples/lucio_samples.vec -bg Data/Negative_Paths/lucio_negative_paths.txt -numPos 150 -numNeg 2579 -numStages 25 -minHitRate .975
+
+# 2 - Staff classifier - 250pos, 25 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_25Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2423 -numStages 25 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_25Stage_925HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2423 -numStages 25 -minHitRate .925
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_150Pos_20Stage_9HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 150 -numNeg 2423 -numStages 20 -minHitRate .9
+opencv_traincascade -data Data/Cascade_Classifiers/Staff_75Pos_15Stage_9HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 75 -numNeg 2423 -numStages 15 -minHitRate .9
+
+# 3 - Glock classifier - 100pos, 25 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/glock_annotations.txt -vec Data/Positive_Samples/glock_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_25Stage_975HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 2681 -numStages 25 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_25Stage_925HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 2681 -numStages 25 -minHitRate .925
+opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_20Stage_9HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 100 -numNeg 2681 -numStages 20 -minHitRate .9
+opencv_traincascade -data Data/Cascade_Classifiers/Glock_75pos_15Stage_9HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 75 -numNeg 2681 -numStages 15 -minHitRate .9
+
+# 4 - Healing classifier - 20pos, 20 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/healing_annotations.txt -vec Data/Positive_Samples/healing_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Healing_20pos_25Stage_975HitRate/ -vec Data/Positive_Samples/healing_samples.vec -bg Data/Negative_Paths/healing_negative_paths.txt -numPos 20 -numNeg 2550 -numStages 25 -minHitRate .975
+opencv_traincascade -data Data/Cascade_Classifiers/Healing_20pos_15Stage_9HitRate/ -vec Data/Positive_Samples/healing_samples.vec -bg Data/Negative_Paths/healing_negative_paths.txt -numPos 20 -numNeg 2550 -numStages 15 -minHitRate .9
+
+# 5 - Damage boosing classifier - 40pos, 25 stages, .975 hit rate
+opencv_createsamples -info Data/Positive_Annotations/damage_boosting_annotations.txt -vec Data/Positive_Samples/damage_boosting_samples.vec
+opencv_traincascade -data Data/Cascade_Classifiers/Damage_Boosting_40pos_25Stage_975HitRate/ -vec Data/Positive_Samples/damage_boosting_samples.vec -bg Data/Negative_Paths/damage_boosting_negative_paths.txt -numPos 40 -numNeg 2485 -numStages 25 -minHitRate .975
