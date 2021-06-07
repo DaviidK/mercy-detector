@@ -1,6 +1,21 @@
 /***************************************************************************************************
  * Mercy Detector
  *
+ * @authors Matthew Munson,
+ * @date June 6th 2021
+ *
+ * This program is our project's final deliverable. It takes in a video of Overwatch gameplay and
+ * displays it to the user while outputting the detected hero and weapon action to the screen. A
+ * frames per second reading is also provided to gauge the performance of the object detection
+ * algorithms.
+ *
+ * _________________________________________________________________________________________________
+ * Assumptions:
+ *
+ *
+ *
+ * _________________________________________________________________________________________________
+ * Implementation Details:
  *
  **************************************************************************************************/
 
@@ -9,16 +24,22 @@
 #include <opencv2/opencv.hpp>
 #include "Overwatch_Constants/overwatchConstants.h"
 
-
 using namespace std;
 using namespace cv;
 
 using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::system_clock;
 
 //--------------------------------------------------------------------------------------------------
 // Configuration Variables
 
 static const string VIDEO_PATH = "Detection_Algorithm/Data/Video/Mercy_Eval/Mercy_Eval1.mp4";
+
+static const bool USE_TEMPLATE_MATCHING = false;
+static const bool USE_CASCADE_CLASSIFIER = false;
+
+static const bool VERBOSE_CONSOLE_LOG = false;
 
 //--------------------------------------------------------------------------------------------------
 
@@ -36,6 +57,16 @@ void addTextOutput(Mat& frame, double fps, OWConst::Heroes hero, OWConst::Weapon
  * Get Time
  **************************************************************************************************/
 long getTime();
+
+/***************************************************************************************************
+ * Detect Hero
+ **************************************************************************************************/
+OWConst::Heroes detectHero(Mat& frame);
+
+/***************************************************************************************************
+ * Detect Action
+ **************************************************************************************************/
+OWConst::WeaponActions detectAction(Mat& frame);
 
 /***************************************************************************************************
  * Main Function
@@ -63,11 +94,10 @@ int main()
  **************************************************************************************************/
 void processVideo(VideoCapture& capture)
 {
-    cout << "Opened Video" << endl;
     Mat frame;
-    int keyValue;
+    int keyCode; // The value of the key pressed during waitKey()
 
-    long lastTime = getTime();
+    long lastTime = getTime(); // The time measured at the end of the last frame
     long elapsedTime;
     double fps;
 
@@ -87,18 +117,18 @@ void processVideo(VideoCapture& capture)
             break;
         }
 
-        keyValue = waitKey(1);
+        keyCode = waitKey(1);
 
-        if(keyValue == 27) // Escape quits the outer frame loop
+        if(keyCode == 27) // Escape key stops the loop
         {
             break;
         }
 
         elapsedTime = getTime() - lastTime;
-        fps = (double) 1000 / (elapsedTime);
+        fps = (double) 1000 / ((double) elapsedTime);
 
-        identifiedHero = OWConst::Mercy;
-        identifiedAction = OWConst::Holding_Staff;
+        identifiedHero = detectHero(frame);
+        identifiedAction = detectAction(frame);
 
         addTextOutput(frame, fps, identifiedHero, identifiedAction);
 
@@ -106,6 +136,70 @@ void processVideo(VideoCapture& capture)
 
         lastTime = getTime();
     }
+}
+
+/***************************************************************************************************
+ * Detect Hero
+ *
+ **************************************************************************************************/
+OWConst::Heroes detectHero(Mat& frame)
+{
+    OWConst::Heroes detectedHero = OWConst::No_Hero;
+
+    if(USE_TEMPLATE_MATCHING)
+    {
+        detectedHero = OWConst::No_Hero; //TODO: Put Template Matching Hero Detect Here
+
+        if(VERBOSE_CONSOLE_LOG)
+        {
+            cout << "Template Matching Detected Hero: "
+            << OWConst::getHeroString(detectedHero) << endl;
+        }
+    }
+    if(USE_CASCADE_CLASSIFIER)
+    {
+        detectedHero = OWConst::No_Hero; //TODO: Put Cascade Classifier Hero Detect Here
+
+        if(VERBOSE_CONSOLE_LOG)
+        {
+            cout << "Cascade Classifier Detected Hero: "
+            << OWConst::getHeroString(detectedHero) << endl;
+        }
+    }
+
+    return detectedHero;
+}
+
+/***************************************************************************************************
+ * Detect Action
+ *
+ **************************************************************************************************/
+OWConst::WeaponActions detectAction(Mat& frame)
+{
+    OWConst::WeaponActions detectedAction = OWConst::No_Action;
+
+    if(USE_TEMPLATE_MATCHING)
+    {
+        detectedAction = OWConst::No_Action; //TODO: Put Template Matching Action Detect Here
+
+        if(VERBOSE_CONSOLE_LOG)
+        {
+            cout << "Template Matching Detected Action: "
+                 << OWConst::getWeaponActionString(detectedAction) << endl;
+        }
+    }
+    if(USE_CASCADE_CLASSIFIER)
+    {
+        detectedAction = OWConst::No_Action; //TODO: Put Cascade Classifier Action Detect Here
+
+        if(VERBOSE_CONSOLE_LOG)
+        {
+            cout << "Cascade Classifier Detected Action: "
+                 << OWConst::getWeaponActionString(detectedAction) << endl;
+        }
+    }
+
+    return detectedAction;
 }
 
 /***************************************************************************************************
@@ -146,5 +240,5 @@ void addTextOutput(Mat& frame, double fps, OWConst::Heroes hero, OWConst::Weapon
  **************************************************************************************************/
 long getTime()
 {
-    return duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
