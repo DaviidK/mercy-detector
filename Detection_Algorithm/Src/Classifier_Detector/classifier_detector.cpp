@@ -141,7 +141,7 @@ OWConst::Heroes classifier_detector::identifyHero(const Mat& image) {
 /**
 
 */
-OWConst::WeaponActions classifier_detector::identifyWeaponAction(const Mat& image) {
+OWConst::WeaponActions classifier_detector::identifyAction(const Mat& image) {
     for (int i = 0; i < this->weaponClassifiers.size(); i++) {
         if (detect(image, this->weaponClassifiers.at(i))) {
             return this->weaponConstants.at(i);
@@ -162,7 +162,9 @@ bool classifier_detector::evaluateHeroClassifier(const Mat& image, const OWConst
     for (int i = 0; i < this->heroClassifiers.size(); i++) {
         if (detect(image, this->heroClassifiers.at(i))) {
             detectedHero = this->heroConstants.at(i);
-            return detectedHero == knownHero; 
+            if (detectedHero == knownHero) {
+                return true;
+            }
         }
     }
 
@@ -178,7 +180,9 @@ bool classifier_detector::evaluateWeaponClassifier(const Mat& image, const OWCon
     for (int i = 0; i < this->weaponClassifiers.size(); i++) {
         if (detect(image, this->weaponClassifiers.at(i))) {
             detectedWeapon = this->weaponConstants.at(i);
-            return detectedWeapon == knownAction;
+            if (detectedWeapon == knownAction) {
+                return true; 
+            }
         }
     }
 

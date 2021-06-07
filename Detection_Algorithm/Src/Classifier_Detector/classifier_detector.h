@@ -44,7 +44,7 @@ public:
 
     OWConst::Heroes identifyHero(const Mat&);
 
-    OWConst::WeaponActions identifyWeaponAction(const Mat&);
+    OWConst::WeaponActions identifyAction(const Mat&);
 
     bool evaluateHeroClassifier(const Mat&, const OWConst::Heroes&);
 
