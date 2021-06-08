@@ -11,34 +11,75 @@
 
 #include "template_matching.h"
 
-const vector<OWConst::Heroes> HEROES = { OWConst::Mercy, OWConst::Lucio };
-const char* templ_file_prefix = "Detection_Algorithm/Data/Templates/";
-static vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
-static Mat HERO_TEMPLATES[2]; static Mat HERO_MASKS[2];
-static map<OWConst::Heroes, Mat[]> WA_TEMPLATES;
-static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
-
 /***************************************************************************************************
- * Temp Matching Setup
+ * temp_matching constructor
  *
- * This method is a specific set up helper method for the template matching method.
+ * This method is a constructor for the template matching method.
  * It loads in the template images into a global vector of Mats.
  *
  **************************************************************************************************/
-void tempMatchingSetup() {
-	Mat orig; Mat resized;
+
+template_matching::template_matching() {
+	string filename;
 	for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {
-		string filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
-		orig = imread(filename);
-		resize(orig, resized, Size(orig.cols, orig.rows));
-		HERO_TEMPLATES[i] = resized;
+		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + ".png";
+		HERO_TEMPLATES[i] = imread(filename);
+
+		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_Edge.png";
+		EDGE_TEMPLATES[i] = imread(filename);
 
 		filename = TEMPL_FILE_PREFIX + OWConst::getHeroString(TM_ACCEPTED_HEROES[i]) + "_mask.png";
-		orig = imread(filename);
-		resize(orig, resized, Size(orig.cols, orig.rows));
-		HERO_MASKS[i] = resized;
-	}	
+		HERO_MASKS[i] = imread(filename);
+	}
+
+	vector<vector<string>> paths;
+	csv_wrapper::readFromCSV(WA_TEMPLATE_FILEPATHS, paths);
+	string heroname;
+	OWConst::Heroes hero;
+	vector<Mat> templates;
+	vector<Mat> masks;
+	vector<Rect> positionRects;
+	vector<OWConst::WeaponActions> actions;
+
+	for (int i = 0; i < paths.size(); i++) {
+		if (paths[i].size() == 1) {
+			if (i != 0) {
+				WA_TEMPLATES[hero] = templates;
+				WA_MASKS[hero] = masks;
+				WA_TEMPL_RECT[hero] = positionRects;
+				ACTIONS[hero] = actions;
+			}
+			templates.clear();
+			masks.clear();
+			positionRects.clear();
+
+			heroname = paths[i][0];
+			hero = OWConst::getHero(heroname);
+		}
+		else {
+			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + ".png";
+			templates.push_back(imread(filename));
+
+			filename = TEMPL_FILE_PREFIX + "Weapon_Actions/" + paths[i][0] + "_mask.png";
+			masks.push_back(imread(filename));
+
+			actions.push_back(OWConst::getAction(paths[i][1]));
+			
+			Rect cropRect = Rect(std::stoi(paths[i][2]), std::stoi(paths[i][3]), 
+				                 std::stoi(paths[i][4]), std::stoi(paths[i][5]));
+			positionRects.push_back(cropRect);
+		}
+		
+		if (paths.size() - 1 == i) {
+			WA_TEMPLATES[hero] = templates;
+			WA_MASKS[hero] = masks;
+			WA_TEMPL_RECT[hero] = positionRects;
+			ACTIONS[hero] = actions;
+		}
+	}
+
 }
+
 
 /***************************************************************************************************
  * Identify Hero
@@ -53,26 +94,57 @@ void tempMatchingSetup() {
  *                       matching method. 
  *
  **************************************************************************************************/
-OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
+OWConst::Heroes template_matching::identifyHero(Mat& frame, int match_method, bool use_mask) {
 	if (match_method < 0 || match_method > 5) {
 		cout << "The match method was invalid." << endl;
 		return OWConst::No_Hero;
 	}
 	
-	Mat templ; Mat result; Mat result_templ;
+	Mat templ; Mat mask; Mat result; Mat result_templ;
 	OWConst::Heroes result_hero = OWConst::No_Hero;
-	double tempScore; 
+	double currScore; 
 	Point matchLoc;
 
 	// Crop the source image so it only looks at the lower right quadrant. 
 	Rect cropRect = Rect(frame.cols / 2, frame.rows / 2, frame.cols / 2, frame.rows / 2);
 	Mat cropped = frame(cropRect);
 
+	if (TRY_GRAYSCALE) {
+		Mat copy;
+		cropped.copyTo(copy);
+		cvtColor(copy, cropped, COLOR_BGR2GRAY);
+		equalizeHist(cropped, cropped);
+	}
+
+	if (TRY_EDGE) {
+		cropped = createEdgeMap(cropped);
+	}
+
 	for (int i = 0; i < HEROES.size(); i++) {
-		templ = HERO_TEMPLATES[i];
+		if (use_mask) {
+			mask = HERO_MASKS[i];
+		}
+		if (TRY_EDGE) {
+			templ = EDGE_TEMPLATES[i];
+		}
+		else {
+			templ = HERO_TEMPLATES[i];
+		}
+
+		if (TRY_GRAYSCALE) {
+			Mat copy;
+			templ.copyTo(copy);
+			cvtColor(copy, templ, COLOR_BGR2GRAY);
+			equalizeHist(templ, templ);
+			if (use_mask) {
+				mask.copyTo(copy);
+				cvtColor(copy, mask, COLOR_BGR2GRAY);
+				equalizeHist(mask, mask);			
+			}
+		}
 
 		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
-			matchTemplate(cropped, templ, result, match_method, HERO_MASKS[i]);
+			matchTemplate(cropped, templ, result, match_method, mask);
 		}
 		else {
 			matchTemplate(cropped, templ, result, match_method);
@@ -87,16 +159,16 @@ OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
 
 		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
 			// If first run or score is less than temp score
-			if (i == 0 || minVal < tempScore) {
-				tempScore = minVal;
+			if (i == 0 || minVal < currScore) {
+				currScore = minVal;
 				matchLoc = minLoc;
 				result_hero = HEROES[i];
 				result_templ = templ;
 			}
 		}
 		else {
-			if (i == 0 || maxVal > tempScore) {
-				tempScore = maxVal;
+			if (i == 0 || maxVal > currScore) {
+				currScore = maxVal;
 				matchLoc = maxLoc;
 				result_hero = HEROES[i];
 				result_templ = templ;
@@ -105,12 +177,8 @@ OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
 	} 
 
 	// Commented out display of the source image and print of the detected object
-	//Mat display_img;
-	//frame.copyTo(display_img);
-	//Point modifiedPt = Point(matchLoc.x + cropped.cols, matchLoc.y + cropped.rows);
-	//rectangle(display_img, modifiedPt, Point(modifiedPt.x + result_templ.cols, modifiedPt.y + result_templ.rows), Scalar::all(0), 2, 8, 0);
-	//imshow("result", display_img);
-	//cout << OWConst::getHeroString(result_hero) << endl;
+	// cout << "Hero: " << OWConst::getHeroString(result_hero) << endl;
+	// displayDetectedArea(frame, matchLoc, resultRect, resultTempl);
 
 	return result_hero;
 }
@@ -130,10 +198,14 @@ OWConst::Heroes identifyHero(Mat& frame, int match_method, bool use_mask) {
  *                                matching method. 
  *
  **************************************************************************************************/
-int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, bool use_mask) {
-	string result = OWConst::getHeroString(identifyHero(frame, match_method, use_mask));
+int template_matching::evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero, 
+										bool use_mask) {
+	string result = OWConst::getHeroString(
+						identifyHero(frame, match_method, use_mask));
 	return result == OWConst::getHeroString(expected_hero);
 }
+
+
 
 /***************************************************************************************************
  * Identify Action
@@ -149,6 +221,64 @@ int evalIdentifyHero(Mat& frame, int match_method, OWConst::Heroes expected_hero
  *      OWConst::Heroes: The hero that was detected in the given frame.
  *
  **************************************************************************************************/
-OWConst::WeaponActions identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
+OWConst::WeaponActions template_matching::identifyAction(Mat& frame, int match_method, bool use_mask, OWConst::Heroes hero) {
+	OWConst::WeaponActions result_action = OWConst::No_Action;
+	Mat templ; Mat result; Mat mask; Mat cropped;
+	Rect resultRect; Mat resultTempl;
 
+	double currScore;
+	Point matchLoc;
+
+	for (int i = 0; i < WA_TEMPLATES[hero].size(); i++) {
+		templ = WA_TEMPLATES[hero][i];
+		mask = WA_MASKS[hero][i];
+		Rect cropRect = WA_TEMPL_RECT[hero][i];
+		cropped = frame(cropRect);
+
+		if (use_mask && (match_method == TM_SQDIFF || match_method == TM_CCORR_NORMED)) {
+			matchTemplate(cropped, templ, result, match_method, mask);
+		}
+		else {
+			matchTemplate(cropped, templ, result, match_method);
+		}
+
+		double minVal; double maxVal; Point minLoc; Point maxLoc;
+		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+
+		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED) {
+			// If first run or score is less than temp score
+			if (i == 0 || minVal < currScore) {
+				currScore = minVal;
+				matchLoc = minLoc;
+				resultRect = cropRect;
+				resultTempl = templ;
+				result_action = ACTIONS[hero][i];
+			}
+		}
+		else {
+			if (i == 0 || maxVal > currScore) {
+				currScore = maxVal;
+				matchLoc = maxLoc;
+				resultRect = cropRect;
+				resultTempl = templ;
+				result_action = ACTIONS[hero][i];
+			}
+		}
+	}
+
+	// Commented out display of the source image and print of the detected object
+	// cout << "Action: " << OWConst::getWeaponActionString(result_action) << endl;
+	// displayDetectedArea(frame, matchLoc, resultRect, resultTempl);
+	
+	return result_action;
+}
+
+void template_matching::displayDetectedArea(Mat frame, Point matchLoc, Rect resultRect, Mat resultTempl) {
+	// Commented out display of the source image and print of the detected object
+	Mat display_img;
+	frame.copyTo(display_img);
+	Point modifiedPt = Point(matchLoc.x + resultRect.x, matchLoc.y + resultRect.y);
+	rectangle(display_img, modifiedPt, Point(modifiedPt.x + resultTempl.cols, modifiedPt.y + resultTempl.rows), Scalar::all(0), 2, 8, 0);
+	imshow("result", display_img);
+	waitKey(0);
 }
