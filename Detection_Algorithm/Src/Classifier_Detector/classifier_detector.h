@@ -59,8 +59,7 @@ public:
      *        by the created classifier_detector object. Trained classifiers must exist for each hero
      * 
      * @pre:  Trained classifiers for each hero in the passed parameter vector have been created and 
-     *        are stored in the location specified by HERO_CLASSIFIER_DIRECTORY and
-     *        WEAPON_CLASSIFIER_DIRECTORY
+     *        are stored in the location specified by HERO_CLASSIFIER_DIRECTORY
      * @post: A classifier_detector object will be created with classifiers for the specified heroes 
      *        loaded, as well as the corresponding OWConst values for each
     ***********************************************************************************************/
