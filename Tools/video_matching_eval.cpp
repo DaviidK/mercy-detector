@@ -574,7 +574,6 @@ void displayStats(const int& correct, const int& total) {
  * This helper method retrieves the current time.
  * This can be used to help name the outputted csv files.
  *
- * @pre: 
  * @post: The date and time will be recorded and returned to wherever this method was called
  * 
  * @return: The current date and local time in the form dayMonthYear-hourMinuteSecond as a string
