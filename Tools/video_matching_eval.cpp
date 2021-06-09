@@ -48,11 +48,6 @@ static const bool USE_META_FILE = true;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
-static const int MATCH_METHOD = 2;
-static const bool USE_MASK = false;
-
-// Template matching specific parameters
-static const int NUM_MATCHING_METHODS = 8;
 static const int MATCH_METHOD = 3;
 static const bool USE_MASK = true;
 
@@ -83,14 +78,10 @@ string getDateTime();
 /***************************************************************************************************
  * Main Function
  *
- * Opens the provided video file and begins the video profiling loop.
- *
- * Video Profiling Loop:
- * - Record the time at the beginning of the loop
- * - Read in the next frame (file access may take time here)
- * - Does user-defined processing on the frame
- * - Waits for minimum amount of time and displays the frame
- * - Records the time at the end of the loop
+ * Loads the target videos listed in the CSV file located in VIDEO_FILE_PATHS and evaluates the 
+ * specified object detection algorithm's performance on those videos. Videos will be processed in 
+ * order, with indidivual detection statistics output to the terminal after each video completes. All
+ * results will be compiled upon the final video's completion and output to a CSV file.
  *
  * @pre: VIDEO_FILE_PATHS contains filepaths to all videos to be evaluated
  * @post: A CSV file will be generated containing results of object detection for the selected method
