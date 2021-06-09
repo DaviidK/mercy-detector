@@ -9,7 +9,6 @@
  * is currently displayed in a passed image.
  *
  * Configuration / Assumptions:
- *
  * - HERO_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different heroes, stored 
  *   with the name of that hero.
  * - WEAPON_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different weapon actions, 
@@ -17,9 +16,6 @@
  **************************************************************************************************/
 
 #include "classifier_detector.h"
-
-const string& HERO_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Heroes/";
-const string& WEAPON_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Weapons/Mercy/";
 
 /**
 
@@ -51,37 +47,6 @@ classifier_detector::classifier_detector() {
 
     // Iterate through all weapon classifiers 
     for (const auto& file : filesystem::directory_iterator(WEAPON_CLASSIFIER_DIRECTORY)) {
-        // Save the filepath, then convert it to a string
-        filesystem::path filePath(file);
-        string filePathString = filePath.generic_string();
-        CascadeClassifier weaponClassifier;
-
-        // Load the classifier for a given file, and push it to the heroClassifiers field
-        weaponClassifier.load(filePathString);
-        this->weaponClassifiers.push_back(weaponClassifier);
-
-        // Push the corresponding hero to the heroConstants field
-        const size_t weaponNameIndex = filePathString.find_last_of("\\/") + 1;
-        const size_t extensionIndex = filePathString.find_last_of(".");
-        const int weaponNameSize = extensionIndex - weaponNameIndex;
-        const string weaponName = filePathString.substr(weaponNameIndex, weaponNameSize);
-        this->weaponConstants.push_back(OWConst::getAction(weaponName));
-    }
-}
-
-/**
-
-*/
-classifier_detector::classifier_detector(const OWConst::Heroes& weaponHero) {
-    this->heroClassifiers = vector<CascadeClassifier>();
-    this->heroConstants = {weaponHero};
-    this->weaponClassifiers = vector<CascadeClassifier>();
-    this->weaponConstants = vector<OWConst::WeaponActions>();
-
-    string weaponDirectory = WEAPON_CLASSIFIER_DIRECTORY + OWConst::getHeroString(weaponHero) + "/";
-
-    // Iterate through all files in the classifier directory
-    for (const auto& file : filesystem::directory_iterator(weaponDirectory)) {
         // Save the filepath, then convert it to a string
         filesystem::path filePath(file);
         string filePathString = filePath.generic_string();

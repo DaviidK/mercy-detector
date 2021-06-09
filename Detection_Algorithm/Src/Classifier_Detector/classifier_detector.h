@@ -9,7 +9,6 @@
  * the OWConst class.
  *
  * Configuration / Assumptions:
- *
  * - HERO_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different heroes, stored
  *   with the name of that hero.
  * - WEAPON_CLASSIFIER_DIRECTORY contains trained cascade classifiers for different weapon actions,
@@ -31,15 +30,36 @@
 using namespace cv;
 using namespace std;
 
-class classifier_detector {
+const string& HERO_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Heroes/";
+const string& WEAPON_CLASSIFIER_DIRECTORY = "Detection_Algorithm/Data/Cascade_Classifiers/Weapons/Mercy/";
 
+class classifier_detector {
+    
 public:
-    //------------------------------------------------------------------------Public member methods
-    // Default constructor: Will instantiate 
+    /***********************************************************************************************
+     * Default Constructor
+     *
+     * Initializes a classifier_detector object by loading all available classifiers present in the 
+     * data directories.
+     * 
+     * @pre: Trained classifiers have been created and are stored in the location specified by 
+     *       HERO_CLASSIFIER_DIRECTORY & WEAPON_CLASSIFIER_DIRECTORY.
+     * @post: A classifier_detector object will be created with all classifiers loaded, as well as
+     *        the corresponding OWConst values for each.
+    ***********************************************************************************************/
     classifier_detector();
 
-    classifier_detector(const OWConst::Heroes&);
-
+    /***********************************************************************************************
+     * Hero-specific Constructor
+     *
+     * Initializes a classifier_detector object by loading all available classifiers present in the 
+     * data directories.
+     * 
+     * @pre: Trained classifiers have been created and are stored in the location specified by 
+     *       HERO_CLASSIFIER_DIRECTORY & WEAPON_CLASSIFIER_DIRECTORY.
+     * @post: A classifier_detector object will be created with all classifiers loaded, as well as
+     *        the corresponding OWConst values for each.
+    ***********************************************************************************************/
     classifier_detector(const vector<OWConst::Heroes>&);
 
     OWConst::Heroes identifyHero(const Mat&);
