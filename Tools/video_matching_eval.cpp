@@ -27,7 +27,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include "Detection_Algorithm/Src/Overwatch_Constants/overwatchConstants.h"
-#include "Tutorials/Template_Matching/template_matching.h"
+#include "Detection_Algorithm/Src/Template_Matching/template_matching.h"
 #include "Detection_Algorithm/Src/classifier_detector/classifier_detector.h"
 #include "Tools/CSV/csv_wrapper.h"
 #include "Tools/Meta_File/meta_file.h"
@@ -44,7 +44,7 @@ static const string VIDEO_FILE_PATHS = "Detection_Algorithm/Data/Video/video_pat
 static const string VIDEO_FILE_PREFIX = "Detection_Algorithm/Data/Video/";
 static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
 static const int DETECTION_METHOD = 0;
-static const bool USE_META_FILE = false;
+static const bool USE_META_FILE = true;
 
 // Template matching specific parameters
 static const int NUM_MATCHING_METHODS = 8;
@@ -57,11 +57,6 @@ void processVideoTemplateMatching(VideoCapture capture,
 	string filePath);
 
 void processMetaTemplateMatching(VideoCapture capture, MetaFile& metaFile, vector<vector<string>>& output, string videoPath);
-
-void processVideoCascadeClassifier(VideoCapture capture,
-							       OWConst::Heroes expectedHero,
-								   vector<vector<string>>& output,
-								   string filepath);
 
 void displayStats(const int& correct, const int& total);
 
@@ -132,7 +127,6 @@ int main() {
 			}
 		}
 		else if (DETECTION_METHOD == 1) {
-			processVideoCascadeClassifier(capture, expectedHero, output, shortPath);
 		}
 		else if (DETECTION_METHOD == 2) {
 			// TODO: Edge Matching frame processing method here
@@ -191,25 +185,24 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 			continue;
 		}
 
-		if (totalFrameCount % 10 == 0) {
-			for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-				if (i == 6) {
-					match_method = 0;
-					use_mask = true;
-				}
-				else if (i == 7) {
-					match_method = 3;
-					use_mask = true;
-				}
-				else {
-					match_method = i;
-					use_mask = false;
-				}
-				correctCount[i] += TMDetector.evalIdentifyHero(frame, match_method, expectedHero, use_mask);
+		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+			if (i == 6) {
+				match_method = 0;
+				use_mask = true;
 			}
-			evalFrameCount++;
+			else if (i == 7) {
+				match_method = 3;
+				use_mask = true;
+			}
+			else {
+				match_method = i;
+				use_mask = false;
+			}
+
+			correctCount[i] += TMDetector.evalIdentifyHero(frame, match_method, expectedHero, use_mask);
 		}
-		
+
+		evalFrameCount++;
 	}
 	cout << endl;
 
