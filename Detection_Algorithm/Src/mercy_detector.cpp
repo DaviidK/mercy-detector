@@ -9,11 +9,10 @@
  * frames per second reading is also provided to gauge the performance of the object detection
  * algorithms.
  *
- * _________________________________________________________________________________________________
- * Assumptions:
+ * Configurations / Assumptions:
  *
- * • VIDEO_PATH is a valid path to a .mp4 video
- * _________________________________________________________________________________________________
+ * - VIDEO_PATH is a valid path to a .mp4 video
+ * 
  * Implementation Details:
  *
  **************************************************************************************************/
@@ -72,7 +71,7 @@ OWConst::WeaponActions detectAction(Mat& frame);
  *
  * Conducts the processing and analyzing of the individual frames within the given video.
  * 
- * @pre VIDEO_PATH contains a valid path to a mp4 video.
+ * @pre VIDEO_PATH contains a valid path to a mp4 video
  * @post Displays the processing of the video frames 
  **************************************************************************************************/
 int main()
@@ -98,11 +97,11 @@ int main()
  * Processes the video. At each frame, a hero and weapon action are detected, and the processing 
  * time for this is captured. 
  * 
- * @param capture : The video capture to be processed.
+ * @param capture : The video capture to be processed
  *
- * @pre VideoCapture is opened.
+ * @pre VideoCapture is opened
  * @post The displayed window shows the elapsed processing time and what hero and action were 
- *       detected in each frame.
+ *       detected in each frame
  **************************************************************************************************/
 void processVideo(VideoCapture& capture)
 {
@@ -157,13 +156,13 @@ void processVideo(VideoCapture& capture)
  * Detect Hero
  *
  * Detects a hero in the given frame using either template matching or cascade classifier.
- * 
- * @param frame : The frame for which a hero is to be detected from.
  *
- * @pre The parameter frame must be a valid Mat image.
- * @post Returns the detected hero as an OWConst::Heroes enum value.
+ * @param frame : The frame for which a hero is to be detected from
  *
- * @return An OWConst::Heroes enum of which hero was detected in the given frame.
+ * @pre The parameter frame must be a valid Mat image
+ * @post Returns the detected hero as an OWConst::Heroes enum value
+ *
+ * @return An OWConst::Heroes enum of which hero was detected in the given frame
  **************************************************************************************************/
 OWConst::Heroes detectHero(Mat& frame)
 {
@@ -199,12 +198,12 @@ OWConst::Heroes detectHero(Mat& frame)
  * Detects a weapon action from the given frame using either cascade classifier or template 
  * matching.
  * 
- * @param frame : The frame for which a weapon action is to be detected from.
+ * @param frame : The frame for which a weapon action is to be detected from
  *
- * @pre The input frame is a valid Mat image.
- * @post Returns the detected weapon action as an OWConst::WeaponActions enum value.
+ * @pre The input frame is a valid Mat image
+ * @post Returns the detected weapon action as an OWConst::WeaponActions enum value
  *
- * @return An OWConst::WeaponActions enum of which weapon action was detected in the given frame.
+ * @return An OWConst::WeaponActions enum of which weapon action was detected in the given frame
  **************************************************************************************************/
 OWConst::WeaponActions detectAction(Mat& frame)
 {
@@ -239,13 +238,13 @@ OWConst::WeaponActions detectAction(Mat& frame)
  *
  * This method adds text output to the displayed window. 
  * 
- * @param frame : The frame for the text to be displayed onto.
- * @param fps : The frames per second (FPS) value to be displayed onto the window.
- * @param hero : The detected hero to be displayed onto the window.
- * @param action : The detected weapon action to be displayed onto the window.
+ * @param frame : The frame for the text to be displayed onto
+ * @param fps : The frames per second (FPS) value to be displayed onto the window
+ * @param hero : The detected hero to be displayed onto the window
+ * @param action : The detected weapon action to be displayed onto the window
  *
  * @pre Input frame is a valid Mat image. fps, hero and action are all initialized
- * @post Adds text to the displayed window about the results from processing the video frame.
+ * @post Adds text to the displayed window about the results from processing the video frame
  **************************************************************************************************/
 void addTextOutput(Mat& frame, double fps, OWConst::Heroes hero, OWConst::WeaponActions action)
 {
