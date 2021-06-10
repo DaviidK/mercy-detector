@@ -12,14 +12,17 @@
 /***************************************************************************************************
  * Save To CSV
  *
- * Opens the provided filename. Current open mode is hardcoded to truncate, which will overwrite
- * existing files.
+ * Creates or overwrites a csv file at the provided file path. The CSV file is populated with
+ * the 2D string data vector.
  *
- * Loops through the provided 2D string vector. For each element in the row, the string is
- * written followed by the delimiter. If the element is the last element in the row, a newline
- * character is added.
- *
- **************************************************************************************************/
+ * TODO: Invalid file handling, append options
+ * 
+ * @param filename: The filename in which the resulting CSV will be saved
+ * @param data: A 2D vector of strings which contains the data to write to a CSV
+ * 
+ * @post: A new CSV file will be created at the location specified by 'filename', containing the 
+ *        data specified by 'data'
+***************************************************************************************************/
 void csv_wrapper::saveToCSV(const string& filename, vector<vector<string>> data)
 {
     fstream fileOut;
@@ -49,13 +52,16 @@ void csv_wrapper::saveToCSV(const string& filename, vector<vector<string>> data)
 /***************************************************************************************************
  * Read From CSV
  *
- * Opens a file from the provided filename.
+ * Opens a csv file at the provided file path. Populates the provided 2D string vector with the
+ * contents of the csv file.
  *
- * Reads through each line in the provided file. Uses commas as a delimiter, then removes
- * whitespace using the reduce() method. This means that all values within the data array
- * will have no whitespace before or after the string.
- *
- **************************************************************************************************/
+ * @param filename: The filename from which to read in data
+ * @param data: A 2D vector of strings which will save the data read in from a CSV
+ * 
+ * @pre: A CSV file exists at the location
+ * @post: A new CSV file will be created at the location specified by 'filename', containing the 
+ *        data specified by 'data'
+***************************************************************************************************/
 void csv_wrapper::readFromCSV(const string& filename, vector<vector<string>>& data)
 {
     fstream fileIn;
@@ -82,12 +88,42 @@ void csv_wrapper::readFromCSV(const string& filename, vector<vector<string>>& da
 }
 
 /***************************************************************************************************
+ * Trim
+ *
+ * Trims whitespace from a provided string
+ * Source: https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
+ * 
+ * @param str: String which will be trimmed
+ * @param whitespace: Whitespace to removed from the string
+ * 
+ * @post: The passed parameter string will have whitespace removed
+****************************************************************************************************/
+string csv_wrapper::trim(const string &str, const string &whitespace)
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos)
+        return ""; // no content
+
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
+}
+
+/***************************************************************************************************
  * Reduce
  *
- * Removes the whitespace from before and after a provided string.
- *
+ * Removes whitespace from the beginning and end of a provided string, replacing it with a given
+ * character.
  * Source: https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
- **************************************************************************************************/
+ * 
+ * @param str: String which will be trimmed
+ * @param fill: Character used to replace trimmed whitespace
+ * @param whitespace: Whitespace to removed from the string
+ * 
+ * @post: The passed parameter string will have whitespace removed, and instead replaced with 
+ *        the specified string
+***************************************************************************************************/
 string csv_wrapper::reduce(const string &str, const string &fill, const string &whitespace)
 {
     // trim first
@@ -107,23 +143,4 @@ string csv_wrapper::reduce(const string &str, const string &fill, const string &
     }
 
     return result;
-}
-
-/***************************************************************************************************
- * Trim
- *
- * Removes whitespace from a string
- *
- * Source: https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
- **************************************************************************************************/
-string csv_wrapper::trim(const string &str, const string &whitespace)
-{
-    const auto strBegin = str.find_first_not_of(whitespace);
-    if (strBegin == std::string::npos)
-        return ""; // no content
-
-    const auto strEnd = str.find_last_not_of(whitespace);
-    const auto strRange = strEnd - strBegin + 1;
-
-    return str.substr(strBegin, strRange);
 }
