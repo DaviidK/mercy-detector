@@ -22,10 +22,11 @@
         opencv.hpp
         shape/shape_distance.hpp
       ```
-2. Download mercy-detector repository
-3. Open `mercy-detector/Detection_Algorithm/Src/mercy_detector.cpp`
-4. Edit constant variables to enable/disable matching methods
-5. Run **`mercy_detector.cpp`**
+2. Configure OpenCV to use C++17
+3. Download mercy-detector repository
+4. Open `mercy-detector/Detection_Algorithm/Src/mercy_detector.cpp`
+5. Edit constant variables to enable/disable matching methods
+6. Run **`mercy_detector.cpp`**
 
 ## Background
 Existing research has demonstrated that it is possible to parse visual data from a video feed of a game and analyze different aspects of gameplay. Static 2D elements such as a GUI used to represent health or energy have been studied in-depth, and no longer represent a particularly challenging task for computer vision projects. 3D modelled objects pose a similar challenge to identifying an object in real-life.
