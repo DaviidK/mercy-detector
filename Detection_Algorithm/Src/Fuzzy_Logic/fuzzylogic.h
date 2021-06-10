@@ -24,39 +24,71 @@ public:
     /***********************************************************************************************
      * FuzzyLogic Constructor
      *
-     * Initializes the FuzzyLogic Module using a vector of keys. These are immutable so ensure
-     * that all keys are included.
-    ***********************************************************************************************/
+     * Initializes all queues using a vector of strings
+     *
+     * @param   keys as vector of strings
+     *
+     * @pre     Keys have been declared with a non-zero size
+     * @post    Initializes all queues using a vectotr of strings
+     *
+     **********************************************************************************************/
     FuzzyLogic(vector<string> keys);
 
     /***********************************************************************************************
      * FuzzyLogic Destructor
      *
-     * Destroys the FuzzyLogic Module and cleans up memory
-    ***********************************************************************************************/
+     * Destroys the contents of the values vector, then all instance variables
+     *
+     * //TODO: set pointers to null, test
+     * @pre     All queues are not null
+     * @post    Destroys the contents of the values vector, then all instance variables
+     *
+     **********************************************************************************************/
     ~FuzzyLogic();
 
     /***********************************************************************************************
      * Add Value
      *
-     * Adds a value to a FuzzyLogic Queue matching the given key
-    ***********************************************************************************************/
+     * Adds a value to the queue matching a provided name
+     *
+     * @param key   : Name of queue
+     * @param value : Value of detection confidence
+     *
+     * @pre     Queues have been initlaied, Value is valid
+     * @post    Adds a value to a specific queue
+     *
+     * @return  Returns TRUE if a value has been added successfully,
+     *          Returns FALSE if the index of the provided key does not exist
+     *
+     **********************************************************************************************/
     bool addValue(const string& key, double value);
 
     /***********************************************************************************************
      * Get State
      *
-     * Polls the FuzzyLogic Module, returning which key has the highest score based on the sum
-     * of each queue.
-    ***********************************************************************************************/
+     * Polls all queues for the maximum value contained in the module, returns the corresponding
+     *
+     * @pre     Queues have been initlaized
+     * @post    Find the maximum value that exists in the module
+     *
+     * @return  Maximum value that exists in the module as String,
+     *          "NONE" if queues
+     *
+     **********************************************************************************************/
     string getState();
 
     /***********************************************************************************************
      * Get State Index
      *
-     * Polls the FuzzyLogic Module, returning the index of the key that has the highest score based
-     * on the sum of each queue.
-    ***********************************************************************************************/
+     * Polls all queues for the maximum value contained in the module, returns the corresponding index
+     * of which key was selected.
+     *
+     * @pre     Queues have been initlaized
+     * @post    Poll all queues for maximum value in the module, return the index of that key
+     *
+     * @return  Key of the maximum value that exists in the module as integer,
+     *          -1 if maximum value does not exist
+     **********************************************************************************************/
     int getStateIndex();
 
 private:
@@ -64,8 +96,17 @@ private:
     /***********************************************************************************************
      * Get Key Index
      *
-     * Helper method, returns the index of a provided key
-    ***********************************************************************************************/
+     * Returns the index of the provided key
+     *
+     * @param key   : key in the queue vector
+     *
+     * @pre     the queue of the key exists
+     * @post    iterate through the keys variable to find the index of specified key
+     *
+     * @return  Index of specified key,
+     *          -1 if the specified key does not exist
+     *
+     **********************************************************************************************/
     int getKeyIndex(const string& value);
 
     /***********************************************************************************************
