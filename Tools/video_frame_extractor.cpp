@@ -105,6 +105,9 @@ int main()
  * Loops through an initialized VideoCapture and retrieves each frame from the video. Saves a
  * frame, then skips FRAME_SKIP frames before saving another.
  *
+ * @param capture : VideoCapture of the video to extract frames from 
+ * @param capitalized_filename : The capitalized filename.
+ * 
  * @pre: capture is opened, capitalized_filename, SAVE_DIRECTORY_PATH, FRAME_SKIP initialized
  * @post: Frames saved to the SAVE_DIRECTORY_PATH/capitalized_filename
  **************************************************************************************************/
@@ -149,8 +152,7 @@ void saveFrames(VideoCapture capture, const string& capitalized_filename)
  * (likely because the directory name already exists) the function calls exit() and forces the
  * program to quit.
  *
- * //TODO test this function specifically on Windows
- *
+ * @param capitalized_filename : The capitalized filename
  *
  * @pre: SAVE_DIRECTORY_PATH, capitalized_filename initialized
  * @post: A directory at SAVE_DIRECTORY_PATH/capitalized_filename has been created
@@ -180,6 +182,8 @@ void createDirectory(const string& capitalized_filename)
  *
  * Source: https://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
  *
+ * @param path : The path to a file to extract a filename from.
+ * 
  * @pre: path is a valid string
  * @post: The path before the filename is removed as well as the file extension.
  *
@@ -214,6 +218,8 @@ string removePath(string path)
  * below ASCII character 96, which is where lowercase letters start. In this case, the original
  * string is returned.
  *
+ * @param filename : The filename
+ * 
  * @pre: filename is a valid string
  * @post: The first character in filename is capitalized, or the filename is unchanged
  *

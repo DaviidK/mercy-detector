@@ -12,7 +12,6 @@
  * The default value of No_Hero and No_Action will be assigned for each frame.
  *
  * A metadata file can also be opened from an existing .csv file.
- *
  **************************************************************************************************/
 
 #ifndef MERCY_DETECTOR_META_FILE_H
@@ -26,10 +25,9 @@ class MetaFile {
 public:
 
     /***********************************************************************************************
-     * Meta No Arg Constructor
+     * Meta File Default Constructor
      *
-     * Does nothing - the object is not initialized
-     *
+     * @post: Does nothing - the object is not initialized
      **********************************************************************************************/
     MetaFile();
 
@@ -37,10 +35,14 @@ public:
      * Meta File FrameCount Constructor
      *
      * Use this constructor to create a metadata object from scratch. The identified hero and
-     * action for each frame will be set to No_Hero and No_Action respectively.
+     * action for each frame will be set to No_Hero and No_Action respectively. Note that the size 
+     * of the metadata object is immutable
      *
-     * Note that the size of the metadata object is immutable.
-     *
+     * @param frameCount: The number of frames contained in the video associated with the created
+     *        metafile
+     * 
+     * @post: A metafile is created from scratch, with OWConst::No_Hero and OWConst::No_Action 
+     *        populated for each frame
      **********************************************************************************************/
     MetaFile(int frameCount);
 
@@ -49,42 +51,70 @@ public:
      *
      * Use this constructor to open a metadata file that is saved as a .csv.
      *
+     * @param filename: The file location of a .csv file which contains data to be loaded into a 
+     *        MetaFile object
+     * 
+     * @pre:  A CSV file exists at the location specified by filename, containing data to be loaded
+     *        into a meta file
+     * @post: The metafile located at 'filename' will be loaded into this object
      **********************************************************************************************/
     MetaFile(const string& filename);
 
     /***********************************************************************************************
      * Set Hero
      *
-     * Sets the identified hero of a given frame to the provided hero.
+     * Sets the identified hero of a given frame to the provided hero
      *
-     * Returns false for out of range indices.
-     *
+     * @param index: Frame number at which a specific hero should be set
+     * @param hero: The hero which will be used to label the specified frame
+     * 
+     * @post: The given frame will be labelled with the OWConst value of the parameter hero
+     * 
+     * @return: Boolean value, with true indicating a successful labelling of the requested frame 
+     *          with the specified weapon action. Returns false for out of range indices
      **********************************************************************************************/
     bool setHero(int index, OWConst::Heroes hero);
 
     /***********************************************************************************************
      * Set Weapon Action
      *
-     * Sets the identified weapon action of a given frame to the provided action.
-     *
-     * Returns false for out of range indices.
-     *
+     * Sets the identified weapon action of a given frame to the provided action
+     * 
+     * @param index: Frame number at which a specific weapon action should be set
+     * @param hero: The weapon action which will be used to label the specified frame
+     * 
+     * @post: The given frame will be labelled with the OWConst value of the parameter weapon action
+     * 
+     * @return: Boolean value, with true indicating a successful labelling of the requested frame 
+     *          with the specified weapon action. Returns false for out of range indices
      **********************************************************************************************/
     bool setWeaponAction(int index, OWConst::WeaponActions action);
 
     /***********************************************************************************************
      * Get Hero
      *
-     * Gets the Hero at the provided frame index. Returns No_Hero for invalid indices.
-     *
+     * Gets the Hero at the provided frame index
+     * 
+     * @param index: Frame number from which the currently labelled hero will be pulled
+     * 
+     * @post: The current hero at the specified frame will be returned.
+     * 
+     * @return: The currently labelled hero at the specified frame. Will return No_Hero for invalid 
+     *          indices
      **********************************************************************************************/
     OWConst::Heroes getHero(int index);
 
     /***********************************************************************************************
      * Get Weapon Action
      *
-     * Gets the Weapon Action at the provided frame index. Returns No_Action for invalid indices.
-     *
+     * Gets the Weapon Action at the provided frame index
+     * 
+     * @param index: Frame number from which the currently labelled weapon action will be pulled
+     * 
+     * @post: The current weapon action at the specified frame will be returned.
+     * 
+     * @return: The currently labelled hero at the specified frame. Will return No_Action for 
+     *          invalid indices
      **********************************************************************************************/
     OWConst::WeaponActions getWeaponAction(int index);
 
@@ -92,7 +122,13 @@ public:
     /***********************************************************************************************
      * Save
      *
-     * Saves the identified heroes and weapon actions as a csv file at the provided path.
+     * Saves the identified heroes and weapon actions as a csv file at the provided path
+     * 
+     * @param filename: The file location at which a .csv file will be written
+     * 
+     * @post: If a file currently exists at the location specified by 'filename', it will be 
+     *        overwritten. Otherwise, a new file will be created with the data contained in the 
+     *        current MetaFile object.
      **********************************************************************************************/
     void save(const string& filename);
 

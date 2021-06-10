@@ -38,7 +38,7 @@ using std::chrono::seconds;
 using std::chrono::system_clock;
 
 static const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Lucio/walking1.mp4";
-static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier", "Edge-Matching" };
+static const string DETECTION_TYPES[] = { "Template-Matching", "Cascade-Classifier"};
 static const int DETECTION_METHOD = 0; // Change this to change the detection method.
 
 // Template Matching variables 
@@ -47,7 +47,8 @@ static const string TEMPL_FILE_PREFIX = "Detection_Algorithm/Data/Templates/";
 static const vector<OWConst::Heroes> TM_ACCEPTED_HEROES = { OWConst::Mercy, OWConst::Lucio };
 static const int MATCH_METHOD = 0; // Change this to change the temp matching method.
 static const bool USE_MASK = false; // Change this to change whether the matching method will take
-                                    // a mask. This can only be set to true for 0 and 3 match methods.
+                                    // a mask. This can only be set to true with 0 and 3 match 
+                                    // methods.
 
 void doProcessing(long& start_processing, long& end_processing, Mat& frame);
 
@@ -140,8 +141,10 @@ int main()
  *
  * This is where you should call your image processing code for a single frame.
  *
- * //TODO: Add your code here
- *
+ * @param frame : Mat image of a single frame to be processed.
+ * 
+ * @pre The parameter frame must be a valid Mat image.
+ * @post Does some processing on the given frame parameter.
  **************************************************************************************************/
 void processFrame(Mat& frame)
 {
@@ -155,7 +158,14 @@ void processFrame(Mat& frame)
  *
  * Records the processing start time, calls the processFrame function, and records the processing
  * end time.
- *
+ * 
+ * @param start_processing : A long value to be declared of when the processing started.
+ * @param end_processing : A long value to be declared of when the processing ended.
+ * @param frame : The Mat frame to be processed.
+ * 
+ * @pre Paramater frame is a valid Mat image.
+ * @post start_processing and end_processing are initialized to the start and end time for 
+ *       processing, respectively.
  **************************************************************************************************/
 void doProcessing(long& start_processing, long& end_processing, Mat& frame)
 {
@@ -184,7 +194,11 @@ long getTime()
  *
  * Displays frame rate information and how much time the processing is taking up. All time values
  * are in milliseconds
- *
+ * 
+ * @param totalTime : Numerical value of how long the program has been running overall.
+ * @param processingTime : Numerical value of how much time the processing took.
+ * 
+ * @post Displays performance statistics to the console. 
  **************************************************************************************************/
 void displayStats(const long& totalTime, const long& processingTime)
 {
@@ -201,6 +215,8 @@ void displayStats(const long& totalTime, const long& processingTime)
  * This method is a specific set up helper method for the template matching method.
  * It loads in the template images into a global vector of Mats.
  *
+ * @post Conducts set up for template matching processes, i.e. add templates to global constant 
+ *       array of templates.
  **************************************************************************************************/
 void tempMatchingSetup() {
     for (int i = 0; i < TM_ACCEPTED_HEROES.size(); i++) {

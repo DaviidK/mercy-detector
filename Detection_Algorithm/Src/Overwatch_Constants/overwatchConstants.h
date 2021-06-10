@@ -13,9 +13,10 @@
 
 #ifndef MERCY_DETECTOR_OVERWATCHCONSTANTS_H
 #define MERCY_DETECTOR_OVERWATCHCONSTANTS_H
-using namespace std;
+
 #include <string>
 
+using namespace std;
 
 // Enums have no size in C++, using seperate variables to prevent hacky-ness
 static const int HERO_COUNT = 33;
@@ -69,7 +70,7 @@ public:
     /***********************************************************************************************
      * Weapon Actions Enum
      *
-     * These are the weapon actions we intend to identify
+     * These are the weapon actions we may identify
     ***********************************************************************************************/
     enum WeaponActions {
         Holding_Staff, Holding_Pistol, Firing, Melee, Healing, Damage_Boosting, No_Action
@@ -79,6 +80,12 @@ public:
      * Get Hero String
      *
      * Returns the string associated with the provided Hero enum.
+     * 
+     * @param hero: The Heroes enum for which a string representation will be returned
+     * 
+     * @post: The string representation of the passed parameter Heroes enum will be returned
+     * 
+     * @return: The string value of the parameter Heroes enum
     ***********************************************************************************************/
     static string getHeroString(Heroes hero);
 
@@ -86,6 +93,12 @@ public:
      * Get Weapon Action String
      *
      * Returns the string associated with the provided Weapon Action enum.
+     * 
+     * @param action: The WeaponActions enum for which a string representation will be returned
+     * 
+     * @post: The string representation of the passed parameter WeaponActions enum will be returned
+     * 
+     * @return: The string value of the parameter WeaponActions enum
     ***********************************************************************************************/
     static string getWeaponActionString(WeaponActions action);
 
@@ -93,6 +106,13 @@ public:
      * Get Hero
      *
      * Returns the Hero enum associated with the provided string
+     * 
+     * @param heroString: A string which corresponds to a valid Heroes enum
+     * 
+     * @pre:  The passed parameter string is a valid entity in the HERO_NAMES array
+     * @post: The Heroes enum value corresponding to the passed string is returned
+     * 
+     * @return: The Heroes enum which is represented by the passed parameter string
     ***********************************************************************************************/
     static Heroes getHero(const string &heroString);
 
@@ -100,6 +120,13 @@ public:
      * Get Action
      *
      * Returns the Weapon Action enum associated with the provided string
+     * 
+     * @param actionString: A string which corresponds to a valid WeaponActions enum
+     * 
+     * @pre:  The passed parameter string is a valid entity in the WEAPON_ACTIONS array
+     * @post: The WeaponActions enum value corresponding to the passed string is returned
+     * 
+     * @return: The WeaponActions enum which is represented by the passed parameter string
     ***********************************************************************************************/
     static WeaponActions getAction(const string &actionString);
 

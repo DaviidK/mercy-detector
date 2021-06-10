@@ -40,9 +40,7 @@
 using namespace std;
 using namespace cv;
 
-//__________________________________________________________________________________________________
 // Configuration Variables
-
 const string PATH_TO_VIDEO = "Detection_Algorithm/Data/Video/Mercy/Glock/firing.mp4";
 const string PATH_TO_METADATA = ""; // Leave this blank to create new
 const string PATH_TO_METADATA_SAVE = "Detection_Algorithm/Data/Output";
@@ -62,8 +60,6 @@ static const OWConst::Heroes HERO2 = OWConst::Lucio;
 static const OWConst::Heroes HERO3 = OWConst::Soldier76;
 static const OWConst::Heroes HERO4 = OWConst::Orisa;
 static const OWConst::Heroes HERO5 = OWConst::No_Hero;
-
-//--------------------------------------------------------------------------------------------------
 
 string removePath(string path);
 
@@ -88,6 +84,11 @@ void processVideo(const string& filePath, MetaFile& metaFile);
  * - Each frame is displayed to the user, allowing them to set the hero and action
  * - The metadata file is saved to the MetaData directory
  *
+ * @pre:  PATH_TO_METADATA either contains a valid filepath or an empty string, in which case a new
+ *        meta file will be created
+ * @post: A meta file will be created with the user-defined heroes and actions for each frame. If an
+ *        existing meta file was referenced by PATH_TO_METADATA, that file will be overwritten. If 
+ *        no file was referenced, a new file will be created at the specified location
  **************************************************************************************************/
 int main()
 {
@@ -141,6 +142,12 @@ int main()
  * - The outer while loop goes through each frame in the video file
  * - The inner while loop waits for user input on each frame
  *
+ * @param filePath: The filepath for a video to be output to the user for frame analysis
+ * @param metafile: The MetaFile object where all user specified heroes & actions will be saved
+ * 
+ * @pre:  A video exists at the location specified by 'filePath'
+ * @post: The passed parameter MetaFile object will be populated with the values selected by the 
+ *        user for each frame.
  **************************************************************************************************/
 void processVideo(const string& filePath, MetaFile& metaFile)
 {
@@ -211,8 +218,15 @@ void processVideo(const string& filePath, MetaFile& metaFile)
 /***************************************************************************************************
  * Get Frame Count
  *
- * Counts the frames in a video by looping through it and incrementing a counter.
+ * Counts the frames in a video by looping through it and incrementing a counter
  *
+ * @param filename: The filename for a video which will have its frames counted
+ * 
+ * @pre:  The filepath for a video to be output to the user for frame analysis
+ * @post: The input video will have its frames counted and returned to where this method was called
+ * 
+ * @return: An int representing the number of frames contained in the video referenced by the 
+ *          parameter string
  **************************************************************************************************/
 int getFrameCount(const string& filename)
 {
@@ -246,7 +260,6 @@ int getFrameCount(const string& filename)
     return frameCount;
 }
 
-// Check the number keys and assign weapon action / hero
 /***************************************************************************************************
  * Check Numerical Input
  *
@@ -265,6 +278,15 @@ int getFrameCount(const string& filename)
  * Shift + Four  : 36
  * Shift + Five  : 37
  *
+ * @param value: The keyboard input from the user
+ * @param frameIndex: The frame currently being assessed by the user
+ * @param currentHero: The stored value for a Hero at the current frame
+ * @param currentAction: The stored value for an action at the current frame
+ * 
+ * @pre:  A single video frame has been isolated and presented to the user, and they have pressed a 
+ *        key to assign a value to the frame
+ * @post: The 'currentHero' or 'currentAction' will be updated to reflect the change specified by 
+ *        the user's keypress
  **************************************************************************************************/
 void checkNumericalInput(int value, int frameIndex, OWConst::Heroes& currentHero, OWConst::WeaponActions& currentAction)
 {
@@ -316,6 +338,14 @@ void checkNumericalInput(int value, int frameIndex, OWConst::Heroes& currentHero
  * is the value stored in the file, which will be No_Hero and No_Action by default. The set hero
  * and action are the values that will be overwritten if the user presses the space bar.
  *
+ * @param frame: The frame of video to be displayed to the user
+ * @param frameIndex: The index value of the frame within the video
+ * @param currentHero: The stored value for a Hero at the current frame
+ * @param currentAction: The stored value for an action at the current frame
+ * 
+ * @pre:  A valid video and metafile have been loaded with data to display to the user
+ * @post: A single frame from the video is displayed to the user, with the corresponding values from
+ *        a metafile being overlaid on top
  **************************************************************************************************/
 void addTextOutput(Mat& frame, MetaFile metaFile, int frameIndex, OWConst::WeaponActions currentAction, OWConst::Heroes currentHero)
 {
@@ -351,7 +381,7 @@ void addTextOutput(Mat& frame, MetaFile metaFile, int frameIndex, OWConst::Weapo
  *
  * Source: https://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
  *
- * @pre: path is a valid string
+ * @pre: 'path' is a valid string
  * @post: The path before the filename is removed as well as the file extension.
  *
  * @return A copy of the provided filename with no path or extension included.
