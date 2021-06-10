@@ -1,5 +1,5 @@
 /***************************************************************************************************
-* Image processer tool - Edge Map
+* Image processer tool - Edge Map header file
 *
 * @author: Irene Wachirawutthichai
 * @date: 06/03/2021
