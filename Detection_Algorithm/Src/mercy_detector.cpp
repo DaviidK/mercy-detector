@@ -12,9 +12,6 @@
  * Configurations / Assumptions:
  *
  * - VIDEO_PATH is a valid path to a .mp4 video
- *
- * Implementation Details:
- *
  **************************************************************************************************/
 
 #include <iostream>
