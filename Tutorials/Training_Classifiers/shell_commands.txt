@@ -79,13 +79,10 @@ opencv_traincascade -data Data/Cascade_Classifiers/Lucio_150Pos_25Stage_975HitRa
 # 2 - Staff classifier - 250pos, 25 stages, .975 hit rate
 opencv_createsamples -info Data/Positive_Annotations/staff_annotations.txt -vec Data/Positive_Samples/staff_samples.vec
 opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_25Stage_975HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2423 -numStages 25 -minHitRate .975
-opencv_traincascade -data Data/Cascade_Classifiers/Staff_250Pos_25Stage_925HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 250 -numNeg 2423 -numStages 25 -minHitRate .925
 opencv_traincascade -data Data/Cascade_Classifiers/Staff_150Pos_20Stage_9HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 150 -numNeg 2423 -numStages 20 -minHitRate .9
 opencv_traincascade -data Data/Cascade_Classifiers/Staff_75Pos_15Stage_9HitRate/ -vec Data/Positive_Samples/staff_samples.vec -bg Data/Negative_Paths/staff_negative_paths.txt -numPos 75 -numNeg 2423 -numStages 15 -minHitRate .9
 
 # 3 - Glock classifier - 100pos, 25 stages, .975 hit rate
-opencv_createsamples -info Data/Positive_Annotations/glock_annotations.txt -vec Data/Positive_Samples/glock_samples.vec
-opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_25Stage_975HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 2681 -numStages 25 -minHitRate .975
 opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_25Stage_925HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 250 -numNeg 2681 -numStages 25 -minHitRate .925
 opencv_traincascade -data Data/Cascade_Classifiers/Glock_100pos_20Stage_9HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 100 -numNeg 2681 -numStages 20 -minHitRate .9
 opencv_traincascade -data Data/Cascade_Classifiers/Glock_75pos_15Stage_9HitRate/ -vec Data/Positive_Samples/glock_samples.vec -bg Data/Negative_Paths/glock_negative_paths.txt -numPos 75 -numNeg 2681 -numStages 15 -minHitRate .9
