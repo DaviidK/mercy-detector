@@ -1,5 +1,32 @@
 # mercy-detector <img style=img align="right" src="https://raw.githubusercontent.com/DaviidK/mercy-detector/main/Documentation/Images/mercy_cartoon.png" />
 
+### Table of Contents:
+- [Setup](#setup)
+- [Background](#background)
+- [Project Description](#a-brief-description)
+- [Input and Output](#input-and-output)
+- [Project Evaluation](#project-evaluation)
+- [Bibliography](#bibliography)
+
+## Setup
+1. Install [OpenCV](https://opencv.org/), including [extra modules](https://github.com/opencv/opencv_contrib)
+    - OpenCV Libraries used: 
+      ```
+      opencv2/
+        core.hpp
+        core/mat.hpp
+        highgui.hpp
+        imgcodecs.hpp
+        imgproc.hpp
+        objdetect.hpp
+        opencv.hpp
+        shape/shape_distance.hpp
+      ```
+2. Download mercy-detector repository
+3. Open `mercy-detector/Detection_Algorithm/Src/mercy_detector.cpp`
+4. Edit constant variables to enable/disable matching methods
+5. Run **`mercy_detector.cpp`**
+
 ## Background
 Existing research has demonstrated that it is possible to parse visual data from a video feed of a game and analyze different aspects of gameplay. Static 2D elements such as a GUI used to represent health or energy have been studied in-depth, and no longer represent a particularly challenging task for computer vision projects. 3D modelled objects pose a similar challenge to identifying an object in real-life.
 
