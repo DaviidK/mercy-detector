@@ -140,7 +140,10 @@ int main()
  *
  * This is where you should call your image processing code for a single frame.
  *
- * //TODO: Add your code here
+ * @param frame : Mat image of a single frame to be processed.
+ * 
+ * @pre 
+ * @post Does some processing on the given frame parameter.
  *
  **************************************************************************************************/
 void processFrame(Mat& frame)
@@ -155,7 +158,14 @@ void processFrame(Mat& frame)
  *
  * Records the processing start time, calls the processFrame function, and records the processing
  * end time.
- *
+ * 
+ * @param start_processing : A long value to be declared of when the processing started.
+ * @param end_processing : A long value to be declared of when the processing ended.
+ * @param frame : The Mat frame to be processed.
+ * 
+ * @pre Paramater frame is a valid Mat image.
+ * @post start_processing and end_processing are initialized to the start and end time for 
+ *       processing, respectively.
  **************************************************************************************************/
 void doProcessing(long& start_processing, long& end_processing, Mat& frame)
 {

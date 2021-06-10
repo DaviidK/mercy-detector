@@ -89,7 +89,6 @@ int main() {
 			continue;
 		}
 
-
 		string shortPath = videoFiles[i][0];
 		string videoPath = VIDEO_FILE_PREFIX + shortPath;
 		OWConst::Heroes expectedHero;
@@ -128,7 +127,6 @@ int main() {
 			}
 		}
 		else if (DETECTION_METHOD == 1) {
-			
 		}
 		else if (DETECTION_METHOD == 2) {
 			// TODO: Edge Matching frame processing method here
@@ -187,25 +185,24 @@ void processVideoTemplateMatching(VideoCapture capture, OWConst::Heroes expected
 			continue;
 		}
 
-		if (totalFrameCount % 10 == 0) {
-			for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
-				if (i == 6) {
-					match_method = 0;
-					use_mask = true;
-				}
-				else if (i == 7) {
-					match_method = 3;
-					use_mask = true;
-				}
-				else {
-					match_method = i;
-					use_mask = false;
-				}
-				correctCount[i] += TMDetector.evalIdentifyHero(frame, match_method, expectedHero, use_mask);
+		for (int i = 0; i < NUM_MATCHING_METHODS; i++) {
+			if (i == 6) {
+				match_method = 0;
+				use_mask = true;
 			}
-			evalFrameCount++;
+			else if (i == 7) {
+				match_method = 3;
+				use_mask = true;
+			}
+			else {
+				match_method = i;
+				use_mask = false;
+			}
+
+			correctCount[i] += TMDetector.evalIdentifyHero(frame, match_method, expectedHero, use_mask);
 		}
-		
+
+		evalFrameCount++;
 	}
 	cout << endl;
 
